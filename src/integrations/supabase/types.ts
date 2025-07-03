@@ -9,7 +9,68 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          age: number | null
+          birthday: string
+          created_at: string | null
+          first_name: string
+          id: string
+          last_name: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string | null
+        }
+        Insert: {
+          age?: number | null
+          birthday: string
+          created_at?: string | null
+          first_name: string
+          id: string
+          last_name: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+        }
+        Update: {
+          age?: number | null
+          birthday?: string
+          created_at?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      volunteer_preferences: {
+        Row: {
+          category: Database["public"]["Enums"]["volunteer_category"]
+          created_at: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["volunteer_category"]
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["volunteer_category"]
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "volunteer_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +79,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "volunteer" | "volunteer_searcher"
+      volunteer_category:
+        | "education"
+        | "environment"
+        | "animal_care"
+        | "community_service"
+        | "healthcare"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +200,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["volunteer", "volunteer_searcher"],
+      volunteer_category: [
+        "education",
+        "environment",
+        "animal_care",
+        "community_service",
+        "healthcare",
+      ],
+    },
   },
 } as const

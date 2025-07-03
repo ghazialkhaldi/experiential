@@ -1,4 +1,3 @@
-
 import { Search, MapPin, Clock, Users, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +11,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import AuthButton from "@/components/AuthButton";
 
 const Index = () => {
   const opportunities = [
@@ -78,9 +78,7 @@ const Index = () => {
               <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium">
                 University Resources
               </Link>
-              <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-                Sign In
-              </Button>
+              <AuthButton />
               <Button className="bg-blue-600 hover:bg-blue-700">
                 Post Opportunity
               </Button>
