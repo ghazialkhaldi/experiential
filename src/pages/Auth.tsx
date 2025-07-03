@@ -11,6 +11,9 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import type { Database } from "@/integrations/supabase/types";
+
+type VolunteerCategory = Database['public']['Enums']['volunteer_category'];
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -137,16 +140,19 @@ const Auth = () => {
       // If user is confirmed and we have preferences, save them
       if (data.user && formData.role === 'volunteer' && formData.preferences.length > 0) {
         // Save preferences after successful signup
-        const preferencePromises = formData.preferences.map(category =>
-          supabase
-            .from('volunteer_preferences')
-            .insert({
-              user_id: data.user.id,
-              category: category
-            })
-        );
+        const preferenceData = formData.preferences.map(category => ({
+          user_id: data.user.id,
+          category: category as VolunteerCategory
+        }));
 
-        await Promise.all(preferencePromises);
+        const { error: preferencesError } = await supabase
+          .from('volunteer_preferences')
+          .insert(preferenceData);
+
+        if (preferencesError) {
+          console.error('Error saving preferences:', preferencesError);
+          // Don't block the signup process for preference errors
+        }
       }
 
       toast({
