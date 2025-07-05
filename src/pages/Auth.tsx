@@ -113,8 +113,24 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = `${window.location.origin}/auth-callback`;
       
+      // Store additional signup data in localStorage for post-confirmation processing
+      const additionalData = {
+        preferences: formData.preferences,
+        organizationData: formData.role === 'volunteer_searcher' ? {
+          name: formData.organizationName,
+          category: formData.organizationCategory,
+          description: formData.organizationDescription || null,
+          address_line1: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zip_code: formData.zipCode
+        } : null
+      };
+      
+      localStorage.setItem('pendingSignupData', JSON.stringify(additionalData));
+
       const metadata: any = {
         first_name: formData.firstName,
         last_name: formData.lastName,
@@ -136,6 +152,7 @@ const Auth = () => {
       });
 
       if (error) {
+        localStorage.removeItem('pendingSignupData');
         toast({
           variant: "destructive",
           title: "Sign Up Failed",
@@ -144,48 +161,9 @@ const Auth = () => {
         return;
       }
 
-      // If user is confirmed and we have preferences, save them
-      if (data.user && formData.role === 'volunteer' && formData.preferences.length > 0) {
-        // Save preferences after successful signup
-        const preferenceData = formData.preferences.map(category => ({
-          user_id: data.user.id,
-          category: category as VolunteerCategory
-        }));
-
-        const { error: preferencesError } = await supabase
-          .from('volunteer_preferences')
-          .insert(preferenceData);
-
-        if (preferencesError) {
-          console.error('Error saving preferences:', preferencesError);
-          // Don't block the signup process for preference errors
-        }
-      }
-
-      // If user is organization, save organization data
-      if (data.user && formData.role === 'volunteer_searcher') {
-        const { error: orgError } = await supabase
-          .from('organizations')
-          .insert({
-            user_id: data.user.id,
-            name: formData.organizationName,
-            category: formData.organizationCategory,
-            description: formData.organizationDescription || null,
-            address_line1: formData.address,
-            city: formData.city,
-            state: formData.state,
-            zip_code: formData.zipCode
-          });
-
-        if (orgError) {
-          console.error('Error saving organization:', orgError);
-          // Don't block the signup process for organization errors
-        }
-      }
-
       toast({
         title: "Account Created!",
-        description: "Please check your email to verify your account.",
+        description: "Please check your email to verify your account. After verification, you'll be redirected to complete your profile setup.",
       });
 
       // Reset form
@@ -208,6 +186,7 @@ const Auth = () => {
       });
 
     } catch (error) {
+      localStorage.removeItem('pendingSignupData');
       toast({
         variant: "destructive",
         title: "Sign Up Failed",
