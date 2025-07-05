@@ -45,8 +45,10 @@ const AuthCallback = () => {
 
         // Get pending signup data from localStorage
         const pendingDataStr = localStorage.getItem('pendingSignupData');
+        console.log('Retrieved pending data from localStorage:', pendingDataStr);
         if (pendingDataStr) {
           const pendingData = JSON.parse(pendingDataStr);
+          console.log('Parsed pending data:', pendingData);
           
           // Process volunteer preferences
           if (pendingData.preferences && pendingData.preferences.length > 0) {
@@ -71,12 +73,18 @@ const AuthCallback = () => {
 
           // Process organization data
           if (pendingData.organizationData) {
+            console.log('Processing organization data:', pendingData.organizationData);
+            console.log('User ID:', data.session.user.id);
+            
+            const orgPayload = {
+              user_id: data.session.user.id,
+              ...pendingData.organizationData
+            };
+            console.log('Organization payload:', orgPayload);
+            
             const { error: orgError } = await supabase
               .from('organizations')
-              .insert({
-                user_id: data.session.user.id,
-                ...pendingData.organizationData
-              });
+              .insert(orgPayload);
 
             if (orgError) {
               console.error('Error saving organization:', orgError);
@@ -85,7 +93,11 @@ const AuthCallback = () => {
                 title: "Organization Setup Error",
                 description: "Could not save organization data. Please complete your organization profile in settings.",
               });
+            } else {
+              console.log('Organization saved successfully');
             }
+          } else {
+            console.log('No organization data found in pending data');
           }
 
           // Clean up pending data

@@ -38,6 +38,8 @@ export const useProfile = () => {
 
     const fetchProfileData = async () => {
       try {
+        console.log('Fetching profile for user ID:', user.id);
+        
         // Fetch user profile
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
@@ -45,23 +47,30 @@ export const useProfile = () => {
           .eq('id', user.id)
           .single();
 
+        console.log('Profile query result:', { profileData, profileError });
+
         if (profileError) {
           console.error('Error fetching profile:', profileError);
         } else {
+          console.log('Profile found:', profileData);
           setProfile(profileData);
         }
 
         // Fetch organization if user is volunteer_searcher
         if (profileData?.role === 'volunteer_searcher') {
+          console.log('User is volunteer_searcher, fetching organization...');
           const { data: orgData, error: orgError } = await supabase
             .from('organizations')
             .select('*')
             .eq('user_id', user.id)
             .maybeSingle();
 
+          console.log('Organization query result:', { orgData, orgError });
+
           if (orgError) {
             console.error('Error fetching organization:', orgError);
           } else {
+            console.log('Organization found:', orgData);
             setOrganization(orgData);
           }
         }

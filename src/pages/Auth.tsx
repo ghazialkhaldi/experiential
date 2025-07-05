@@ -115,6 +115,19 @@ const Auth = () => {
     try {
       const redirectUrl = `${window.location.origin}/auth-callback`;
       
+      console.log('Signup data being stored:', {
+        preferences: formData.preferences,
+        organizationData: formData.role === 'volunteer_searcher' ? {
+          name: formData.organizationName,
+          category: formData.organizationCategory,
+          description: formData.organizationDescription || null,
+          address_line1: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zip_code: formData.zipCode
+        } : null
+      });
+      
       // Store additional signup data in localStorage for post-confirmation processing
       const additionalData = {
         preferences: formData.preferences,
