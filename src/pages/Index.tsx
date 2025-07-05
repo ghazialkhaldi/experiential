@@ -12,54 +12,49 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
+import { useOpportunities } from "@/hooks/useOpportunities";
+import { useState } from "react";
 
 const Index = () => {
-  const opportunities = [
-    {
-      id: 1,
-      title: "Animal Shelter Assistant",
-      organization: "City Animal Rescue",
-      location: "Downtown Community Center",
-      type: "Animal Care",
-      timeCommitment: "4-6 hours/week",
-      description: "Help care for rescued animals, assist with feeding, cleaning, and socialization activities.",
-      requirements: "Ages 16+, weekend availability preferred",
-      posted: "2 days ago"
-    },
-    {
-      id: 2,
-      title: "Tutoring Assistant",
-      organization: "Boys & Girls Club",
-      location: "Westside Community Center",
-      type: "Education",
-      timeCommitment: "3-5 hours/week",
-      description: "Support elementary students with homework and reading activities after school.",
-      requirements: "Ages 15+, strong academic performance",
-      posted: "1 week ago"
-    },
-    {
-      id: 3,
-      title: "Community Garden Helper",
-      organization: "Green City Initiative",
-      location: "Central Park Garden",
-      type: "Environment",
-      timeCommitment: "2-4 hours/week",
-      description: "Assist with planting, weeding, and harvesting in our community garden program.",
-      requirements: "Ages 14+, outdoor work comfort",
-      posted: "3 days ago"
-    },
-    {
-      id: 4,
-      title: "Senior Center Companion",
-      organization: "Golden Years Center",
-      location: "Maple Street Senior Center",
-      type: "Community Service",
-      timeCommitment: "2-3 hours/week",
-      description: "Spend time with elderly residents, play games, assist with activities, and provide companionship.",
-      requirements: "Ages 16+, patient and friendly personality",
-      posted: "5 days ago"
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
+  
+  const { opportunities, loading, error } = useOpportunities(searchQuery, categoryFilter);
+
+  const handleSearch = () => {
+    // Search is already handled by the useOpportunities hook
+    // This function can be expanded for more complex search logic
+  };
+
+  const formatTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    
+    if (diffInHours < 24) {
+      return `${diffInHours} hours ago`;
+    } else {
+      const diffInDays = Math.floor(diffInHours / 24);
+      return `${diffInDays} days ago`;
     }
-  ];
+  };
+
+  // Sort opportunities based on selected option
+  const sortedOpportunities = [...opportunities].sort((a, b) => {
+    switch (sortBy) {
+      case 'newest':
+        return new Date(b.posted_at).getTime() - new Date(a.posted_at).getTime();
+      case 'closest':
+        // For now, just sort alphabetically by location
+        // In a real app, you'd calculate distance from user's location
+        return a.location.localeCompare(b.location);
+      case 'time':
+        return a.time_commitment.localeCompare(b.time_commitment);
+      default:
+        return 0;
+    }
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
@@ -79,9 +74,11 @@ const Index = () => {
                 University Resources
               </Link>
               <AuthButton />
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                Post Opportunity
-              </Button>
+              <Link to="/post-opportunity">
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  Post Opportunity
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -106,21 +103,25 @@ const Index = () => {
                 <Input 
                   placeholder="Search volunteer opportunities..." 
                   className="pl-10 h-12"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 />
               </div>
-              <Select>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                 <SelectTrigger className="h-12">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="">All Categories</SelectItem>
                   <SelectItem value="education">Education</SelectItem>
                   <SelectItem value="environment">Environment</SelectItem>
-                  <SelectItem value="animal-care">Animal Care</SelectItem>
-                  <SelectItem value="community">Community Service</SelectItem>
+                  <SelectItem value="animal_care">Animal Care</SelectItem>
+                  <SelectItem value="community_service">Community Service</SelectItem>
                   <SelectItem value="healthcare">Healthcare</SelectItem>
                 </SelectContent>
               </Select>
-              <Button className="h-12 bg-blue-600 hover:bg-blue-700">
+              <Button className="h-12 bg-blue-600 hover:bg-blue-700" onClick={handleSearch}>
                 Search
               </Button>
             </div>
@@ -154,7 +155,7 @@ const Index = () => {
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900">Latest Opportunities</h2>
             <div className="flex items-center space-x-4">
-              <Select>
+              <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
@@ -167,45 +168,69 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {opportunities.map((opportunity) => (
-              <Card key={opportunity.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <div className="flex justify-between items-start mb-2">
-                    <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                      {opportunity.type}
-                    </Badge>
-                    <span className="text-sm text-gray-500">{opportunity.posted}</span>
-                  </div>
-                  <CardTitle className="text-xl mb-2">{opportunity.title}</CardTitle>
-                  <CardDescription className="text-green-600 font-medium">
-                    {opportunity.organization}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="h-4 w-4 mr-2" />
-                      <span className="text-sm">{opportunity.location}</span>
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">Loading opportunities...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-600">{error}</p>
+            </div>
+          ) : sortedOpportunities.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No opportunities found. Try adjusting your search criteria.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sortedOpportunities.map((opportunity) => (
+                <Card key={opportunity.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+                  <CardHeader>
+                    <div className="flex justify-between items-start mb-2">
+                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                        {opportunity.category.replace('_', ' ')}
+                      </Badge>
+                      <span className="text-sm text-gray-500">{formatTimeAgo(opportunity.posted_at)}</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
-                      <Clock className="h-4 w-4 mr-2" />
-                      <span className="text-sm">{opportunity.timeCommitment}</span>
+                    <CardTitle className="text-xl mb-2">{opportunity.title}</CardTitle>
+                    <CardDescription className="text-green-600 font-medium">
+                      {opportunity.organization.name}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center text-gray-600">
+                        <MapPin className="h-4 w-4 mr-2" />
+                        <span className="text-sm">{opportunity.location}</span>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="h-4 w-4 mr-2" />
+                        <span className="text-sm">{opportunity.time_commitment}</span>
+                      </div>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        {opportunity.description}
+                      </p>
+                      {opportunity.requirements && (
+                        <p className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+                          <strong>Requirements:</strong> {opportunity.requirements}
+                        </p>
+                      )}
+                      {opportunity.max_volunteers && (
+                        <div className="flex items-center text-gray-600">
+                          <Users className="h-4 w-4 mr-2" />
+                          <span className="text-sm">
+                            {opportunity.current_volunteers}/{opportunity.max_volunteers} volunteers
+                          </span>
+                        </div>
+                      )}
+                      <Button className="w-full mt-4 bg-green-600 hover:bg-green-700">
+                        Apply Now
+                      </Button>
                     </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">
-                      {opportunity.description}
-                    </p>
-                    <p className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
-                      <strong>Requirements:</strong> {opportunity.requirements}
-                    </p>
-                    <Button className="w-full mt-4 bg-green-600 hover:bg-green-700">
-                      Apply Now
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

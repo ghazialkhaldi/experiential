@@ -9,6 +9,116 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      opportunities: {
+        Row: {
+          category: string
+          created_at: string
+          current_volunteers: number | null
+          description: string
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          location: string
+          max_volunteers: number | null
+          organization_id: string
+          posted_at: string
+          requirements: string | null
+          time_commitment: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          current_volunteers?: number | null
+          description: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          location: string
+          max_volunteers?: number | null
+          organization_id: string
+          posted_at?: string
+          requirements?: string | null
+          time_commitment: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          current_volunteers?: number | null
+          description?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string
+          max_volunteers?: number | null
+          organization_id?: string
+          posted_at?: string
+          requirements?: string | null
+          time_commitment?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunities_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          city: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          phone: string | null
+          state: string
+          updated_at: string
+          user_id: string
+          website: string | null
+          zip_code: string
+        }
+        Insert: {
+          address_line1: string
+          address_line2?: string | null
+          city: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          state: string
+          updated_at?: string
+          user_id: string
+          website?: string | null
+          zip_code: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          state?: string
+          updated_at?: string
+          user_id?: string
+          website?: string | null
+          zip_code?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null

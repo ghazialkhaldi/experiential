@@ -4,33 +4,38 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import AuthButton from "@/components/AuthButton";
 
 const Resources = () => {
   const collegeGuides = [
     {
-      title: "How to Write About Volunteer Work in College Essays",
-      description: "Learn to transform your volunteer experiences into compelling college application stories.",
-      category: "Essay Writing",
+      title: "How Community Service Impacts College Admissions",
+      description: "Research from NACAC (National Association for College Admission Counseling) shows 89% of colleges consider community service in admissions.",
+      category: "Research",
       readTime: "8 min read",
-      featured: true
+      featured: true,
+      url: "https://www.nacacnet.org/news--publications/Research/"
     },
     {
-      title: "Documenting Community Service Hours",
-      description: "Best practices for tracking and verifying your volunteer hours for college applications.",
-      category: "Documentation",
-      readTime: "5 min read"
+      title: "The Economic Value of Volunteering (Independent Sector Study)",
+      description: "2022 study showing volunteer time valued at $31.80 per hour, demonstrating significant impact of service work.",
+      category: "Economic Impact",
+      readTime: "5 min read",
+      url: "https://independentsector.org/value-of-volunteer-time/"
     },
     {
-      title: "Leadership in Volunteer Organizations",
-      description: "How to develop and showcase leadership skills through volunteer work.",
-      category: "Leadership",
-      readTime: "10 min read"
+      title: "Corporation for National and Community Service Research",
+      description: "Comprehensive data on volunteering trends, demographics, and impact on communities across America.",
+      category: "Government Data",
+      readTime: "10 min read",
+      url: "https://americorps.gov/about/our-impact/research-reports"
     },
     {
-      title: "Building Long-term Community Relationships",
-      description: "Strategies for creating lasting impact and meaningful connections through service.",
-      category: "Community Impact",
-      readTime: "7 min read"
+      title: "Do Good Institute - University of Maryland Research",
+      description: "Academic research on civic engagement and service-learning effectiveness in higher education.",
+      category: "Academic Research",
+      readTime: "7 min read",
+      url: "https://dogood.umd.edu/research"
     }
   ];
 
@@ -96,9 +101,7 @@ const Resources = () => {
               <Link to="/resources" className="text-blue-600 font-medium">
                 University Resources
               </Link>
-              <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-                Sign In
-              </Button>
+              <AuthButton />
               <Button className="bg-blue-600 hover:bg-blue-700">
                 Post Opportunity
               </Button>
@@ -179,9 +182,11 @@ const Resources = () => {
                   <CardDescription className="text-gray-600 mb-4">
                     {guide.description}
                   </CardDescription>
-                  <Button variant={guide.featured ? "default" : "outline"} className="w-full">
-                    Read Guide
-                    <ExternalLink className="h-4 w-4 ml-2" />
+                  <Button variant={guide.featured ? "default" : "outline"} className="w-full" asChild>
+                    <a href={guide.url} target="_blank" rel="noopener noreferrer">
+                      Read Study
+                      <ExternalLink className="h-4 w-4 ml-2" />
+                    </a>
                   </Button>
                 </CardContent>
               </Card>
