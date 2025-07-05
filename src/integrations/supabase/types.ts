@@ -75,6 +75,7 @@ export type Database = {
         Row: {
           address_line1: string
           address_line2: string | null
+          category: string | null
           city: string
           created_at: string
           description: string | null
@@ -90,6 +91,7 @@ export type Database = {
         Insert: {
           address_line1: string
           address_line2?: string | null
+          category?: string | null
           city: string
           created_at?: string
           description?: string | null
@@ -105,6 +107,7 @@ export type Database = {
         Update: {
           address_line1?: string
           address_line2?: string | null
+          category?: string | null
           city?: string
           created_at?: string
           description?: string | null

@@ -26,7 +26,14 @@ const Auth = () => {
     birthday: '',
     role: '',
     age: '',
-    preferences: [] as string[]
+    preferences: [] as string[],
+    organizationName: '',
+    organizationCategory: '',
+    organizationDescription: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: ''
   });
   
   const navigate = useNavigate();
@@ -155,6 +162,27 @@ const Auth = () => {
         }
       }
 
+      // If user is organization, save organization data
+      if (data.user && formData.role === 'volunteer_searcher') {
+        const { error: orgError } = await supabase
+          .from('organizations')
+          .insert({
+            user_id: data.user.id,
+            name: formData.organizationName,
+            category: formData.organizationCategory,
+            description: formData.organizationDescription || null,
+            address_line1: formData.address,
+            city: formData.city,
+            state: formData.state,
+            zip_code: formData.zipCode
+          });
+
+        if (orgError) {
+          console.error('Error saving organization:', orgError);
+          // Don't block the signup process for organization errors
+        }
+      }
+
       toast({
         title: "Account Created!",
         description: "Please check your email to verify your account.",
@@ -169,7 +197,14 @@ const Auth = () => {
         birthday: '',
         role: '',
         age: '',
-        preferences: []
+        preferences: [],
+        organizationName: '',
+        organizationCategory: '',
+        organizationDescription: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: ''
       });
 
     } catch (error) {
@@ -278,6 +313,93 @@ const Auth = () => {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {formData.role === 'volunteer_searcher' && (
+                    <>
+                      <div className="space-y-2">
+                        <Label htmlFor="organizationName">Organization Name *</Label>
+                        <Input
+                          id="organizationName"
+                          value={formData.organizationName}
+                          onChange={(e) => handleInputChange('organizationName', e.target.value)}
+                          placeholder="Enter organization name"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="organizationCategory">Organization Category *</Label>
+                        <Select value={formData.organizationCategory} onValueChange={(value) => handleInputChange('organizationCategory', value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select organization category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="education">Education</SelectItem>
+                            <SelectItem value="environment">Environment</SelectItem>
+                            <SelectItem value="animal_care">Animal Care</SelectItem>
+                            <SelectItem value="community_service">Community Service</SelectItem>
+                            <SelectItem value="healthcare">Healthcare</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="organizationDescription">Organization Description (optional)</Label>
+                        <Input
+                          id="organizationDescription"
+                          value={formData.organizationDescription}
+                          onChange={(e) => handleInputChange('organizationDescription', e.target.value)}
+                          placeholder="Brief description of your organization"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="address">Address *</Label>
+                        <Input
+                          id="address"
+                          value={formData.address}
+                          onChange={(e) => handleInputChange('address', e.target.value)}
+                          placeholder="Street address"
+                          required
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="city">City *</Label>
+                          <Input
+                            id="city"
+                            value={formData.city}
+                            onChange={(e) => handleInputChange('city', e.target.value)}
+                            placeholder="City"
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="state">State *</Label>
+                          <Input
+                            id="state"
+                            value={formData.state}
+                            onChange={(e) => handleInputChange('state', e.target.value)}
+                            placeholder="State"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="zipCode">ZIP Code *</Label>
+                        <Input
+                          id="zipCode"
+                          value={formData.zipCode}
+                          onChange={(e) => handleInputChange('zipCode', e.target.value)}
+                          placeholder="ZIP Code"
+                          required
+                        />
+                      </div>
+                    </>
+                  )}
 
                   {formData.role === 'volunteer' && (
                     <>
