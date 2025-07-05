@@ -17,7 +17,7 @@ import { useState } from "react";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   
   const { opportunities, loading, error } = useOpportunities(searchQuery, categoryFilter);
@@ -113,7 +113,7 @@ const Index = () => {
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
                   <SelectItem value="education">Education</SelectItem>
                   <SelectItem value="environment">Environment</SelectItem>
                   <SelectItem value="animal_care">Animal Care</SelectItem>
