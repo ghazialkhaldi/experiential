@@ -18,6 +18,7 @@ type VolunteerCategory = Database['public']['Enums']['volunteer_category'];
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -63,6 +64,47 @@ const Auth = () => {
       ...prev,
       [field]: value
     }));
+
+    // Validate password for signup form
+    if (field === 'password' && !isLogin) {
+      validatePassword(value);
+    }
+  };
+
+  const validatePassword = (password: string) => {
+    const errors: string[] = [];
+    
+    if (password.length < 8) {
+      errors.push('Password must be at least 8 characters long');
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Password must contain at least one capital letter');
+    }
+    
+    if (!/[0-9]/.test(password)) {
+      errors.push('Password must contain at least one number');
+    }
+    
+    setPasswordErrors(errors);
+  };
+
+  const validatePasswordSync = (password: string) => {
+    const errors: string[] = [];
+    
+    if (password.length < 8) {
+      errors.push('Password must be at least 8 characters long');
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Password must contain at least one capital letter');
+    }
+    
+    if (!/[0-9]/.test(password)) {
+      errors.push('Password must contain at least one number');
+    }
+    
+    return errors;
   };
 
   const handlePreferenceChange = (category: string, checked: boolean) => {
@@ -111,6 +153,19 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    // Check password validation for signup
+    const errors = validatePasswordSync(formData.password);
+    if (errors.length > 0) {
+      setPasswordErrors(errors);
+      toast({
+        variant: "destructive",
+        title: "Password Requirements Not Met",
+        description: "Please fix the password requirements before signing up.",
+      });
+      setLoading(false);
+      return;
+    }
 
     try {
       const redirectUrl = `${window.location.origin}/auth-callback`;
@@ -257,6 +312,15 @@ const Auth = () => {
                   onChange={(e) => handleInputChange('password', e.target.value)}
                   required
                 />
+                {!isLogin && passwordErrors.length > 0 && (
+                  <div className="mt-2 space-y-1">
+                    {passwordErrors.map((error, index) => (
+                      <p key={index} className="text-sm text-red-600">
+                        • {error}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {!isLogin && (
