@@ -1,15 +1,22 @@
 import { useState, useEffect } from 'react';
-import { Users, Plus, Eye, FileText } from 'lucide-react';
+import { Users, Plus, Eye, FileText, Edit, Trash2, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useApplications } from '@/hooks/useApplications';
 import ApplicationCard from '@/components/ApplicationCard';
 import AuthButton from '@/components/AuthButton';
+import { useToast } from '@/hooks/use-toast';
 
 interface OrganizationOpportunity {
   id: string;
@@ -21,6 +28,7 @@ interface OrganizationOpportunity {
   max_volunteers: number | null;
   current_volunteers: number;
   is_active: boolean;
+  requirements: string | null;
   applications?: any[];
 }
 
@@ -28,8 +36,18 @@ const ManageOpportunities = () => {
   const [opportunities, setOpportunities] = useState<OrganizationOpportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editingOpportunity, setEditingOpportunity] = useState<OrganizationOpportunity | null>(null);
+  const [editForm, setEditForm] = useState({
+    title: '',
+    description: '',
+    category: '',
+    location: '',
+    requirements: '',
+    max_volunteers: ''
+  });
   const { user } = useAuth();
   const { applications } = useApplications();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -96,6 +114,103 @@ const ManageOpportunities = () => {
     } else {
       const diffInDays = Math.floor(diffInHours / 24);
       return `${diffInDays} days ago`;
+    }
+  };
+
+  const handleEditOpportunity = (opportunity: OrganizationOpportunity) => {
+    setEditingOpportunity(opportunity);
+    setEditForm({
+      title: opportunity.title,
+      description: opportunity.description,
+      category: opportunity.category,
+      location: opportunity.location,
+      requirements: opportunity.requirements || '',
+      max_volunteers: opportunity.max_volunteers?.toString() || ''
+    });
+  };
+
+  const handleUpdateOpportunity = async () => {
+    if (!editingOpportunity) return;
+
+    try {
+      const { error } = await supabase
+        .from('opportunities')
+        .update({
+          title: editForm.title,
+          description: editForm.description,
+          category: editForm.category,
+          location: editForm.location,
+          requirements: editForm.requirements || null,
+          max_volunteers: editForm.max_volunteers ? parseInt(editForm.max_volunteers) : null
+        })
+        .eq('id', editingOpportunity.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Opportunity updated successfully.",
+      });
+
+      setEditingOpportunity(null);
+      fetchOrganizationOpportunities();
+    } catch (err) {
+      console.error('Error updating opportunity:', err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update opportunity.",
+      });
+    }
+  };
+
+  const handleDeleteOpportunity = async (opportunityId: string) => {
+    try {
+      const { error } = await supabase
+        .from('opportunities')
+        .delete()
+        .eq('id', opportunityId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Opportunity deleted successfully.",
+      });
+
+      fetchOrganizationOpportunities();
+    } catch (err) {
+      console.error('Error deleting opportunity:', err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete opportunity.",
+      });
+    }
+  };
+
+  const handleToggleActive = async (opportunityId: string, currentStatus: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('opportunities')
+        .update({ is_active: !currentStatus })
+        .eq('id', opportunityId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `Opportunity ${!currentStatus ? 'activated' : 'closed'} successfully.`,
+      });
+
+      fetchOrganizationOpportunities();
+    } catch (err) {
+      console.error('Error updating opportunity status:', err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update opportunity status.",
+      });
     }
   };
 
@@ -224,28 +339,74 @@ const ManageOpportunities = () => {
                       <CardTitle className="text-xl">{opportunity.title}</CardTitle>
                       <CardDescription>{opportunity.location}</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <p className="text-gray-700 text-sm line-clamp-3">
-                          {opportunity.description}
-                        </p>
-                        <div className="flex items-center justify-between text-sm text-gray-600">
-                          <span>Posted {formatTimeAgo(opportunity.posted_at)}</span>
-                          <div className="flex items-center">
-                            <Eye className="h-4 w-4 mr-1" />
-                            {opportunity.applications?.length || 0} applications
-                          </div>
-                        </div>
-                        {opportunity.max_volunteers && (
-                          <div className="flex items-center text-gray-600">
-                            <Users className="h-4 w-4 mr-2" />
-                            <span className="text-sm">
-                              {opportunity.current_volunteers}/{opportunity.max_volunteers} volunteers
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
+                     <CardContent>
+                       <div className="space-y-3">
+                         <p className="text-gray-700 text-sm line-clamp-3">
+                           {opportunity.description}
+                         </p>
+                         <div className="flex items-center justify-between text-sm text-gray-600">
+                           <span>Posted {formatTimeAgo(opportunity.posted_at)}</span>
+                           <div className="flex items-center">
+                             <Eye className="h-4 w-4 mr-1" />
+                             {opportunity.applications?.length || 0} applications
+                           </div>
+                         </div>
+                         {opportunity.max_volunteers && (
+                           <div className="flex items-center text-gray-600">
+                             <Users className="h-4 w-4 mr-2" />
+                             <span className="text-sm">
+                               {opportunity.current_volunteers}/{opportunity.max_volunteers} volunteers
+                             </span>
+                           </div>
+                         )}
+                         <div className="flex items-center justify-between pt-3 border-t">
+                           <div className="flex items-center space-x-2">
+                             <Button
+                               variant="outline"
+                               size="sm"
+                               onClick={() => handleEditOpportunity(opportunity)}
+                             >
+                               <Edit className="h-4 w-4" />
+                             </Button>
+                             <Button
+                               variant="outline"
+                               size="sm"
+                               onClick={() => handleToggleActive(opportunity.id, opportunity.is_active)}
+                             >
+                               {opportunity.is_active ? (
+                                 <XCircle className="h-4 w-4 text-orange-600" />
+                               ) : (
+                                 <CheckCircle className="h-4 w-4 text-green-600" />
+                               )}
+                             </Button>
+                           </div>
+                           <AlertDialog>
+                             <AlertDialogTrigger asChild>
+                               <Button variant="outline" size="sm">
+                                 <Trash2 className="h-4 w-4 text-red-600" />
+                               </Button>
+                             </AlertDialogTrigger>
+                             <AlertDialogContent>
+                               <AlertDialogHeader>
+                                 <AlertDialogTitle>Delete Opportunity</AlertDialogTitle>
+                                 <AlertDialogDescription>
+                                   Are you sure you want to delete "{opportunity.title}"? This action cannot be undone and will also delete all applications.
+                                 </AlertDialogDescription>
+                               </AlertDialogHeader>
+                               <AlertDialogFooter>
+                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                 <AlertDialogAction
+                                   onClick={() => handleDeleteOpportunity(opportunity.id)}
+                                   className="bg-red-600 hover:bg-red-700"
+                                 >
+                                   Delete
+                                 </AlertDialogAction>
+                               </AlertDialogFooter>
+                             </AlertDialogContent>
+                           </AlertDialog>
+                         </div>
+                       </div>
+                     </CardContent>
                   </Card>
                 ))}
               </div>
@@ -323,6 +484,97 @@ const ManageOpportunities = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Edit Opportunity Dialog */}
+      <Dialog open={!!editingOpportunity} onOpenChange={() => setEditingOpportunity(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Opportunity</DialogTitle>
+            <DialogDescription>
+              Update the details of your volunteer opportunity.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-title">Title</Label>
+              <Input
+                id="edit-title"
+                value={editForm.title}
+                onChange={(e) => setEditForm(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Enter opportunity title"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-description">Description</Label>
+              <Textarea
+                id="edit-description"
+                value={editForm.description}
+                onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="Describe the volunteer opportunity"
+                rows={4}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="edit-category">Category</Label>
+                <Select value={editForm.category} onValueChange={(value) => setEditForm(prev => ({ ...prev, category: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="education">Education</SelectItem>
+                    <SelectItem value="environment">Environment</SelectItem>
+                    <SelectItem value="animal_care">Animal Care</SelectItem>
+                    <SelectItem value="community_service">Community Service</SelectItem>
+                    <SelectItem value="healthcare">Healthcare</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-location">Location</Label>
+                <Input
+                  id="edit-location"
+                  value={editForm.location}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, location: e.target.value }))}
+                  placeholder="Enter location"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="edit-requirements">Requirements (Optional)</Label>
+              <Textarea
+                id="edit-requirements"
+                value={editForm.requirements}
+                onChange={(e) => setEditForm(prev => ({ ...prev, requirements: e.target.value }))}
+                placeholder="Any specific requirements or skills needed"
+                rows={3}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-max-volunteers">Maximum Volunteers (Optional)</Label>
+              <Input
+                id="edit-max-volunteers"
+                type="number"
+                value={editForm.max_volunteers}
+                onChange={(e) => setEditForm(prev => ({ ...prev, max_volunteers: e.target.value }))}
+                placeholder="Enter maximum number of volunteers"
+                min={1}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setEditingOpportunity(null)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateOpportunity}>
+              Update Opportunity
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
