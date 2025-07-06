@@ -76,25 +76,74 @@ const AuthCallback = () => {
             console.log('Processing organization data:', pendingData.organizationData);
             console.log('User ID:', data.session.user.id);
             
-            const orgPayload = {
-              user_id: data.session.user.id,
-              ...pendingData.organizationData
-            };
-            console.log('Organization payload:', orgPayload);
+            // Validate required organization fields
+            const orgData = pendingData.organizationData;
+            const requiredFields = ['name', 'address_line1', 'city', 'state', 'zip_code'];
+            const missingFields = requiredFields.filter(field => !orgData[field]);
             
-            const { error: orgError } = await supabase
-              .from('organizations')
-              .insert(orgPayload);
-
-            if (orgError) {
-              console.error('Error saving organization:', orgError);
+            if (missingFields.length > 0) {
+              console.error('Missing required organization fields:', missingFields);
               toast({
                 variant: "destructive",
-                title: "Organization Setup Error",
-                description: "Could not save organization data. Please complete your organization profile in settings.",
+                title: "Organization Setup Incomplete",
+                description: `Missing required fields: ${missingFields.join(', ')}. Please complete your organization profile in settings.`,
               });
             } else {
-              console.log('Organization saved successfully');
+              // Attempt to save organization with retry logic
+              let orgSaved = false;
+              let retryCount = 0;
+              const maxRetries = 3;
+              
+              while (!orgSaved && retryCount < maxRetries) {
+                try {
+                  const orgPayload = {
+                    user_id: data.session.user.id,
+                    ...orgData
+                  };
+                  console.log(`Organization save attempt ${retryCount + 1}:`, orgPayload);
+                  
+                  const { error: orgError } = await supabase
+                    .from('organizations')
+                    .insert(orgPayload);
+
+                  if (orgError) {
+                    console.error(`Organization save attempt ${retryCount + 1} failed:`, orgError);
+                    
+                    if (retryCount === maxRetries - 1) {
+                      // Final attempt failed - offer fallback
+                      toast({
+                        variant: "destructive",
+                        title: "Organization Setup Failed",
+                        description: "We couldn't save your organization data automatically. You can complete your organization profile after logging in.",
+                      });
+                      
+                      // Store organization data for later completion
+                      localStorage.setItem('incompleteOrgData', JSON.stringify(orgData));
+                    } else {
+                      // Wait before retry
+                      await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+                    }
+                  } else {
+                    console.log('Organization saved successfully on attempt', retryCount + 1);
+                    orgSaved = true;
+                    toast({
+                      title: "Organization Profile Created",
+                      description: "Your organization profile has been set up successfully.",
+                    });
+                  }
+                } catch (error) {
+                  console.error(`Organization save attempt ${retryCount + 1} threw error:`, error);
+                  if (retryCount === maxRetries - 1) {
+                    toast({
+                      variant: "destructive",
+                      title: "Organization Setup Error",
+                      description: "An unexpected error occurred. Please complete your organization profile in settings.",
+                    });
+                    localStorage.setItem('incompleteOrgData', JSON.stringify(orgData));
+                  }
+                }
+                retryCount++;
+              }
             }
           } else {
             console.log('No organization data found in pending data');
