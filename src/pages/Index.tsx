@@ -12,7 +12,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
+import OrganizationSetup from "@/components/OrganizationSetup";
 import { useOpportunities } from "@/hooks/useOpportunities";
+import { useProfile } from "@/hooks/useProfile";
 import { useState } from "react";
 
 const Index = () => {
@@ -21,6 +23,22 @@ const Index = () => {
   const [sortBy, setSortBy] = useState('newest');
   
   const { opportunities, loading, error } = useOpportunities(searchQuery, categoryFilter);
+  const { hasIncompleteOrganization, hasIncompleteOrgData, loading: profileLoading } = useProfile();
+
+  // Check if we need to show organization setup
+  const needsOrganizationSetup = hasIncompleteOrganization || hasIncompleteOrgData;
+
+  // Show organization setup if needed
+  if (needsOrganizationSetup && !profileLoading) {
+    return (
+      <OrganizationSetup 
+        onComplete={() => {
+          // Refresh the page to show the normal interface
+          window.location.reload();
+        }}
+      />
+    );
+  }
 
   const handleSearch = () => {
     // Search is already handled by the useOpportunities hook

@@ -94,11 +94,23 @@ export const useProfile = () => {
     return user?.email || '';
   };
 
+  // Check for incomplete organization setup
+  const hasIncompleteOrganization = () => {
+    return profile?.role === 'volunteer_searcher' && !organization;
+  };
+
+  // Check for incomplete organization data in localStorage
+  const hasIncompleteOrgData = () => {
+    return !!localStorage.getItem('incompleteOrgData');
+  };
+
   return {
     profile,
     organization,
     loading,
     getDisplayName,
-    isOrganization: !!organization
+    isOrganization: !!organization,
+    hasIncompleteOrganization: hasIncompleteOrganization(),
+    hasIncompleteOrgData: hasIncompleteOrgData()
   };
 };

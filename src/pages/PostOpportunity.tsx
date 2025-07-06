@@ -12,13 +12,17 @@ import { useProfile } from '@/hooks/useProfile';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from "@/hooks/use-toast";
 import AuthButton from "@/components/AuthButton";
+import OrganizationSetup from "@/components/OrganizationSetup";
 
 const PostOpportunity = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
-  const { organization, loading } = useProfile();
+  const { organization, loading, hasIncompleteOrganization, hasIncompleteOrgData, profile } = useProfile();
   const [submitting, setSubmitting] = useState(false);
+
+  // Check for incomplete organization setup
+  const needsOrganizationSetup = (hasIncompleteOrganization || hasIncompleteOrgData) && profile?.role === 'volunteer_searcher';
 
   const [formData, setFormData] = useState({
     title: '',
@@ -108,12 +112,39 @@ const PostOpportunity = () => {
     );
   }
 
-  if (!organization) {
+  // Show organization setup if needed
+  if (needsOrganizationSetup && !loading) {
+    return (
+      <OrganizationSetup 
+        onComplete={() => {
+          // Navigate back to the post opportunity page
+          window.location.reload();
+        }}
+      />
+    );
+  }
+
+  if (!organization && profile?.role === 'volunteer_searcher') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="pt-6 text-center">
             <p className="text-gray-600 mb-4">Only organizations can post opportunities. Please contact support if you need to register your organization.</p>
+            <Link to="/">
+              <Button>Back to Home</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!organization) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6 text-center">
+            <p className="text-gray-600 mb-4">Only volunteers with organization accounts can post opportunities.</p>
             <Link to="/">
               <Button>Back to Home</Button>
             </Link>
