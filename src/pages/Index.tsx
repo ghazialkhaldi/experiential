@@ -93,7 +93,7 @@ const Index = () => {
               <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
                 Opportunities
               </Link>
-              <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium text-sm">
                 University Resources
               </Link>
               {user && (
