@@ -18,15 +18,18 @@ import { useOpportunities } from "@/hooks/useOpportunities";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   
-  const { opportunities, loading, error } = useOpportunities(searchQuery, categoryFilter);
+  // Show latest opportunities on home page without any search
+  const { opportunities, loading, error } = useOpportunities('', 'all');
   const { hasIncompleteOrganization, hasIncompleteOrgData, loading: profileLoading } = useProfile();
   const { user } = useAuth();
 
@@ -46,8 +49,10 @@ const Index = () => {
   }
 
   const handleSearch = () => {
-    // Search is already handled by the useOpportunities hook
-    // This function can be expanded for more complex search logic
+    const params = new URLSearchParams();
+    if (searchQuery.trim()) params.set('q', searchQuery.trim());
+    if (categoryFilter && categoryFilter !== 'all') params.set('category', categoryFilter);
+    navigate(`/search?${params.toString()}`);
   };
 
   const formatTimeAgo = (dateString: string) => {

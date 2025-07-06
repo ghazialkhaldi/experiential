@@ -44,11 +44,7 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
         }
 
         if (searchQuery.trim()) {
-          query = query.or(`
-            title.ilike.%${searchQuery}%,
-            description.ilike.%${searchQuery}%, 
-            location.ilike.%${searchQuery}%
-          `);
+          query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,location.ilike.%${searchQuery}%`);
         }
 
         const { data, error } = await query;
