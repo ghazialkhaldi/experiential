@@ -47,8 +47,7 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
           query = query.or(`
             title.ilike.%${searchQuery}%,
             description.ilike.%${searchQuery}%, 
-            location.ilike.%${searchQuery}%,
-            organizations.name.ilike.%${searchQuery}%
+            location.ilike.%${searchQuery}%
           `);
         }
 
