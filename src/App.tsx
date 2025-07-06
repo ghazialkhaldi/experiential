@@ -9,6 +9,7 @@ import Resources from "./pages/Resources";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import PostOpportunity from "./pages/PostOpportunity";
+import ManageOpportunities from "./pages/ManageOpportunities";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/auth-callback" element={<AuthCallback />} />
           <Route path="/post-opportunity" element={<PostOpportunity />} />
+          <Route path="/manage-opportunities" element={<ManageOpportunities />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

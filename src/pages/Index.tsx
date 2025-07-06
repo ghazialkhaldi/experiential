@@ -13,17 +13,22 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
 import OrganizationSetup from "@/components/OrganizationSetup";
+import OpportunityDetailDialog from "@/components/OpportunityDetailDialog";
 import { useOpportunities } from "@/hooks/useOpportunities";
 import { useProfile } from "@/hooks/useProfile";
+import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   
   const { opportunities, loading, error } = useOpportunities(searchQuery, categoryFilter);
   const { hasIncompleteOrganization, hasIncompleteOrgData, loading: profileLoading } = useProfile();
+  const { user } = useAuth();
 
   // Check if we need to show organization setup
   const needsOrganizationSetup = hasIncompleteOrganization || hasIncompleteOrgData;
@@ -91,6 +96,11 @@ const Index = () => {
               <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium">
                 University Resources
               </Link>
+              {user && (
+                <Link to="/manage-opportunities" className="text-gray-700 hover:text-blue-600 font-medium">
+                  Manage
+                </Link>
+              )}
               <AuthButton />
               <Link to="/post-opportunity">
                 <Button className="bg-blue-600 hover:bg-blue-700">
@@ -224,14 +234,9 @@ const Index = () => {
                         <Clock className="h-4 w-4 mr-2" />
                         <span className="text-sm">{opportunity.time_commitment}</span>
                       </div>
-                      <p className="text-gray-700 text-sm leading-relaxed">
+                      <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
                         {opportunity.description}
                       </p>
-                      {opportunity.requirements && (
-                        <p className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
-                          <strong>Requirements:</strong> {opportunity.requirements}
-                        </p>
-                      )}
                       {opportunity.max_volunteers && (
                         <div className="flex items-center text-gray-600">
                           <Users className="h-4 w-4 mr-2" />
@@ -240,8 +245,14 @@ const Index = () => {
                           </span>
                         </div>
                       )}
-                      <Button className="w-full mt-4 bg-green-600 hover:bg-green-700">
-                        Apply Now
+                      <Button 
+                        className="w-full mt-4 bg-green-600 hover:bg-green-700"
+                        onClick={() => {
+                          setSelectedOpportunity(opportunity);
+                          setDialogOpen(true);
+                        }}
+                      >
+                        View Details & Apply
                       </Button>
                     </div>
                   </CardContent>
@@ -251,6 +262,13 @@ const Index = () => {
           )}
         </div>
       </section>
+
+      {/* Opportunity Detail Dialog */}
+      <OpportunityDetailDialog
+        opportunity={selectedOpportunity}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
 
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-blue-600 to-green-600 text-white">
