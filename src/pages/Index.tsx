@@ -137,20 +137,22 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Background Elements that extend down */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/15 via-blue-400/8 to-green-500/12"></div>
+        {/* Background Elements with smooth transition to white */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-blue-400/8 to-white"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-green-500/5 to-transparent"></div>
         
-        {/* Circles positioned throughout hero and extending down */}
+        {/* Circles with varying opacity that fade towards bottom */}
         <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/25 rounded-full blur-2xl animate-pulse"></div>
         <div className="absolute top-20 right-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
-        <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-green-400/22 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-green-400/15 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
         <div className="absolute top-1/2 right-10 w-32 h-32 bg-blue-300/30 rounded-full blur-lg animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-20 right-1/3 w-36 h-36 bg-purple-400/18 rounded-full blur-xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
+        <div className="absolute bottom-20 right-1/3 w-36 h-36 bg-purple-400/12 rounded-full blur-xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
         <div className="absolute top-1/3 left-1/2 w-28 h-28 bg-indigo-400/20 rounded-full blur-lg animate-pulse" style={{animationDelay: '3s'}}></div>
         <div className="absolute bottom-1/4 left-1/6 w-24 h-24 bg-cyan-400/18 rounded-full blur-md animate-pulse" style={{animationDelay: '2.5s'}}></div>
         
-        {/* Decorative Grid Pattern */}
-        <div className="absolute inset-0 opacity-[0.08]" style={{
+        {/* Decorative Grid Pattern that fades out */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/80"></div>
+        <div className="absolute top-0 left-0 right-0 h-3/4 opacity-[0.08]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, rgb(59 130 246) 1px, transparent 0)`,
           backgroundSize: '30px 30px'
         }}></div>
@@ -209,36 +211,21 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section with gradient transition from blue to white */}
-      <section className="py-16 relative overflow-hidden">
-        {/* Extended background elements from hero section */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/12 via-blue-400/6 to-white"></div>
-        
-        {/* Extended circles that fade to white */}
-        <div className="absolute -top-10 left-10 w-40 h-40 bg-blue-400/15 rounded-full blur-2xl animate-pulse"></div>
-        <div className="absolute -top-5 right-20 w-56 h-56 bg-blue-500/12 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
-        <div className="absolute top-20 left-1/4 w-32 h-32 bg-green-400/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute top-10 right-10 w-24 h-24 bg-blue-300/15 rounded-full blur-lg animate-pulse" style={{animationDelay: '2s'}}></div>
-        
-        {/* Grid pattern that fades out */}
-        <div className="absolute top-0 left-0 right-0 h-1/3 opacity-[0.04]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(59 130 246) 1px, transparent 0)`,
-          backgroundSize: '30px 30px'
-        }}></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Stats Section */}
+      <section className="py-16 bg-gradient-to-r from-white via-blue-50/30 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="stat-card bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-blue-100">
+            <div className="stat-card bg-white rounded-xl p-8 shadow-lg border border-blue-100">
               <div className="text-5xl font-bold text-blue-600 mb-3 fade-in">2,500+</div>
               <div className="text-gray-600 font-medium">Active Opportunities</div>
               <div className="w-12 h-1 bg-blue-600 mx-auto mt-4 rounded"></div>
             </div>
-            <div className="stat-card bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-green-100 fade-in-delayed">
+            <div className="stat-card bg-white rounded-xl p-8 shadow-lg border border-green-100 fade-in-delayed">
               <div className="text-5xl font-bold text-green-600 mb-3">15,000+</div>
               <div className="text-gray-600 font-medium">Student Volunteers</div>
               <div className="w-12 h-1 bg-green-600 mx-auto mt-4 rounded"></div>
             </div>
-            <div className="stat-card bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-purple-100 fade-in-delayed-2">
+            <div className="stat-card bg-white rounded-xl p-8 shadow-lg border border-purple-100 fade-in-delayed-2">
               <div className="text-5xl font-bold text-purple-600 mb-3">800+</div>
               <div className="text-gray-600 font-medium">Partner Organizations</div>
               <div className="w-12 h-1 bg-purple-600 mx-auto mt-4 rounded"></div>
