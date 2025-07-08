@@ -157,32 +157,25 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Organic vibrating gradients with varying intensity */}
+        {/* Background Elements with smooth transition to white */}
         <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-blue-400/8 to-white"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-green-500/5 to-transparent"></div>
         
-        {/* Intense vibrating gradient zones */}
-        <div className="absolute inset-0" 
-             style={{
-               background: 'radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.12) 0%, transparent 40%), radial-gradient(circle at 60% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 45%)',
-               animation: 'intense-vibration 3s ease-in-out infinite'
-             }}></div>
+        {/* Circles with varying opacity that fade towards bottom */}
+        <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/25 rounded-full blur-2xl animate-pulse"></div>
+        <div className="absolute top-20 right-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+        <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-green-400/15 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="absolute top-1/2 right-10 w-32 h-32 bg-blue-300/30 rounded-full blur-lg animate-pulse" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-20 right-1/3 w-36 h-36 bg-purple-400/12 rounded-full blur-xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
+        <div className="absolute top-1/3 left-1/2 w-28 h-28 bg-indigo-400/20 rounded-full blur-lg animate-pulse" style={{animationDelay: '3s'}}></div>
+        <div className="absolute bottom-1/4 left-1/6 w-24 h-24 bg-cyan-400/18 rounded-full blur-md animate-pulse" style={{animationDelay: '2.5s'}}></div>
         
-        {/* Medium intensity zones */}
-        <div className="absolute inset-0" 
-             style={{
-               background: 'radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 60%), radial-gradient(circle at 90% 60%, rgba(34, 197, 94, 0.06) 0%, transparent 50%)',
-               animation: 'medium-vibration 4s ease-in-out infinite 1s'
-             }}></div>
-        
-        {/* Gentle pulsing zones */}
-        <div className="absolute inset-0" 
-             style={{
-               background: 'radial-gradient(circle at 10% 60%, rgba(168, 85, 247, 0.05) 0%, transparent 70%), radial-gradient(circle at 70% 40%, rgba(59, 130, 246, 0.04) 0%, transparent 80%)',
-               animation: 'gentle-pulse 6s ease-in-out infinite 2s'
-             }}></div>
-        
-        {/* Decorative fade to white at bottom */}
+        {/* Decorative Grid Pattern that fades out */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/80"></div>
+        <div className="absolute top-0 left-0 right-0 h-3/4 opacity-[0.08]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(59 130 246) 1px, transparent 0)`,
+          backgroundSize: '30px 30px'
+        }}></div>
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="fade-in">
