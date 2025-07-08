@@ -98,6 +98,34 @@ All colors MUST be HSL.
   .text-gradient-blue {
     @apply bg-gradient-to-r from-blue-400 to-blue-700 bg-clip-text text-transparent;
   }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:shadow-blue-100/50;
+  }
+  
+  .stat-card {
+    @apply transform transition-all duration-500 hover:scale-105;
+  }
+  
+  .fade-in {
+    @apply animate-in slide-in-from-bottom-4 duration-700;
+  }
+  
+  .fade-in-delayed {
+    @apply animate-in slide-in-from-bottom-4 duration-700 [animation-delay:200ms];
+  }
+  
+  .fade-in-delayed-2 {
+    @apply animate-in slide-in-from-bottom-4 duration-700 [animation-delay:400ms];
+  }
+  
+  .floating {
+    @apply animate-pulse;
+  }
+  
+  .hero-bg {
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, rgba(59, 130, 246, 0.05) 100%);
+  }
 }
 
 @layer base {

@@ -94,33 +94,39 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="min-h-screen hero-bg">
       {/* Sidebar */}
       <Sidebar />
       
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b">
+      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <Users className="h-8 w-8 text-blue-600" />
+            <div className="flex items-center space-x-2 fade-in">
+              <div className="relative">
+                <Users className="h-8 w-8 text-blue-600 floating" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              </div>
               <span className="text-2xl font-bold text-gray-900">VolunteerHub</span>
             </div>
-            <div className="flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
+            <div className="flex items-center space-x-6 fade-in-delayed">
+              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 relative group">
                 Opportunities
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-200 group-hover:w-full"></span>
               </Link>
-              <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium text-sm">
+              <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium text-sm transition-colors duration-200 relative group">
                 University Resources
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-200 group-hover:w-full"></span>
               </Link>
               {user && (
-                <Link to="/manage-opportunities" className="text-gray-700 hover:text-blue-600 font-medium">
+                <Link to="/manage-opportunities" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 relative group">
                   Manage
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-200 group-hover:w-full"></span>
                 </Link>
               )}
               <AuthButton />
               <Link to="/post-opportunity">
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="bg-blue-600 hover:bg-blue-700 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
                   Post Opportunity
                 </Button>
               </Link>
@@ -130,65 +136,76 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            Find Your Perfect
-            <span className="text-gradient-blue"> Volunteer Opportunity</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Connect with local organizations and make a difference in your community while building experience for college applications.
-          </p>
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-green-600/5"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="fade-in">
+            <h1 className="text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Find Your Perfect
+              <span className="text-gradient-blue block"> Volunteer Opportunity</span>
+            </h1>
+          </div>
+          <div className="fade-in-delayed">
+            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Connect with local organizations and make a difference in your community while building experience for college applications.
+            </p>
+          </div>
           
           {/* Search Bar */}
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="md:col-span-2 relative">
-                <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <Input 
-                  placeholder="Search volunteer opportunities..." 
-                  className="pl-10 h-12"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                />
+          <div className="fade-in-delayed-2">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto border border-blue-100">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="md:col-span-2 relative group">
+                  <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" />
+                  <Input 
+                    placeholder="Search volunteer opportunities..." 
+                    className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  />
+                </div>
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger className="h-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="education">Education</SelectItem>
+                    <SelectItem value="environment">Environment</SelectItem>
+                    <SelectItem value="animal_care">Animal Care</SelectItem>
+                    <SelectItem value="community_service">Community Service</SelectItem>
+                    <SelectItem value="healthcare">Healthcare</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button className="h-12 bg-blue-600 hover:bg-blue-700 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl" onClick={handleSearch}>
+                  <Search className="h-4 w-4 mr-2" />
+                  Search
+                </Button>
               </div>
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="h-12">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="education">Education</SelectItem>
-                  <SelectItem value="environment">Environment</SelectItem>
-                  <SelectItem value="animal_care">Animal Care</SelectItem>
-                  <SelectItem value="community_service">Community Service</SelectItem>
-                  <SelectItem value="healthcare">Healthcare</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button className="h-12 bg-blue-600 hover:bg-blue-700" onClick={handleSearch}>
-                Search
-              </Button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-white">
+      <section className="py-16 bg-gradient-to-r from-white via-blue-50/30 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-blue-600 mb-2">2,500+</div>
-              <div className="text-gray-600">Active Opportunities</div>
+            <div className="stat-card bg-white rounded-xl p-8 shadow-lg border border-blue-100">
+              <div className="text-5xl font-bold text-blue-600 mb-3 fade-in">2,500+</div>
+              <div className="text-gray-600 font-medium">Active Opportunities</div>
+              <div className="w-12 h-1 bg-blue-600 mx-auto mt-4 rounded"></div>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600 mb-2">15,000+</div>
-              <div className="text-gray-600">Student Volunteers</div>
+            <div className="stat-card bg-white rounded-xl p-8 shadow-lg border border-green-100 fade-in-delayed">
+              <div className="text-5xl font-bold text-green-600 mb-3">15,000+</div>
+              <div className="text-gray-600 font-medium">Student Volunteers</div>
+              <div className="w-12 h-1 bg-green-600 mx-auto mt-4 rounded"></div>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-purple-600 mb-2">800+</div>
-              <div className="text-gray-600">Partner Organizations</div>
+            <div className="stat-card bg-white rounded-xl p-8 shadow-lg border border-purple-100 fade-in-delayed-2">
+              <div className="text-5xl font-bold text-purple-600 mb-3">800+</div>
+              <div className="text-gray-600 font-medium">Partner Organizations</div>
+              <div className="w-12 h-1 bg-purple-600 mx-auto mt-4 rounded"></div>
             </div>
           </div>
         </div>
@@ -227,43 +244,49 @@ const Index = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedOpportunities.map((opportunity) => (
-                <Card key={opportunity.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                  <CardHeader>
-                    <div className="flex justify-between items-start mb-2">
-                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              {sortedOpportunities.map((opportunity, index) => (
+                <Card key={opportunity.id} className={`card-hover border-0 bg-white/80 backdrop-blur-sm ${index % 3 === 0 ? 'fade-in' : index % 3 === 1 ? 'fade-in-delayed' : 'fade-in-delayed-2'}`}>
+                  <CardHeader className="pb-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <Badge variant="secondary" className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0 px-3 py-1">
                         {opportunity.category.replace('_', ' ')}
                       </Badge>
-                      <span className="text-sm text-gray-500">{formatTimeAgo(opportunity.posted_at)}</span>
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{formatTimeAgo(opportunity.posted_at)}</span>
                     </div>
-                    <CardTitle className="text-xl mb-2">{opportunity.title}</CardTitle>
-                    <CardDescription className="text-green-600 font-medium">
+                    <CardTitle className="text-xl mb-2 text-gray-900 leading-tight">{opportunity.title}</CardTitle>
+                    <CardDescription className="text-green-600 font-semibold">
                       {opportunity.organization.name}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-center text-gray-600">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        <span className="text-sm">{opportunity.location}</span>
+                  <CardContent className="pt-0">
+                    <div className="space-y-4">
+                      <div className="flex items-center text-gray-600 bg-gray-50 p-2 rounded-lg">
+                        <MapPin className="h-4 w-4 mr-2 text-blue-500" />
+                        <span className="text-sm font-medium">{opportunity.location}</span>
                       </div>
-                      <div className="flex items-center text-gray-600">
-                        <Clock className="h-4 w-4 mr-2" />
-                        <span className="text-sm">{opportunity.time_commitment}</span>
+                      <div className="flex items-center text-gray-600 bg-gray-50 p-2 rounded-lg">
+                        <Clock className="h-4 w-4 mr-2 text-green-500" />
+                        <span className="text-sm font-medium">{opportunity.time_commitment}</span>
                       </div>
-                      <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
+                      <p className="text-gray-700 text-sm leading-relaxed line-clamp-3 bg-blue-50/50 p-3 rounded-lg border-l-4 border-blue-400">
                         {opportunity.description}
                       </p>
                       {opportunity.max_volunteers && (
-                        <div className="flex items-center text-gray-600">
-                          <Users className="h-4 w-4 mr-2" />
-                          <span className="text-sm">
+                        <div className="flex items-center text-gray-600 bg-purple-50 p-2 rounded-lg">
+                          <Users className="h-4 w-4 mr-2 text-purple-500" />
+                          <span className="text-sm font-medium">
                             {opportunity.current_volunteers}/{opportunity.max_volunteers} volunteers
                           </span>
+                          <div className="ml-auto w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-gradient-to-r from-purple-400 to-purple-600"
+                              style={{ width: `${(opportunity.current_volunteers / opportunity.max_volunteers) * 100}%` }}
+                            />
+                          </div>
                         </div>
                       )}
                       <Button 
-                        className="w-full mt-4 bg-green-600 hover:bg-green-700"
+                        className="w-full mt-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl text-white font-semibold"
                         onClick={() => {
                           setSelectedOpportunity(opportunity);
                           setDialogOpen(true);
