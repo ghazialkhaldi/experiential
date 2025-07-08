@@ -19,6 +19,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "@/components/Sidebar";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -84,8 +85,19 @@ const Index = () => {
     }
   });
 
+  const handleCreateProfile = () => {
+    if (user) {
+      alert("You are already signed in!");
+    } else {
+      navigate("/auth");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      {/* Sidebar */}
+      <Sidebar />
+      
       {/* Navigation */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -307,24 +319,24 @@ const Index = () => {
             <div>
               <h3 className="font-semibold mb-4">For Students</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Find Opportunities</a></li>
-                <li><a href="#" className="hover:text-white">Create Profile</a></li>
-                <li><a href="#" className="hover:text-white">Track Hours</a></li>
+                <li><Link to="/" className="hover:text-white">Find Opportunities</Link></li>
+                <li><button onClick={handleCreateProfile} className="hover:text-white">Create Profile</button></li>
+                <li><Link to="/track-hours" className="hover:text-white">Track Hours</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4">For Organizations</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Post Opportunities</a></li>
-                <li><a href="#" className="hover:text-white">Manage Applications</a></li>
-                <li><a href="#" className="hover:text-white">Organization Dashboard</a></li>
+                <li><Link to="/post-opportunity" className="hover:text-white">Post Opportunities</Link></li>
+                <li><Link to="/manage-opportunities" className="hover:text-white">Manage Applications</Link></li>
+                <li><Link to="/manage-opportunities" className="hover:text-white">Organization Dashboard</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Resources</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><Link to="/resources" className="hover:text-white">University Guide</Link></li>
-                <li><a href="#" className="hover:text-white">Volunteer Tips</a></li>
+                <li><Link to="/resources" className="hover:text-white">Volunteer Tips</Link></li>
                 <li><a href="#" className="hover:text-white">Contact Support</a></li>
               </ul>
             </div>

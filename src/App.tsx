@@ -11,6 +11,7 @@ import AuthCallback from "./pages/AuthCallback";
 import PostOpportunity from "./pages/PostOpportunity";
 import ManageOpportunities from "./pages/ManageOpportunities";
 import SearchResults from "./pages/SearchResults";
+import TrackHours from "./pages/TrackHours";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/auth-callback" element={<AuthCallback />} />
           <Route path="/post-opportunity" element={<PostOpportunity />} />
           <Route path="/manage-opportunities" element={<ManageOpportunities />} />
+          <Route path="/track-hours" element={<TrackHours />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
