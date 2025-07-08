@@ -15,7 +15,9 @@ import AuthButton from "@/components/AuthButton";
 import OpportunityDetailDialog from "@/components/OpportunityDetailDialog";
 import { useOpportunities } from "@/hooks/useOpportunities";
 import { useAuth } from "@/hooks/useAuth";
+import { useLocation } from "@/hooks/useLocation";
 import { useState, useEffect } from "react";
+import LocationSelector from "@/components/LocationSelector";
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
@@ -28,7 +30,25 @@ const SearchResults = () => {
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   
-  const { opportunities, loading, error } = useOpportunities(searchQuery, categoryFilter);
+  // Location hook and URL location params
+  const { 
+    location: userLocation, 
+    loading: locationLoading, 
+    error: locationError,
+    userDenied,
+    getCurrentLocation,
+    setManualLocation 
+  } = useLocation();
+  
+  // Check for location params in URL
+  const urlLat = searchParams.get('lat');
+  const urlLng = searchParams.get('lng');
+  const locationFromUrl = urlLat && urlLng ? 
+    { latitude: parseFloat(urlLat), longitude: parseFloat(urlLng) } : null;
+  
+  const activeLocation = locationFromUrl || userLocation;
+  
+  const { opportunities, loading, error } = useOpportunities(searchQuery, categoryFilter, activeLocation);
 
   useEffect(() => {
     setSearchQuery(searchParams.get('q') || '');
@@ -39,6 +59,10 @@ const SearchResults = () => {
     const params = new URLSearchParams();
     if (searchQuery.trim()) params.set('q', searchQuery.trim());
     if (categoryFilter && categoryFilter !== 'all') params.set('category', categoryFilter);
+    if (activeLocation) {
+      params.set('lat', activeLocation.latitude.toString());
+      params.set('lng', activeLocation.longitude.toString());
+    }
     navigate(`/search?${params.toString()}`);
   };
 
@@ -61,6 +85,12 @@ const SearchResults = () => {
       case 'newest':
         return new Date(b.posted_at).getTime() - new Date(a.posted_at).getTime();
       case 'closest':
+        // Sort by distance if available, otherwise alphabetically
+        if (a.distance !== undefined && b.distance !== undefined) {
+          return a.distance - b.distance;
+        }
+        if (a.distance !== undefined) return -1;
+        if (b.distance !== undefined) return 1;
         return a.location.localeCompare(b.location);
       case 'time':
         return a.time_commitment.localeCompare(b.time_commitment);
@@ -118,7 +148,14 @@ const SearchResults = () => {
           
           {/* Search Bar */}
           <div className="bg-gray-50 rounded-lg p-6 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <LocationSelector
+                location={activeLocation}
+                loading={locationLoading}
+                onLocationChange={setManualLocation}
+                onDetectLocation={getCurrentLocation}
+                userDenied={userDenied}
+              />
               <div className="md:col-span-2 relative">
                 <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                 <Input 
@@ -224,10 +261,17 @@ const SearchResults = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
+                     <div className="space-y-3">
                       <div className="flex items-center text-gray-600">
                         <MapPin className="h-4 w-4 mr-2" />
-                        <span className="text-sm">{opportunity.location}</span>
+                        <div className="flex-1">
+                          <span className="text-sm">{opportunity.location}</span>
+                          {opportunity.distance && (
+                            <span className="text-xs text-blue-600 block">
+                              {opportunity.distance.toFixed(1)} km away
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className="flex items-center text-gray-600">
                         <Clock className="h-4 w-4 mr-2" />

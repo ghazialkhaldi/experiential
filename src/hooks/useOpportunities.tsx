@@ -12,16 +12,53 @@ interface Opportunity {
   posted_at: string;
   max_volunteers: number | null;
   current_volunteers: number;
+  distance?: number;
   organization: {
     name: string;
     id: string;
   };
 }
 
-export const useOpportunities = (searchQuery: string = '', categoryFilter: string = '') => {
+interface UserLocation {
+  latitude: number;
+  longitude: number;
+}
+
+export const useOpportunities = (searchQuery: string = '', categoryFilter: string = '', userLocation?: UserLocation | null) => {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const distance = R * c; // Distance in kilometers
+    return distance;
+  };
+
+  const parseLocationCoordinates = async (locationString: string): Promise<{lat: number, lon: number} | null> => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationString)}&limit=1`
+      );
+      const data = await response.json();
+      if (data.length > 0) {
+        return {
+          lat: parseFloat(data[0].lat),
+          lon: parseFloat(data[0].lon)
+        };
+      }
+    } catch (error) {
+      console.error('Error geocoding location:', error);
+    }
+    return null;
+  };
 
   useEffect(() => {
     const fetchOpportunities = async () => {
@@ -53,7 +90,29 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
           throw error;
         }
 
-        setOpportunities(data || []);
+        let processedOpportunities = data || [];
+
+        // Add distance calculation if user location is available
+        if (userLocation && processedOpportunities.length > 0) {
+          const opportunitiesWithDistance = await Promise.all(
+            processedOpportunities.map(async (opportunity) => {
+              const coords = await parseLocationCoordinates(opportunity.location);
+              if (coords) {
+                const distance = calculateDistance(
+                  userLocation.latitude,
+                  userLocation.longitude,
+                  coords.lat,
+                  coords.lon
+                );
+                return { ...opportunity, distance };
+              }
+              return { ...opportunity, distance: undefined };
+            })
+          );
+          processedOpportunities = opportunitiesWithDistance;
+        }
+
+        setOpportunities(processedOpportunities);
         setError(null);
       } catch (err) {
         console.error('Error fetching opportunities:', err);
@@ -65,7 +124,7 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
     };
 
     fetchOpportunities();
-  }, [searchQuery, categoryFilter]);
+  }, [searchQuery, categoryFilter, userLocation]);
 
   return { opportunities, loading, error };
 };

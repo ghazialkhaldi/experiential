@@ -17,9 +17,11 @@ import OpportunityDetailDialog from "@/components/OpportunityDetailDialog";
 import { useOpportunities } from "@/hooks/useOpportunities";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
+import { useLocation } from "@/hooks/useLocation";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
+import LocationSelector from "@/components/LocationSelector";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -29,8 +31,18 @@ const Index = () => {
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   
-  // Show latest opportunities on home page without any search
-  const { opportunities, loading, error } = useOpportunities('', 'all');
+  // Location hook
+  const { 
+    location: userLocation, 
+    loading: locationLoading, 
+    error: locationError,
+    userDenied,
+    getCurrentLocation,
+    setManualLocation 
+  } = useLocation();
+  
+  // Show latest opportunities on home page with location-based sorting
+  const { opportunities, loading, error } = useOpportunities('', 'all', userLocation);
   const { hasIncompleteOrganization, hasIncompleteOrgData, loading: profileLoading } = useProfile();
   const { user } = useAuth();
 
@@ -53,6 +65,10 @@ const Index = () => {
     const params = new URLSearchParams();
     if (searchQuery.trim()) params.set('q', searchQuery.trim());
     if (categoryFilter && categoryFilter !== 'all') params.set('category', categoryFilter);
+    if (userLocation) {
+      params.set('lat', userLocation.latitude.toString());
+      params.set('lng', userLocation.longitude.toString());
+    }
     navigate(`/search?${params.toString()}`);
   };
 
@@ -75,8 +91,12 @@ const Index = () => {
       case 'newest':
         return new Date(b.posted_at).getTime() - new Date(a.posted_at).getTime();
       case 'closest':
-        // For now, just sort alphabetically by location
-        // In a real app, you'd calculate distance from user's location
+        // Sort by distance if available, otherwise alphabetically
+        if (a.distance !== undefined && b.distance !== undefined) {
+          return a.distance - b.distance;
+        }
+        if (a.distance !== undefined) return -1;
+        if (b.distance !== undefined) return 1;
         return a.location.localeCompare(b.location);
       case 'time':
         return a.time_commitment.localeCompare(b.time_commitment);
@@ -176,7 +196,14 @@ const Index = () => {
               {/* Search bar glow effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-white/10 to-green-500/5 rounded-2xl"></div>
               <div className="relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  <LocationSelector
+                    location={userLocation}
+                    loading={locationLoading}
+                    onLocationChange={setManualLocation}
+                    onDetectLocation={getCurrentLocation}
+                    userDenied={userDenied}
+                  />
                   <div className="md:col-span-2 relative group">
                     <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" />
                     <Input 
@@ -285,7 +312,14 @@ const Index = () => {
                     <div className="space-y-4">
                       <div className="flex items-center text-gray-600 bg-gray-50 p-2 rounded-lg">
                         <MapPin className="h-4 w-4 mr-2 text-blue-500" />
-                        <span className="text-sm font-medium">{opportunity.location}</span>
+                        <div className="flex-1">
+                          <span className="text-sm font-medium">{opportunity.location}</span>
+                          {opportunity.distance && (
+                            <span className="text-xs text-blue-600 block">
+                              {opportunity.distance.toFixed(1)} km away
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className="flex items-center text-gray-600 bg-gray-50 p-2 rounded-lg">
                         <Clock className="h-4 w-4 mr-2 text-green-500" />
