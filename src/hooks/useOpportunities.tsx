@@ -96,8 +96,8 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
 
         let processedOpportunities = data || [];
 
-        // Add distance calculation if user location is available
-        if (memoizedUserLocation && processedOpportunities.length > 0) {
+        // Add distance calculation only if user location has valid coordinates
+        if (memoizedUserLocation && memoizedUserLocation.latitude !== 0 && memoizedUserLocation.longitude !== 0 && processedOpportunities.length > 0) {
           const opportunitiesWithDistance = await Promise.all(
             processedOpportunities.map(async (opportunity) => {
               const coords = await parseLocationCoordinates(opportunity.location);

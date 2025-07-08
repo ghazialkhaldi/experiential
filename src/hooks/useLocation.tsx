@@ -91,40 +91,27 @@ export const useLocation = () => {
     setLocationState(prev => ({ ...prev, loading: true, error: null }));
     
     try {
-      // Using a CORS-friendly geocoding service
-      const response = await fetch(
-        `https://geocode.maps.co/search?q=${encodeURIComponent(locationInput)}&format=json&limit=1`
-      );
-      const data = await response.json();
+      // For manual location input, we'll create a basic location object
+      // without exact coordinates since geocoding APIs have CORS issues
+      const locationData: Location = {
+        latitude: 0, // Default coordinates 
+        longitude: 0,
+        city: locationInput.split(',')[0]?.trim() || locationInput,
+        state: locationInput.split(',')[1]?.trim() || '',
+        country: locationInput.split(',')[2]?.trim() || '',
+      };
       
-      if (data && data.length > 0) {
-        const result = data[0];
-        const locationData: Location = {
-          latitude: parseFloat(result.lat),
-          longitude: parseFloat(result.lon),
-          city: result.display_name.split(',')[0] || '',
-          state: result.display_name.split(',')[1]?.trim() || '',
-          country: result.display_name.split(',').pop()?.trim() || '',
-        };
-        
-        setLocationState({
-          location: locationData,
-          loading: false,
-          error: null,
-          userDenied: false,
-        });
-      } else {
-        setLocationState(prev => ({
-          ...prev,
-          loading: false,
-          error: 'Location not found',
-        }));
-      }
+      setLocationState({
+        location: locationData,
+        loading: false,
+        error: null,
+        userDenied: false,
+      });
     } catch (error) {
       setLocationState(prev => ({
         ...prev,
         loading: false,
-        error: 'Failed to find location',
+        error: 'Failed to set location',
       }));
     }
   };

@@ -43,7 +43,7 @@ const LocationSelector = ({
       return location.city;
     }
     if (userDenied) return "Location access denied";
-    return "Detect location";
+    return "Select location";
   };
 
   const handleSubmit = (e: React.FormEvent) => {
