@@ -27,7 +27,10 @@ const TrackHours = () => {
   const { isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
   const { hours: volunteerHours, loading: hoursLoading, addHours, totalHours, totalOpportunities } = useVolunteerHours();
-  const [hourGoal, setHourGoal] = useState(50);
+  const [hourGoal, setHourGoal] = useState(() => {
+    const savedGoal = localStorage.getItem('volunteerHourGoal');
+    return savedGoal ? parseInt(savedGoal, 10) : 50;
+  });
   const [newGoal, setNewGoal] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -36,7 +39,9 @@ const TrackHours = () => {
 
   const handleSetGoal = () => {
     if (newGoal && !isNaN(Number(newGoal))) {
-      setHourGoal(Number(newGoal));
+      const goalValue = Number(newGoal);
+      setHourGoal(goalValue);
+      localStorage.setItem('volunteerHourGoal', goalValue.toString());
       setNewGoal("");
     }
   };
