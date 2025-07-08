@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Opportunity {
@@ -29,7 +29,7 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+  const calculateDistance = useCallback((lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const R = 6371; // Radius of the Earth in kilometers
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
@@ -40,9 +40,9 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     const distance = R * c; // Distance in kilometers
     return distance;
-  };
+  }, []);
 
-  const parseLocationCoordinates = async (locationString: string): Promise<{lat: number, lon: number} | null> => {
+  const parseLocationCoordinates = useCallback(async (locationString: string): Promise<{lat: number, lon: number} | null> => {
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationString)}&limit=1`
@@ -58,7 +58,10 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
       console.error('Error geocoding location:', error);
     }
     return null;
-  };
+  }, []);
+
+  // Memoize user location to prevent unnecessary re-renders
+  const memoizedUserLocation = useMemo(() => userLocation, [userLocation?.latitude, userLocation?.longitude]);
 
   useEffect(() => {
     const fetchOpportunities = async () => {
@@ -93,14 +96,14 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
         let processedOpportunities = data || [];
 
         // Add distance calculation if user location is available
-        if (userLocation && processedOpportunities.length > 0) {
+        if (memoizedUserLocation && processedOpportunities.length > 0) {
           const opportunitiesWithDistance = await Promise.all(
             processedOpportunities.map(async (opportunity) => {
               const coords = await parseLocationCoordinates(opportunity.location);
               if (coords) {
                 const distance = calculateDistance(
-                  userLocation.latitude,
-                  userLocation.longitude,
+                  memoizedUserLocation.latitude,
+                  memoizedUserLocation.longitude,
                   coords.lat,
                   coords.lon
                 );
@@ -124,7 +127,7 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
     };
 
     fetchOpportunities();
-  }, [searchQuery, categoryFilter, userLocation]);
+  }, [searchQuery, categoryFilter, memoizedUserLocation, calculateDistance, parseLocationCoordinates]);
 
   return { opportunities, loading, error };
 };
