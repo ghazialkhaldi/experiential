@@ -137,51 +137,72 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-green-600/5"></div>
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-blue-400/5 to-green-500/8"></div>
+        <div className="absolute top-10 left-10 w-32 h-32 bg-blue-400/10 rounded-full blur-xl"></div>
+        <div className="absolute top-20 right-20 w-48 h-48 bg-blue-500/8 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-10 left-1/4 w-24 h-24 bg-green-400/10 rounded-full blur-lg"></div>
+        <div className="absolute top-1/2 right-10 w-16 h-16 bg-blue-300/15 rounded-full blur-md"></div>
+        
+        {/* Decorative Grid Pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(59 130 246) 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
+        }}></div>
+        
+        {/* Floating Geometric Shapes */}
+        <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-blue-400/20 transform rotate-45 animate-pulse"></div>
+        <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-green-400/25 rounded-full animate-bounce" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-1/3 left-1/5 w-4 h-4 border border-blue-300/30 transform rotate-12 animate-pulse" style={{animationDelay: '2s'}}></div>
+        
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="fade-in">
-            <h1 className="text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-6xl font-bold text-gray-900 mb-6 leading-tight drop-shadow-sm">
               Find Your Perfect
               <span className="text-gradient-blue block"> Volunteer Opportunity</span>
             </h1>
           </div>
           <div className="fade-in-delayed">
-            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-700 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-sm">
               Connect with local organizations and make a difference in your community while building experience for college applications.
             </p>
           </div>
           
           {/* Search Bar */}
           <div className="fade-in-delayed-2">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto border border-blue-100">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="md:col-span-2 relative group">
-                  <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" />
-                  <Input 
-                    placeholder="Search volunteer opportunities..." 
-                    className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  />
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto border border-blue-200/50 relative">
+              {/* Search bar glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-white/10 to-green-500/5 rounded-2xl"></div>
+              <div className="relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="md:col-span-2 relative group">
+                    <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" />
+                    <Input 
+                      placeholder="Search volunteer opportunities..." 
+                      className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white/90"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    />
+                  </div>
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger className="h-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/90">
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white/95 backdrop-blur-md border-blue-200/50">
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="education">Education</SelectItem>
+                      <SelectItem value="environment">Environment</SelectItem>
+                      <SelectItem value="animal_care">Animal Care</SelectItem>
+                      <SelectItem value="community_service">Community Service</SelectItem>
+                      <SelectItem value="healthcare">Healthcare</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button className="h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl" onClick={handleSearch}>
+                    <Search className="h-4 w-4 mr-2" />
+                    Search
+                  </Button>
                 </div>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger className="h-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="education">Education</SelectItem>
-                    <SelectItem value="environment">Environment</SelectItem>
-                    <SelectItem value="animal_care">Animal Care</SelectItem>
-                    <SelectItem value="community_service">Community Service</SelectItem>
-                    <SelectItem value="healthcare">Healthcare</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button className="h-12 bg-blue-600 hover:bg-blue-700 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl" onClick={handleSearch}>
-                  <Search className="h-4 w-4 mr-2" />
-                  Search
-                </Button>
               </div>
             </div>
           </div>
