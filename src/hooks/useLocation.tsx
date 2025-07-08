@@ -91,9 +91,9 @@ export const useLocation = () => {
     setLocationState(prev => ({ ...prev, loading: true, error: null }));
     
     try {
-      // Using Nominatim OpenStreetMap geocoding service (free, no API key required)
+      // Using a CORS-friendly geocoding service
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationInput)}&limit=1&addressdetails=1`
+        `https://geocode.maps.co/search?q=${encodeURIComponent(locationInput)}&format=json&limit=1`
       );
       const data = await response.json();
       
@@ -102,9 +102,9 @@ export const useLocation = () => {
         const locationData: Location = {
           latitude: parseFloat(result.lat),
           longitude: parseFloat(result.lon),
-          city: result.address?.city || result.address?.town || result.address?.village || '',
-          state: result.address?.state || result.address?.province || '',
-          country: result.address?.country || '',
+          city: result.display_name.split(',')[0] || '',
+          state: result.display_name.split(',')[1]?.trim() || '',
+          country: result.display_name.split(',').pop()?.trim() || '',
         };
         
         setLocationState({
@@ -142,9 +142,10 @@ export const useLocation = () => {
     return distance;
   };
 
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
+  // Don't auto-detect location on mount to avoid overriding manual selections
+  // useEffect(() => {
+  //   getCurrentLocation();
+  // }, []);
 
   return {
     ...locationState,

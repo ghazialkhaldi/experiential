@@ -44,9 +44,9 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
 
   const parseLocationCoordinates = useCallback(async (locationString: string): Promise<{lat: number, lon: number} | null> => {
     try {
-      // Using Nominatim OpenStreetMap geocoding service (free, no API key required)
+      // Using a CORS-friendly geocoding service
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationString)}&limit=1`
+        `https://geocode.maps.co/search?q=${encodeURIComponent(locationString)}&format=json&limit=1`
       );
       const data = await response.json();
       if (data && data.length > 0) {
