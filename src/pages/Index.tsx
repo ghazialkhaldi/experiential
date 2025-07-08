@@ -157,9 +157,21 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Background Elements with smooth transition to white */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-blue-400/8 to-white"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-green-500/5 to-transparent"></div>
+        {/* Animated Background Elements with smooth transition to white */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-blue-400/8 to-white animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-green-500/5 to-transparent" 
+             style={{
+               animation: 'gradient-shift 8s ease-in-out infinite alternate',
+               background: 'linear-gradient(45deg, rgba(37, 99, 235, 0.1), rgba(34, 197, 94, 0.05), transparent)'
+             }}></div>
+        
+        {/* Moving gradient overlay */}
+        <div className="absolute inset-0 opacity-30" 
+             style={{
+               background: 'linear-gradient(120deg, transparent 0%, rgba(59, 130, 246, 0.1) 25%, rgba(34, 197, 94, 0.08) 50%, rgba(168, 85, 247, 0.06) 75%, transparent 100%)',
+               animation: 'wave-motion 12s linear infinite',
+               backgroundSize: '300% 300%'
+             }}></div>
         
         {/* Circles with varying opacity that fade towards bottom */}
         <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/25 rounded-full blur-2xl animate-pulse"></div>
