@@ -134,7 +134,7 @@ const Index = () => {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Find Your Perfect
-            <span className="text-blue-600"> Volunteer Opportunity</span>
+            <span className="text-gradient-blue"> Volunteer Opportunity</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Connect with local organizations and make a difference in your community while building experience for college applications.

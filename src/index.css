@@ -94,6 +94,12 @@ All colors MUST be HSL.
   }
 }
 
+@layer components {
+  .text-gradient-blue {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
