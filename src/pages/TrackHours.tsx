@@ -11,19 +11,28 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
 import { Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useVolunteerHours } from "@/hooks/useVolunteerHours";
+import { useForm } from "react-hook-form";
+import { useToast } from "@/hooks/use-toast";
+
+interface LogHoursForm {
+  title: string;
+  organization: string;
+  hours: string;
+  date_completed: string;
+  category: string;
+}
 
 const TrackHours = () => {
   const { isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
-  const [totalHours, setTotalHours] = useState(0);
+  const { hours: volunteerHours, loading: hoursLoading, addHours, totalHours, totalOpportunities } = useVolunteerHours();
   const [hourGoal, setHourGoal] = useState(50);
-  const [completedOpportunities, setCompletedOpportunities] = useState([]);
   const [newGoal, setNewGoal] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const total = completedOpportunities.reduce((sum, opp) => sum + opp.hours, 0);
-    setTotalHours(total);
-  }, [completedOpportunities]);
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<LogHoursForm>();
 
   const handleSetGoal = () => {
     if (newGoal && !isNaN(Number(newGoal))) {
@@ -32,7 +41,35 @@ const TrackHours = () => {
     }
   };
 
+  const onSubmit = async (data: LogHoursForm) => {
+    const success = await addHours({
+      title: data.title,
+      organization: data.organization,
+      hours: parseFloat(data.hours),
+      date_completed: data.date_completed,
+      category: data.category || undefined,
+    });
+
+    if (success) {
+      reset();
+      setDialogOpen(false);
+    }
+  };
+
   const progressPercentage = (totalHours / hourGoal) * 100;
+
+  const getMostActiveCategory = () => {
+    if (volunteerHours.length === 0) return "None yet";
+    const categories = volunteerHours.map(h => h.category).filter(Boolean);
+    if (categories.length === 0) return "None yet";
+    
+    const categoryCounts = categories.reduce((acc, cat) => {
+      acc[cat!] = (acc[cat!] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    return Object.entries(categoryCounts).sort(([,a], [,b]) => b - a)[0][0];
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
@@ -91,7 +128,7 @@ const TrackHours = () => {
                 <CardContent>
                   <div className="text-2xl font-bold">{totalHours}</div>
                   <p className="text-xs text-muted-foreground">
-                    {totalHours === 0 ? "No hours logged yet" : `${completedOpportunities.length} opportunities completed`}
+                    {totalHours === 0 ? "No hours logged yet" : `${totalOpportunities} opportunities completed`}
                   </p>
                 </CardContent>
               </Card>
@@ -116,11 +153,11 @@ const TrackHours = () => {
                   <CheckCircle className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{completedOpportunities.length}</div>
+                  <div className="text-2xl font-bold">{totalOpportunities}</div>
                   <p className="text-xs text-muted-foreground">
-                    {completedOpportunities.length === 0 
+                    {totalOpportunities === 0 
                       ? "Start logging your volunteer work"
-                      : `Across ${new Set(completedOpportunities.map(o => o.category)).size} categories`
+                      : `Across ${new Set(volunteerHours.map(h => h.category).filter(Boolean)).size} categories`
                     }
                   </p>
                 </CardContent>
@@ -175,8 +212,8 @@ const TrackHours = () => {
                     <div className="flex justify-between">
                       <span className="text-sm text-gray-600">Average per opportunity:</span>
                       <span className="font-medium">
-                        {completedOpportunities.length > 0 
-                          ? Math.round(totalHours / completedOpportunities.length) 
+                        {totalOpportunities > 0 
+                          ? Math.round(totalHours / totalOpportunities) 
                           : 0} hours
                       </span>
                     </div>
@@ -189,7 +226,7 @@ const TrackHours = () => {
                     <div className="flex justify-between">
                       <span className="text-sm text-gray-600">Most active category:</span>
                       <span className="font-medium">
-                        {completedOpportunities.length === 0 ? "None yet" : "Community Service"}
+                        {getMostActiveCategory()}
                       </span>
                     </div>
                   </CardContent>
@@ -210,7 +247,7 @@ const TrackHours = () => {
                           View all your completed volunteer work and logged hours.
                         </CardDescription>
                       </div>
-                      <Dialog>
+                      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                         <DialogTrigger asChild>
                           <Button>
                             <Plus className="h-4 w-4 mr-2" />
@@ -224,52 +261,93 @@ const TrackHours = () => {
                               Add a completed volunteer opportunity to track your hours.
                             </DialogDescription>
                           </DialogHeader>
-                          <div className="space-y-4 py-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="title">Opportunity Title</Label>
-                              <Input id="title" placeholder="Enter opportunity title" />
+                          <form onSubmit={handleSubmit(onSubmit)}>
+                            <div className="space-y-4 py-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="title">Opportunity Title</Label>
+                                <Input 
+                                  id="title" 
+                                  placeholder="Enter opportunity title" 
+                                  {...register("title", { required: "Title is required" })}
+                                />
+                                {errors.title && <p className="text-sm text-red-600">{errors.title.message}</p>}
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="organization">Organization</Label>
+                                <Input 
+                                  id="organization" 
+                                  placeholder="Enter organization name" 
+                                  {...register("organization", { required: "Organization is required" })}
+                                />
+                                {errors.organization && <p className="text-sm text-red-600">{errors.organization.message}</p>}
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="hours">Hours Completed</Label>
+                                <Input 
+                                  id="hours" 
+                                  type="number" 
+                                  step="0.5"
+                                  placeholder="Enter hours" 
+                                  {...register("hours", { 
+                                    required: "Hours is required",
+                                    min: { value: 0.5, message: "Must be at least 0.5 hours" }
+                                  })}
+                                />
+                                {errors.hours && <p className="text-sm text-red-600">{errors.hours.message}</p>}
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="date_completed">Date Completed</Label>
+                                <Input 
+                                  id="date_completed" 
+                                  type="date" 
+                                  {...register("date_completed", { required: "Date is required" })}
+                                />
+                                {errors.date_completed && <p className="text-sm text-red-600">{errors.date_completed.message}</p>}
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="category">Category (Optional)</Label>
+                                <Input 
+                                  id="category" 
+                                  placeholder="e.g., Community Service, Education"
+                                  {...register("category")}
+                                />
+                              </div>
+                              <Button type="submit" className="w-full">Log Hours</Button>
                             </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="organization">Organization</Label>
-                              <Input id="organization" placeholder="Enter organization name" />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="hours">Hours Completed</Label>
-                              <Input id="hours" type="number" placeholder="Enter hours" />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="date">Date Completed</Label>
-                              <Input id="date" type="date" />
-                            </div>
-                            <Button className="w-full">Log Hours</Button>
-                          </div>
+                          </form>
                         </DialogContent>
                       </Dialog>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {completedOpportunities.map((opportunity) => (
-                        <div key={opportunity.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div className="flex-1">
-                            <h3 className="font-medium text-gray-900">{opportunity.title}</h3>
-                            <p className="text-sm text-gray-600">{opportunity.organization}</p>
-                            <div className="flex items-center space-x-4 mt-2">
-                              <div className="flex items-center space-x-1">
-                                <Calendar className="h-4 w-4 text-gray-400" />
-                                <span className="text-sm text-gray-500">{opportunity.date}</span>
+                      {hoursLoading ? (
+                        <div className="text-center py-8">
+                          <div className="text-lg text-gray-500">Loading...</div>
+                        </div>
+                      ) : volunteerHours.length > 0 ? (
+                        volunteerHours.map((hour) => (
+                          <div key={hour.id} className="flex items-center justify-between p-4 border rounded-lg">
+                            <div className="flex-1">
+                              <h3 className="font-medium text-gray-900">{hour.title}</h3>
+                              <p className="text-sm text-gray-600">{hour.organization}</p>
+                              <div className="flex items-center space-x-4 mt-2">
+                                <div className="flex items-center space-x-1">
+                                  <Calendar className="h-4 w-4 text-gray-400" />
+                                  <span className="text-sm text-gray-500">
+                                    {new Date(hour.date_completed).toLocaleDateString()}
+                                  </span>
+                                </div>
+                                {hour.category && <Badge variant="secondary">{hour.category}</Badge>}
                               </div>
-                              <Badge variant="secondary">{opportunity.category}</Badge>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-2xl font-bold text-blue-600">{hour.hours}</div>
+                              <div className="text-sm text-gray-500">hours</div>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <div className="text-2xl font-bold text-blue-600">{opportunity.hours}</div>
-                            <div className="text-sm text-gray-500">hours</div>
-                          </div>
-                        </div>
-                      ))}
-                      
-                      {completedOpportunities.length === 0 && (
+                        ))
+                      ) : (
                         <div className="text-center py-8 text-gray-500">
                           <CheckCircle className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                           <p className="text-lg mb-2">No completed opportunities yet</p>

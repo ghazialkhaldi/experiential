@@ -204,6 +204,45 @@ export type Database = {
         }
         Relationships: []
       }
+      volunteer_hours: {
+        Row: {
+          category: string | null
+          created_at: string
+          date_completed: string
+          hours: number
+          id: string
+          notes: string | null
+          organization: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          date_completed: string
+          hours: number
+          id?: string
+          notes?: string | null
+          organization: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          date_completed?: string
+          hours?: number
+          id?: string
+          notes?: string | null
+          organization?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       volunteer_preferences: {
         Row: {
           category: Database["public"]["Enums"]["volunteer_category"]
