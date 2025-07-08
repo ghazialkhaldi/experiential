@@ -44,14 +44,15 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
 
   const parseLocationCoordinates = useCallback(async (locationString: string): Promise<{lat: number, lon: number} | null> => {
     try {
+      // Using Nominatim OpenStreetMap geocoding service (free, no API key required)
       const response = await fetch(
-        `https://api.bigdatacloud.net/data/forward-geocoding?query=${encodeURIComponent(locationString)}&key=bdc_pk&format=json`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationString)}&limit=1`
       );
       const data = await response.json();
-      if (data.results && data.results.length > 0) {
+      if (data && data.length > 0) {
         return {
-          lat: parseFloat(data.results[0].latitude),
-          lon: parseFloat(data.results[0].longitude)
+          lat: parseFloat(data[0].lat),
+          lon: parseFloat(data[0].lon)
         };
       }
     } catch (error) {

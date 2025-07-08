@@ -91,20 +91,20 @@ export const useLocation = () => {
     setLocationState(prev => ({ ...prev, loading: true, error: null }));
     
     try {
-      // Using a CORS-friendly geocoding service
+      // Using Nominatim OpenStreetMap geocoding service (free, no API key required)
       const response = await fetch(
-        `https://api.bigdatacloud.net/data/forward-geocoding?query=${encodeURIComponent(locationInput)}&key=bdc_pk&format=json`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationInput)}&limit=1&addressdetails=1`
       );
       const data = await response.json();
       
-      if (data.results && data.results.length > 0) {
-        const result = data.results[0];
+      if (data && data.length > 0) {
+        const result = data[0];
         const locationData: Location = {
-          latitude: parseFloat(result.latitude),
-          longitude: parseFloat(result.longitude),
-          city: result.city || result.locality || '',
-          state: result.principalSubdivision || '',
-          country: result.countryName || '',
+          latitude: parseFloat(result.lat),
+          longitude: parseFloat(result.lon),
+          city: result.address?.city || result.address?.town || result.address?.village || '',
+          state: result.address?.state || result.address?.province || '',
+          country: result.address?.country || '',
         };
         
         setLocationState({
