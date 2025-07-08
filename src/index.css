@@ -96,7 +96,7 @@ All colors MUST be HSL.
 
 @layer components {
   .text-gradient-blue {
-    @apply bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-blue-400 to-blue-700 bg-clip-text text-transparent;
   }
 }
 
