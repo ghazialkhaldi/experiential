@@ -25,21 +25,22 @@ export const useLocation = () => {
 
   const reverseGeocode = async (latitude: number, longitude: number): Promise<Location> => {
     try {
-      // Using a free geocoding service (nominatim)
+      // Using a CORS-friendly geocoding service
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
       );
       const data = await response.json();
       
       return {
         latitude,
         longitude,
-        city: data.address?.city || data.address?.town || data.address?.village || '',
-        state: data.address?.state || '',
-        country: data.address?.country || '',
+        city: data.city || data.locality || '',
+        state: data.principalSubdivision || '',
+        country: data.countryName || '',
       };
     } catch (error) {
       console.error('Reverse geocoding failed:', error);
+      // Return basic location info without geocoding
       return { latitude, longitude };
     }
   };
@@ -90,20 +91,20 @@ export const useLocation = () => {
     setLocationState(prev => ({ ...prev, loading: true, error: null }));
     
     try {
-      // Using a free geocoding service to convert location string to coordinates
+      // Using a CORS-friendly geocoding service
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationInput)}&limit=1&addressdetails=1`
+        `https://api.bigdatacloud.net/data/forward-geocoding?query=${encodeURIComponent(locationInput)}&key=bdc_pk&format=json`
       );
       const data = await response.json();
       
-      if (data.length > 0) {
-        const result = data[0];
+      if (data.results && data.results.length > 0) {
+        const result = data.results[0];
         const locationData: Location = {
-          latitude: parseFloat(result.lat),
-          longitude: parseFloat(result.lon),
-          city: result.address?.city || result.address?.town || result.address?.village || '',
-          state: result.address?.state || '',
-          country: result.address?.country || '',
+          latitude: parseFloat(result.latitude),
+          longitude: parseFloat(result.longitude),
+          city: result.city || result.locality || '',
+          state: result.principalSubdivision || '',
+          country: result.countryName || '',
         };
         
         setLocationState({

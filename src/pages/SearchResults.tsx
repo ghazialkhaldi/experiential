@@ -55,10 +55,15 @@ const SearchResults = () => {
     setCategoryFilter(searchParams.get('category') || 'all');
   }, [searchParams]);
 
+  const handleLocationChange = (locationInput: string) => {
+    setManualLocation(locationInput);
+  };
+
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchQuery.trim()) params.set('q', searchQuery.trim());
     if (categoryFilter && categoryFilter !== 'all') params.set('category', categoryFilter);
+    // Always persist the current location in URL if available
     if (activeLocation) {
       params.set('lat', activeLocation.latitude.toString());
       params.set('lng', activeLocation.longitude.toString());
@@ -152,7 +157,7 @@ const SearchResults = () => {
               <LocationSelector
                 location={activeLocation}
                 loading={locationLoading}
-                onLocationChange={setManualLocation}
+                onLocationChange={handleLocationChange}
                 onDetectLocation={getCurrentLocation}
                 userDenied={userDenied}
               />
