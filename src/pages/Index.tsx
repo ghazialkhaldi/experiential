@@ -114,9 +114,9 @@ const Index = () => {
   ], []);
 
   const currentHeroText = useMemo(() => {
-    // Use date-based rotation for consistency during the day
-    const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
-    return heroTexts[dayOfYear % heroTexts.length];
+    // Random selection that changes on each page visit/refresh
+    const randomIndex = Math.floor(Math.random() * heroTexts.length);
+    return heroTexts[randomIndex];
   }, [heroTexts]);
 
   const handleCreateProfile = () => {
