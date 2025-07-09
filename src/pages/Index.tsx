@@ -18,7 +18,7 @@ import { useOpportunities } from "@/hooks/useOpportunities";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "@/hooks/useLocation";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import LocationSelector from "@/components/LocationSelector";
@@ -105,6 +105,20 @@ const Index = () => {
     }
   });
 
+  // Hero text rotation
+  const heroTexts = useMemo(() => [
+    { firstPart: "Find Your Perfect", secondPart: "Volunteer Opportunity" },
+    { firstPart: "Discover Amazing", secondPart: "Volunteer Experiences" },
+    { firstPart: "Connect with Meaningful", secondPart: "Service Projects" },
+    { firstPart: "Explore Impactful", secondPart: "Community Opportunities" }
+  ], []);
+
+  const currentHeroText = useMemo(() => {
+    // Use date-based rotation for consistency during the day
+    const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
+    return heroTexts[dayOfYear % heroTexts.length];
+  }, [heroTexts]);
+
   const handleCreateProfile = () => {
     if (user) {
       alert("You are already signed in!");
@@ -180,8 +194,8 @@ const Index = () => {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="fade-in">
             <h1 className="text-6xl font-bold text-gray-900 mb-6 leading-tight drop-shadow-sm">
-              Find Your Perfect
-              <span className="text-gradient-blue block"> Volunteer Opportunity</span>
+              {currentHeroText.firstPart}
+              <span className="text-gradient-blue block"> {currentHeroText.secondPart}</span>
             </h1>
           </div>
           <div className="fade-in-delayed">
