@@ -18,7 +18,7 @@ interface LocationState {
 export const useLocation = () => {
   const [locationState, setLocationState] = useState<LocationState>({
     location: null,
-    loading: true,
+    loading: false, // Don't start in loading state since we're not auto-detecting
     error: null,
     userDenied: false,
   });
