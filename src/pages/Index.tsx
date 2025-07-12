@@ -34,6 +34,7 @@ const Index = () => {
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   
+  // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
   // Location hook
   const { 
     location: userLocation, 
@@ -49,7 +50,31 @@ const Index = () => {
   const { hasIncompleteOrganization, hasIncompleteOrgData, loading: profileLoading } = useProfile();
   const { user } = useAuth();
 
-  // Check if we need to show organization setup
+  // Hero text rotation - moved before conditional return
+  const heroTexts = useMemo(() => {
+    if (isInternshipMode) {
+      return [
+        { firstPart: "Launch Your", secondPart: "Career Journey" },
+        { firstPart: "Discover Amazing", secondPart: "Internship Opportunities" },
+        { firstPart: "Find Your Next", secondPart: "Professional Experience" },
+        { firstPart: "Explore Exciting", secondPart: "Career Opportunities" }
+      ];
+    }
+    return [
+      { firstPart: "Find Your Perfect", secondPart: "Volunteer Opportunity" },
+      { firstPart: "Discover Amazing", secondPart: "Volunteer Experiences" },
+      { firstPart: "Connect with Meaningful", secondPart: "Service Projects" },
+      { firstPart: "Explore Impactful", secondPart: "Community Opportunities" }
+    ];
+  }, [isInternshipMode]);
+
+  const currentHeroText = useMemo(() => {
+    // Random selection that changes on each page visit/refresh
+    const randomIndex = Math.floor(Math.random() * heroTexts.length);
+    return heroTexts[randomIndex];
+  }, [heroTexts]);
+
+  // Check if we need to show organization setup - AFTER all hooks
   const needsOrganizationSetup = hasIncompleteOrganization || hasIncompleteOrgData;
 
   // Show organization setup if needed
@@ -95,30 +120,6 @@ const Index = () => {
         return 0;
     }
   });
-
-  // Hero text rotation
-  const heroTexts = useMemo(() => {
-    if (isInternshipMode) {
-      return [
-        { firstPart: "Launch Your", secondPart: "Career Journey" },
-        { firstPart: "Discover Amazing", secondPart: "Internship Opportunities" },
-        { firstPart: "Find Your Next", secondPart: "Professional Experience" },
-        { firstPart: "Explore Exciting", secondPart: "Career Opportunities" }
-      ];
-    }
-    return [
-      { firstPart: "Find Your Perfect", secondPart: "Volunteer Opportunity" },
-      { firstPart: "Discover Amazing", secondPart: "Volunteer Experiences" },
-      { firstPart: "Connect with Meaningful", secondPart: "Service Projects" },
-      { firstPart: "Explore Impactful", secondPart: "Community Opportunities" }
-    ];
-  }, [isInternshipMode]);
-
-  const currentHeroText = useMemo(() => {
-    // Random selection that changes on each page visit/refresh
-    const randomIndex = Math.floor(Math.random() * heroTexts.length);
-    return heroTexts[randomIndex];
-  }, [heroTexts]);
 
   const handleCreateProfile = () => {
     if (user) {
