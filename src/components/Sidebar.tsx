@@ -118,7 +118,7 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <Link
-                    to="/track-hours"
+                    to={isInternshipMode ? "/track-experience" : "/track-hours"}
                     className={`flex items-center space-x-3 transition-colors ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 

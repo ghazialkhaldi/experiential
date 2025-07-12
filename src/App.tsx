@@ -14,6 +14,7 @@ import PostOpportunity from "./pages/PostOpportunity";
 import ManageOpportunities from "./pages/ManageOpportunities";
 import SearchResults from "./pages/SearchResults";
 import TrackHours from "./pages/TrackHours";
+import TrackExperience from "./pages/TrackExperience";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/post-opportunity" element={<PostOpportunity />} />
             <Route path="/manage-opportunities" element={<ManageOpportunities />} />
             <Route path="/track-hours" element={<TrackHours />} />
+            <Route path="/track-experience" element={<TrackExperience />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
