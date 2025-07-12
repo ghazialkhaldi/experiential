@@ -80,11 +80,6 @@ const Sidebar = () => {
             </Button>
           </div>
 
-          {/* Logo Placeholder */}
-          <div className="mb-8 p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
-            <div className="text-gray-500 text-sm">Logo Placeholder</div>
-            <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mt-2"></div>
-          </div>
 
           {/* Navigation Sections */}
           <div className="space-y-8">
@@ -240,22 +235,27 @@ const Sidebar = () => {
               </ul>
             </div>
 
-            {/* Mode Switch */}
-            <div className={`pt-6 border-t ${isInternshipMode ? 'border-gray-700' : 'border-gray-200'}`}>
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className={`text-sm font-medium ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                    {isInternshipMode ? 'Internship Mode' : 'Volunteer Mode'}
-                  </span>
-                  <span className={`text-xs ${isInternshipMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {isInternshipMode ? 'Find internships & jobs' : 'Find volunteer opportunities'}
-                  </span>
+            {/* Mode Switch - Made more prominent */}
+            <div className={`pt-6 mt-6 border-t ${isInternshipMode ? 'border-gray-700' : 'border-gray-200'}`}>
+              <div className={`p-4 rounded-lg ${isInternshipMode ? 'bg-gray-800/50' : 'bg-blue-50'}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex flex-col">
+                    <span className={`text-sm font-semibold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                      {isInternshipMode ? 'Internship Mode' : 'Volunteer Mode'}
+                    </span>
+                    <span className={`text-xs ${isInternshipMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      {isInternshipMode ? 'Find internships & jobs' : 'Find volunteer opportunities'}
+                    </span>
+                  </div>
+                  <Switch
+                    checked={isInternshipMode}
+                    onCheckedChange={(checked) => setMode(checked ? 'internship' : 'volunteer')}
+                    className="data-[state=checked]:bg-blue-600 scale-110"
+                  />
                 </div>
-                <Switch
-                  checked={isInternshipMode}
-                  onCheckedChange={(checked) => setMode(checked ? 'internship' : 'volunteer')}
-                  className="data-[state=checked]:bg-blue-600"
-                />
+                <div className={`text-xs text-center ${isInternshipMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  Toggle to switch between modes
+                </div>
               </div>
             </div>
           </div>
