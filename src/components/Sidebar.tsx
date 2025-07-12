@@ -43,7 +43,11 @@ const Sidebar = () => {
         variant="ghost"
         size="icon"
         onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-50 bg-white shadow-md hover:bg-gray-50"
+        className={`fixed top-4 left-4 z-50 shadow-md ${
+          isInternshipMode 
+            ? 'bg-gray-800 hover:bg-gray-700 text-white' 
+            : 'bg-white hover:bg-gray-50'
+        }`}
       >
         <Menu className="h-6 w-6" />
       </Button>

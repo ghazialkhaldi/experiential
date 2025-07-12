@@ -57,26 +57,7 @@ const upcomingInternships = [
   }
 ];
 
-const mockExperiences = [
-  {
-    id: 1,
-    title: "Software Development Intern",
-    company: "StartupXYZ",
-    duration: "3 months",
-    description: "Developed web applications using React and Node.js",
-    skills: "React, Node.js, MongoDB",
-    completedAt: "2023-08-15"
-  },
-  {
-    id: 2,
-    title: "Marketing Assistant",
-    company: "Local Business",
-    duration: "2 months",
-    description: "Assisted with social media campaigns and content creation",
-    skills: "Social Media, Content Writing, Analytics",
-    completedAt: "2023-12-20"
-  }
-];
+const mockExperiences: any[] = [];
 
 const TrackExperience = () => {
   const { user } = useAuth();
@@ -115,22 +96,29 @@ const TrackExperience = () => {
   };
 
   const totalMonths = mockExperiences.reduce((sum, exp) => {
-    const months = parseInt(exp.duration.split(' ')[0]);
+    if (!exp.duration) return sum;
+    const durationMatch = exp.duration.match(/(\d+)/);
+    const months = durationMatch ? parseInt(durationMatch[1]) : 0;
     return sum + months;
   }, 0);
 
   const progressPercentage = Math.min((totalMonths / experienceGoal) * 100, 100);
 
   const getMostCommonSkill = () => {
+    if (mockExperiences.length === 0) return 'N/A';
+    
     const allSkills = mockExperiences.flatMap(exp => 
-      exp.skills.split(', ').map(skill => skill.trim())
+      exp.skills ? exp.skills.split(', ').map(skill => skill.trim()) : []
     );
+    
+    if (allSkills.length === 0) return 'N/A';
+    
     const skillCounts = allSkills.reduce((acc, skill) => {
       acc[skill] = (acc[skill] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
     
-    return Object.entries(skillCounts).sort(([,a], [,b]) => b - a)[0]?.[0] || 'N/A';
+    return Object.entries(skillCounts).sort(([,a], [,b]) => (b as number) - (a as number))[0]?.[0] || 'N/A';
   };
 
   return (
@@ -327,23 +315,31 @@ const TrackExperience = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {mockExperiences.map((experience) => (
-                      <div key={experience.id} className="border-l-2 border-primary pl-4">
-                        <h3 className="font-semibold">{experience.title}</h3>
-                        <p className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Building className="h-3 w-3" />
-                          {experience.company} • {experience.duration}
-                        </p>
-                        <p className="text-sm mt-1">{experience.description}</p>
-                        <div className="flex gap-1 mt-2">
-                          {experience.skills.split(', ').map((skill) => (
-                            <Badge key={skill} variant="outline" className="text-xs">
-                              {skill}
-                            </Badge>
-                          ))}
-                        </div>
+                    {mockExperiences.length === 0 ? (
+                      <div className="text-center py-8 text-muted-foreground">
+                        <Briefcase className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                        <p className="text-lg font-medium mb-2">No experience logged yet</p>
+                        <p className="text-sm">Click "Log Experience" to add your first internship or work experience.</p>
                       </div>
-                    ))}
+                    ) : (
+                      mockExperiences.map((experience) => (
+                        <div key={experience.id} className="border-l-2 border-primary pl-4">
+                          <h3 className="font-semibold">{experience.title}</h3>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                            <Building className="h-3 w-3" />
+                            {experience.company} • {experience.duration}
+                          </p>
+                          <p className="text-sm mt-1">{experience.description}</p>
+                          <div className="flex gap-1 mt-2">
+                            {experience.skills.split(', ').map((skill) => (
+                              <Badge key={skill} variant="outline" className="text-xs">
+                                {skill}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </CardContent>
               </Card>
