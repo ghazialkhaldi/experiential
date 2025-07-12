@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ModeProvider } from "./contexts/ModeContext";
 import Index from "./pages/Index";
 import Resources from "./pages/Resources";
+import CareerResources from "./pages/CareerResources";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import PostOpportunity from "./pages/PostOpportunity";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/career-resources" element={<CareerResources />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/auth-callback" element={<AuthCallback />} />
             <Route path="/post-opportunity" element={<PostOpportunity />} />

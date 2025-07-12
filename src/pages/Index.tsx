@@ -1,4 +1,4 @@
-import { Search, MapPin, Clock, Users, BookOpen } from "lucide-react";
+import { Search, MapPin, Clock, Users, BookOpen, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -165,7 +165,7 @@ const Index = () => {
                   isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
                 }`}></span>
               </Link>
-              <Link to="/resources" className={`font-medium text-sm transition-colors duration-200 relative group ${
+              <Link to={isInternshipMode ? "/career-resources" : "/resources"} className={`font-medium text-sm transition-colors duration-200 relative group ${
                 isInternshipMode 
                   ? 'text-gray-300 hover:text-blue-400' 
                   : 'text-gray-700 hover:text-blue-600'
@@ -266,7 +266,7 @@ const Index = () => {
               isInternshipMode ? 'text-gray-300' : 'text-gray-700'
             }`}>
               {isInternshipMode 
-                ? 'Discover internships and temporary job opportunities to kickstart your professional career and gain valuable experience.'
+                ? 'Launch your professional journey with internships and temporary positions that provide real-world experience and industry connections.'
                 : 'Connect with local organizations and make a difference in your community while building experience for college applications.'
               }
             </p>
