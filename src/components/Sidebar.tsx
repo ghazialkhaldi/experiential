@@ -11,15 +11,19 @@ import {
   BarChart3, 
   BookOpen, 
   Lightbulb, 
-  Phone 
+  Phone,
+  Briefcase
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
+import { useMode } from "@/contexts/ModeContext";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
+  const { mode, setMode, isInternshipMode } = useMode();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -54,19 +58,25 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full w-80 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 left-0 h-full w-80 transform transition-transform duration-300 ease-in-out z-50 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        } ${isInternshipMode ? 'bg-gray-900 shadow-2xl' : 'bg-white shadow-lg'}`}
       >
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center space-x-2">
-              <Users className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">VolunteerHub</span>
+              {isInternshipMode ? (
+                <Briefcase className="h-8 w-8 text-blue-400" />
+              ) : (
+                <Users className="h-8 w-8 text-blue-600" />
+              )}
+              <span className={`text-xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+              </span>
             </div>
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-              <X className="h-6 w-6" />
+              <X className={`h-6 w-6 ${isInternshipMode ? 'text-gray-300' : ''}`} />
             </Button>
           </div>
 
@@ -80,22 +90,32 @@ const Sidebar = () => {
           <div className="space-y-8">
             {/* For Students */}
             <div>
-              <h3 className="font-semibold mb-4 text-gray-900">For Students</h3>
+              <h3 className={`font-semibold mb-4 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                {isInternshipMode ? 'For Job Seekers' : 'For Students'}
+              </h3>
               <ul className="space-y-3">
                 <li>
                   <Link
                     to="/"
-                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     <Search className="h-4 w-4" />
-                    <span>Find Opportunities</span>
+                    <span>{isInternshipMode ? 'Find Internships' : 'Find Opportunities'}</span>
                   </Link>
                 </li>
                 <li>
                   <button
                     onClick={handleCreateProfile}
-                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors w-full text-left"
+                    className={`flex items-center space-x-3 transition-colors w-full text-left ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
                   >
                     <UserPlus className="h-4 w-4" />
                     <span>Create Profile</span>
@@ -104,11 +124,15 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to="/track-hours"
-                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     <Clock className="h-4 w-4" />
-                    <span>Track Hours</span>
+                    <span>{isInternshipMode ? 'Track Experience' : 'Track Hours'}</span>
                   </Link>
                 </li>
               </ul>
@@ -116,22 +140,32 @@ const Sidebar = () => {
 
             {/* For Organizations */}
             <div>
-              <h3 className="font-semibold mb-4 text-gray-900">For Organizations</h3>
+              <h3 className={`font-semibold mb-4 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                {isInternshipMode ? 'For Companies' : 'For Organizations'}
+              </h3>
               <ul className="space-y-3">
                 <li>
                   <Link
                     to="/post-opportunity"
-                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     <Plus className="h-4 w-4" />
-                    <span>Post Opportunities</span>
+                    <span>{isInternshipMode ? 'Post Internships' : 'Post Opportunities'}</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/manage-opportunities"
-                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     <Settings className="h-4 w-4" />
@@ -141,11 +175,15 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to="/manage-opportunities"
-                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     <BarChart3 className="h-4 w-4" />
-                    <span>Organization Dashboard</span>
+                    <span>{isInternshipMode ? 'Company Dashboard' : 'Organization Dashboard'}</span>
                   </Link>
                 </li>
               </ul>
@@ -153,32 +191,46 @@ const Sidebar = () => {
 
             {/* Resources */}
             <div>
-              <h3 className="font-semibold mb-4 text-gray-900">Resources</h3>
+              <h3 className={`font-semibold mb-4 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                Resources
+              </h3>
               <ul className="space-y-3">
                 <li>
                   <Link
                     to="/resources"
-                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     <BookOpen className="h-4 w-4" />
-                    <span>University Guide</span>
+                    <span>{isInternshipMode ? 'Career Guide' : 'University Guide'}</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/resources"
-                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     <Lightbulb className="h-4 w-4" />
-                    <span>Volunteer Tips</span>
+                    <span>{isInternshipMode ? 'Interview Tips' : 'Volunteer Tips'}</span>
                   </Link>
                 </li>
                 <li>
                   <a
                     href="#"
-                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     <Phone className="h-4 w-4" />
@@ -186,6 +238,25 @@ const Sidebar = () => {
                   </a>
                 </li>
               </ul>
+            </div>
+
+            {/* Mode Switch */}
+            <div className={`pt-6 border-t ${isInternshipMode ? 'border-gray-700' : 'border-gray-200'}`}>
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className={`text-sm font-medium ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                    {isInternshipMode ? 'Internship Mode' : 'Volunteer Mode'}
+                  </span>
+                  <span className={`text-xs ${isInternshipMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    {isInternshipMode ? 'Find internships & jobs' : 'Find volunteer opportunities'}
+                  </span>
+                </div>
+                <Switch
+                  checked={isInternshipMode}
+                  onCheckedChange={(checked) => setMode(checked ? 'internship' : 'volunteer')}
+                  className="data-[state=checked]:bg-blue-600"
+                />
+              </div>
             </div>
           </div>
         </div>

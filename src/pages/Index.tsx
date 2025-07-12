@@ -18,13 +18,16 @@ import { useOpportunities } from "@/hooks/useOpportunities";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "@/hooks/useLocation";
+import { useMode } from "@/contexts/ModeContext";
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import LocationSelector from "@/components/LocationSelector";
+import { isNewOpportunity, formatTimeAgo } from "@/utils/dateUtils";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { isInternshipMode } = useMode();
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -72,18 +75,6 @@ const Index = () => {
     navigate(`/search?${params.toString()}`);
   };
 
-  const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 24) {
-      return `${diffInHours} hours ago`;
-    } else {
-      const diffInDays = Math.floor(diffInHours / 24);
-      return `${diffInDays} days ago`;
-    }
-  };
 
   // Sort opportunities based on selected option
   const sortedOpportunities = [...opportunities].sort((a, b) => {
@@ -106,12 +97,22 @@ const Index = () => {
   });
 
   // Hero text rotation
-  const heroTexts = useMemo(() => [
-    { firstPart: "Find Your Perfect", secondPart: "Volunteer Opportunity" },
-    { firstPart: "Discover Amazing", secondPart: "Volunteer Experiences" },
-    { firstPart: "Connect with Meaningful", secondPart: "Service Projects" },
-    { firstPart: "Explore Impactful", secondPart: "Community Opportunities" }
-  ], []);
+  const heroTexts = useMemo(() => {
+    if (isInternshipMode) {
+      return [
+        { firstPart: "Launch Your", secondPart: "Career Journey" },
+        { firstPart: "Discover Amazing", secondPart: "Internship Opportunities" },
+        { firstPart: "Find Your Next", secondPart: "Professional Experience" },
+        { firstPart: "Explore Exciting", secondPart: "Career Opportunities" }
+      ];
+    }
+    return [
+      { firstPart: "Find Your Perfect", secondPart: "Volunteer Opportunity" },
+      { firstPart: "Discover Amazing", secondPart: "Volunteer Experiences" },
+      { firstPart: "Connect with Meaningful", secondPart: "Service Projects" },
+      { firstPart: "Explore Impactful", secondPart: "Community Opportunities" }
+    ];
+  }, [isInternshipMode]);
 
   const currentHeroText = useMemo(() => {
     // Random selection that changes on each page visit/refresh
@@ -128,40 +129,72 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen hero-bg">
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
       {/* Sidebar */}
       <Sidebar />
       
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-blue-100">
+      <nav className={`backdrop-blur-md shadow-sm border-b ${
+        isInternshipMode 
+          ? 'bg-gray-800/80 border-gray-700' 
+          : 'bg-white/80 border-blue-100'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2 fade-in">
               <div className="relative">
-                <Users className="h-8 w-8 text-blue-600 floating" />
+                <Users className={`h-8 w-8 floating ${
+                  isInternshipMode ? 'text-blue-400' : 'text-blue-600'
+                }`} />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
               </div>
-              <span className="text-2xl font-bold text-gray-900">VolunteerHub</span>
+              <span className={`text-2xl font-bold ${
+                isInternshipMode ? 'text-white' : 'text-gray-900'
+              }`}>
+                {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+              </span>
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 relative group">
-                Opportunities
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-200 group-hover:w-full"></span>
+              <Link to="/" className={`font-medium transition-colors duration-200 relative group ${
+                isInternshipMode 
+                  ? 'text-gray-300 hover:text-blue-400' 
+                  : 'text-gray-700 hover:text-blue-600'
+              }`}>
+                {isInternshipMode ? 'Internships' : 'Opportunities'}
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
+                  isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
+                }`}></span>
               </Link>
-              <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium text-sm transition-colors duration-200 relative group">
-                University Resources
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-200 group-hover:w-full"></span>
+              <Link to="/resources" className={`font-medium text-sm transition-colors duration-200 relative group ${
+                isInternshipMode 
+                  ? 'text-gray-300 hover:text-blue-400' 
+                  : 'text-gray-700 hover:text-blue-600'
+              }`}>
+                {isInternshipMode ? 'Career Resources' : 'University Resources'}
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
+                  isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
+                }`}></span>
               </Link>
               {user && (
-                <Link to="/manage-opportunities" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 relative group">
+                <Link to="/manage-opportunities" className={`font-medium transition-colors duration-200 relative group ${
+                  isInternshipMode 
+                    ? 'text-gray-300 hover:text-blue-400' 
+                    : 'text-gray-700 hover:text-blue-600'
+                }`}>
                   Manage
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-200 group-hover:w-full"></span>
+                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
+                    isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
+                  }`}></span>
                 </Link>
               )}
               <AuthButton />
               <Link to="/post-opportunity">
-                <Button className="bg-blue-600 hover:bg-blue-700 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
-                  Post Opportunity
+                <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
+                  isInternshipMode 
+                    ? 'bg-blue-600 hover:bg-blue-700' 
+                    : 'bg-blue-600 hover:bg-blue-700'
+                }`}>
+                  {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
                 </Button>
               </Link>
             </div>
@@ -171,44 +204,87 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Background Elements with smooth transition to white */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-blue-400/8 to-white"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-green-500/5 to-transparent"></div>
-        
-        {/* Circles with varying opacity that fade towards bottom */}
-        <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/25 rounded-full blur-2xl animate-pulse"></div>
-        <div className="absolute top-20 right-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
-        <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-green-400/15 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute top-1/2 right-10 w-32 h-32 bg-blue-300/30 rounded-full blur-lg animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-20 right-1/3 w-36 h-36 bg-purple-400/12 rounded-full blur-xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
-        <div className="absolute top-1/3 left-1/2 w-28 h-28 bg-indigo-400/20 rounded-full blur-lg animate-pulse" style={{animationDelay: '3s'}}></div>
-        <div className="absolute bottom-1/4 left-1/6 w-24 h-24 bg-cyan-400/18 rounded-full blur-md animate-pulse" style={{animationDelay: '2.5s'}}></div>
-        
-        {/* Decorative Grid Pattern that fades out */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/80"></div>
-        <div className="absolute top-0 left-0 right-0 h-3/4 opacity-[0.08]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(59 130 246) 1px, transparent 0)`,
-          backgroundSize: '30px 30px'
-        }}></div>
+        {!isInternshipMode ? (
+          <>
+            {/* Light Mode Background Elements */}
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-blue-400/8 to-white"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-green-500/5 to-transparent"></div>
+            
+            {/* Circles with varying opacity that fade towards bottom */}
+            <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/25 rounded-full blur-2xl animate-pulse"></div>
+            <div className="absolute top-20 right-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+            <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-green-400/15 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+            <div className="absolute top-1/2 right-10 w-32 h-32 bg-blue-300/30 rounded-full blur-lg animate-pulse" style={{animationDelay: '2s'}}></div>
+            <div className="absolute bottom-20 right-1/3 w-36 h-36 bg-purple-400/12 rounded-full blur-xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
+            <div className="absolute top-1/3 left-1/2 w-28 h-28 bg-indigo-400/20 rounded-full blur-lg animate-pulse" style={{animationDelay: '3s'}}></div>
+            <div className="absolute bottom-1/4 left-1/6 w-24 h-24 bg-cyan-400/18 rounded-full blur-md animate-pulse" style={{animationDelay: '2.5s'}}></div>
+            
+            {/* Decorative Grid Pattern that fades out */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/80"></div>
+            <div className="absolute top-0 left-0 right-0 h-3/4 opacity-[0.08]" style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, rgb(59 130 246) 1px, transparent 0)`,
+              backgroundSize: '30px 30px'
+            }}></div>
+          </>
+        ) : (
+          <>
+            {/* Dark Mode Background Elements */}
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 via-purple-600/10 to-gray-900"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/15 via-indigo-500/8 to-transparent"></div>
+            
+            {/* Dark mode circles */}
+            <div className="absolute top-10 left-10 w-48 h-48 bg-blue-500/30 rounded-full blur-2xl animate-pulse"></div>
+            <div className="absolute top-20 right-20 w-72 h-72 bg-purple-500/25 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+            <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-indigo-400/20 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+            <div className="absolute top-1/2 right-10 w-32 h-32 bg-blue-400/35 rounded-full blur-lg animate-pulse" style={{animationDelay: '2s'}}></div>
+            <div className="absolute bottom-20 right-1/3 w-36 h-36 bg-cyan-400/18 rounded-full blur-xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
+            <div className="absolute top-1/3 left-1/2 w-28 h-28 bg-purple-400/25 rounded-full blur-lg animate-pulse" style={{animationDelay: '3s'}}></div>
+            <div className="absolute bottom-1/4 left-1/6 w-24 h-24 bg-blue-300/25 rounded-full blur-md animate-pulse" style={{animationDelay: '2.5s'}}></div>
+            
+            {/* Dark decorative grid */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-900/80"></div>
+            <div className="absolute top-0 left-0 right-0 h-3/4 opacity-[0.1]" style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, rgb(96 165 250) 1px, transparent 0)`,
+              backgroundSize: '30px 30px'
+            }}></div>
+          </>
+        )}
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="fade-in">
-            <h1 className="text-6xl font-bold text-gray-900 mb-6 leading-tight drop-shadow-sm">
+            <h1 className={`text-6xl font-bold mb-6 leading-tight drop-shadow-sm ${
+              isInternshipMode ? 'text-white' : 'text-gray-900'
+            }`}>
               {currentHeroText.firstPart}
-              <span className="text-gradient-blue block"> {currentHeroText.secondPart}</span>
+              <span className={`block ${
+                isInternshipMode ? 'text-blue-400' : 'text-gradient-blue'
+              }`}> {currentHeroText.secondPart}</span>
             </h1>
           </div>
           <div className="fade-in-delayed">
-            <p className="text-xl text-gray-700 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-sm">
-              Connect with local organizations and make a difference in your community while building experience for college applications.
+            <p className={`text-xl mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-sm ${
+              isInternshipMode ? 'text-gray-300' : 'text-gray-700'
+            }`}>
+              {isInternshipMode 
+                ? 'Discover internships and temporary job opportunities to kickstart your professional career and gain valuable experience.'
+                : 'Connect with local organizations and make a difference in your community while building experience for college applications.'
+              }
             </p>
           </div>
           
           {/* Search Bar */}
           <div className="fade-in-delayed-2">
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto border border-blue-200/50 relative">
+            <div className={`backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto border relative ${
+              isInternshipMode 
+                ? 'bg-gray-800/95 border-gray-600/50' 
+                : 'bg-white/95 border-blue-200/50'
+            }`}>
               {/* Search bar glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-white/10 to-green-500/5 rounded-2xl"></div>
+              <div className={`absolute inset-0 rounded-2xl ${
+                isInternshipMode 
+                  ? 'bg-gradient-to-r from-blue-500/10 via-purple-500/5 to-indigo-500/10' 
+                  : 'bg-gradient-to-r from-blue-500/5 via-white/10 to-green-500/5'
+              }`}></div>
               <div className="relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                   <LocationSelector
@@ -219,20 +295,36 @@ const Index = () => {
                     userDenied={userDenied}
                   />
                   <div className="md:col-span-2 relative group">
-                    <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" />
+                    <Search className={`absolute left-3 top-3 h-5 w-5 transition-colors duration-200 ${
+                      isInternshipMode 
+                        ? 'text-gray-400 group-focus-within:text-blue-400' 
+                        : 'text-gray-400 group-focus-within:text-blue-500'
+                    }`} />
                     <Input 
-                      placeholder="Search volunteer opportunities..." 
-                      className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white/90"
+                      placeholder={isInternshipMode ? "Search internship opportunities..." : "Search volunteer opportunities..."} 
+                      className={`pl-10 h-12 transition-all duration-200 ${
+                        isInternshipMode 
+                          ? 'border-gray-600 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 bg-gray-700/90 text-white placeholder:text-gray-400' 
+                          : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/90'
+                      }`}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                     />
                   </div>
                   <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="h-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/90">
+                    <SelectTrigger className={`h-12 transition-all duration-200 ${
+                      isInternshipMode 
+                        ? 'border-gray-600 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 bg-gray-700/90 text-white' 
+                        : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/90'
+                    }`}>
                       <SelectValue placeholder="Category" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white/95 backdrop-blur-md border-blue-200/50">
+                    <SelectContent className={`backdrop-blur-md ${
+                      isInternshipMode 
+                        ? 'bg-gray-800/95 border-gray-600/50' 
+                        : 'bg-white/95 border-blue-200/50'
+                    }`}>
                       <SelectItem value="all">All Categories</SelectItem>
                       <SelectItem value="education">Education</SelectItem>
                       <SelectItem value="environment">Environment</SelectItem>
@@ -253,23 +345,69 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-white via-blue-50/30 to-white">
+      <section className={`py-16 ${
+        isInternshipMode 
+          ? 'bg-gradient-to-r from-gray-900 via-gray-800/50 to-gray-900' 
+          : 'bg-gradient-to-r from-white via-blue-50/30 to-white'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="stat-card bg-white rounded-xl p-8 shadow-lg border border-blue-100">
-              <div className="text-5xl font-bold text-blue-600 mb-3 fade-in">2,500+</div>
-              <div className="text-gray-600 font-medium">Active Opportunities</div>
-              <div className="w-12 h-1 bg-blue-600 mx-auto mt-4 rounded"></div>
+            <div className={`stat-card rounded-xl p-8 shadow-lg border ${
+              isInternshipMode 
+                ? 'bg-gray-800 border-blue-500/20' 
+                : 'bg-white border-blue-100'
+            }`}>
+              <div className={`text-5xl font-bold mb-3 fade-in ${
+                isInternshipMode ? 'text-blue-400' : 'text-blue-600'
+              }`}>
+                {isInternshipMode ? '1,200+' : '2,500+'}
+              </div>
+              <div className={`font-medium ${
+                isInternshipMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>
+                {isInternshipMode ? 'Active Internships' : 'Active Opportunities'}
+              </div>
+              <div className={`w-12 h-1 mx-auto mt-4 rounded ${
+                isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
+              }`}></div>
             </div>
-            <div className="stat-card bg-white rounded-xl p-8 shadow-lg border border-green-100 fade-in-delayed">
-              <div className="text-5xl font-bold text-green-600 mb-3">15,000+</div>
-              <div className="text-gray-600 font-medium">Student Volunteers</div>
-              <div className="w-12 h-1 bg-green-600 mx-auto mt-4 rounded"></div>
+            <div className={`stat-card rounded-xl p-8 shadow-lg border fade-in-delayed ${
+              isInternshipMode 
+                ? 'bg-gray-800 border-green-400/20' 
+                : 'bg-white border-green-100'
+            }`}>
+              <div className={`text-5xl font-bold mb-3 ${
+                isInternshipMode ? 'text-green-400' : 'text-green-600'
+              }`}>
+                {isInternshipMode ? '8,500+' : '15,000+'}
+              </div>
+              <div className={`font-medium ${
+                isInternshipMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>
+                {isInternshipMode ? 'Job Seekers' : 'Student Volunteers'}
+              </div>
+              <div className={`w-12 h-1 mx-auto mt-4 rounded ${
+                isInternshipMode ? 'bg-green-400' : 'bg-green-600'
+              }`}></div>
             </div>
-            <div className="stat-card bg-white rounded-xl p-8 shadow-lg border border-purple-100 fade-in-delayed-2">
-              <div className="text-5xl font-bold text-purple-600 mb-3">800+</div>
-              <div className="text-gray-600 font-medium">Partner Organizations</div>
-              <div className="w-12 h-1 bg-purple-600 mx-auto mt-4 rounded"></div>
+            <div className={`stat-card rounded-xl p-8 shadow-lg border fade-in-delayed-2 ${
+              isInternshipMode 
+                ? 'bg-gray-800 border-purple-400/20' 
+                : 'bg-white border-purple-100'
+            }`}>
+              <div className={`text-5xl font-bold mb-3 ${
+                isInternshipMode ? 'text-purple-400' : 'text-purple-600'
+              }`}>
+                {isInternshipMode ? '450+' : '800+'}
+              </div>
+              <div className={`font-medium ${
+                isInternshipMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>
+                {isInternshipMode ? 'Partner Companies' : 'Partner Organizations'}
+              </div>
+              <div className={`w-12 h-1 mx-auto mt-4 rounded ${
+                isInternshipMode ? 'bg-purple-400' : 'bg-purple-600'
+              }`}></div>
             </div>
           </div>
         </div>
@@ -279,13 +417,21 @@ const Index = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Latest Opportunities</h2>
+            <h2 className={`text-3xl font-bold ${
+              isInternshipMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              {isInternshipMode ? 'Latest Internships' : 'Latest Opportunities'}
+            </h2>
             <div className="flex items-center space-x-4">
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className={`w-48 ${
+                  isInternshipMode 
+                    ? 'bg-gray-800 border-gray-600 text-white' 
+                    : ''
+                }`}>
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className={isInternshipMode ? 'bg-gray-800 border-gray-600' : ''}>
                   <SelectItem value="newest">Newest First</SelectItem>
                   <SelectItem value="closest">Closest Location</SelectItem>
                   <SelectItem value="time">Time Commitment</SelectItem>
@@ -296,7 +442,9 @@ const Index = () => {
 
           {loading ? (
             <div className="text-center py-12">
-              <p className="text-gray-600">Loading opportunities...</p>
+              <p className={isInternshipMode ? 'text-gray-300' : 'text-gray-600'}>
+                Loading {isInternshipMode ? 'internships' : 'opportunities'}...
+              </p>
             </div>
           ) : error ? (
             <div className="text-center py-12">
@@ -304,49 +452,99 @@ const Index = () => {
             </div>
           ) : sortedOpportunities.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-600">No opportunities found. Try adjusting your search criteria.</p>
+              <p className={isInternshipMode ? 'text-gray-300' : 'text-gray-600'}>
+                No {isInternshipMode ? 'internships' : 'opportunities'} found. Try adjusting your search criteria.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedOpportunities.map((opportunity, index) => (
-                <Card key={opportunity.id} className={`card-hover border-0 bg-white/80 backdrop-blur-sm ${index % 3 === 0 ? 'fade-in' : index % 3 === 1 ? 'fade-in-delayed' : 'fade-in-delayed-2'}`}>
+                <Card key={opportunity.id} className={`card-hover border-0 backdrop-blur-sm relative ${
+                  index % 3 === 0 ? 'fade-in' : index % 3 === 1 ? 'fade-in-delayed' : 'fade-in-delayed-2'
+                } ${
+                  isInternshipMode ? 'bg-gray-800/80' : 'bg-white/80'
+                }`}>
+                  {/* New Label */}
+                  {isNewOpportunity(opportunity.posted_at) && (
+                    <div className="absolute -top-2 -right-2 z-10">
+                      <Badge className="bg-green-500 text-white border-0 text-xs px-2 py-1 animate-pulse">
+                        NEW
+                      </Badge>
+                    </div>
+                  )}
                   <CardHeader className="pb-4">
                     <div className="flex justify-between items-start mb-3">
                       <Badge variant="secondary" className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0 px-3 py-1">
                         {opportunity.category.replace('_', ' ')}
                       </Badge>
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{formatTimeAgo(opportunity.posted_at)}</span>
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        isInternshipMode 
+                          ? 'text-gray-400 bg-gray-700/50' 
+                          : 'text-gray-500 bg-gray-100'
+                      }`}>
+                        {formatTimeAgo(opportunity.posted_at)}
+                      </span>
                     </div>
-                    <CardTitle className="text-xl mb-2 text-gray-900 leading-tight">{opportunity.title}</CardTitle>
-                    <CardDescription className="text-green-600 font-semibold">
+                    <CardTitle className={`text-xl mb-2 leading-tight ${
+                      isInternshipMode ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      {opportunity.title}
+                    </CardTitle>
+                    <CardDescription className={`font-semibold ${
+                      isInternshipMode ? 'text-green-400' : 'text-green-600'
+                    }`}>
                       {opportunity.organization.name}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-0">
                     <div className="space-y-4">
-                      <div className="flex items-center text-gray-600 bg-gray-50 p-2 rounded-lg">
-                        <MapPin className="h-4 w-4 mr-2 text-blue-500" />
+                      <div className={`flex items-center p-2 rounded-lg ${
+                        isInternshipMode 
+                          ? 'text-gray-300 bg-gray-700/50' 
+                          : 'text-gray-600 bg-gray-50'
+                      }`}>
+                        <MapPin className={`h-4 w-4 mr-2 ${
+                          isInternshipMode ? 'text-blue-400' : 'text-blue-500'
+                        }`} />
                         <div className="flex-1">
                           <span className="text-sm font-medium">{opportunity.location}</span>
                           {opportunity.distance && (
-                            <span className="text-xs text-blue-600 block">
+                            <span className={`text-xs block ${
+                              isInternshipMode ? 'text-blue-400' : 'text-blue-600'
+                            }`}>
                               {opportunity.distance.toFixed(1)} km away
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center text-gray-600 bg-gray-50 p-2 rounded-lg">
-                        <Clock className="h-4 w-4 mr-2 text-green-500" />
+                      <div className={`flex items-center p-2 rounded-lg ${
+                        isInternshipMode 
+                          ? 'text-gray-300 bg-gray-700/50' 
+                          : 'text-gray-600 bg-gray-50'
+                      }`}>
+                        <Clock className={`h-4 w-4 mr-2 ${
+                          isInternshipMode ? 'text-green-400' : 'text-green-500'
+                        }`} />
                         <span className="text-sm font-medium">{opportunity.time_commitment}</span>
                       </div>
-                      <p className="text-gray-700 text-sm leading-relaxed line-clamp-3 bg-blue-50/50 p-3 rounded-lg border-l-4 border-blue-400">
+                      <p className={`text-sm leading-relaxed line-clamp-3 p-3 rounded-lg border-l-4 ${
+                        isInternshipMode 
+                          ? 'text-gray-300 bg-gray-700/30 border-blue-400' 
+                          : 'text-gray-700 bg-blue-50/50 border-blue-400'
+                      }`}>
                         {opportunity.description}
                       </p>
                       {opportunity.max_volunteers && (
-                        <div className="flex items-center text-gray-600 bg-purple-50 p-2 rounded-lg">
-                          <Users className="h-4 w-4 mr-2 text-purple-500" />
+                        <div className={`flex items-center p-2 rounded-lg ${
+                          isInternshipMode 
+                            ? 'text-gray-300 bg-purple-900/30' 
+                            : 'text-gray-600 bg-purple-50'
+                        }`}>
+                          <Users className={`h-4 w-4 mr-2 ${
+                            isInternshipMode ? 'text-purple-400' : 'text-purple-500'
+                          }`} />
                           <span className="text-sm font-medium">
-                            {opportunity.current_volunteers}/{opportunity.max_volunteers} volunteers
+                            {opportunity.current_volunteers}/{opportunity.max_volunteers} {isInternshipMode ? 'positions' : 'volunteers'}
                           </span>
                           <div className="ml-auto w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
                             <div 
