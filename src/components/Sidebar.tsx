@@ -14,7 +14,7 @@ import {
   Phone,
   Briefcase
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,6 +24,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
   const { mode, setMode, isInternshipMode } = useMode();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -253,7 +254,10 @@ const Sidebar = () => {
                   </div>
                   <Switch
                     checked={isInternshipMode}
-                    onCheckedChange={(checked) => setMode(checked ? 'internship' : 'volunteer')}
+                    onCheckedChange={(checked) => {
+                      setMode(checked ? 'internship' : 'volunteer');
+                      navigate('/');
+                    }}
                     className="data-[state=checked]:bg-blue-600 scale-110"
                   />
                 </div>
