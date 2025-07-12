@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useMode } from '@/contexts/ModeContext';
 
 interface Opportunity {
   id: string;
@@ -25,6 +26,7 @@ interface UserLocation {
 }
 
 export const useOpportunities = (searchQuery: string = '', categoryFilter: string = '', userLocation?: UserLocation | null) => {
+  const { isInternshipMode } = useMode();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +80,7 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
             )
           `)
           .eq('is_active', true)
+          .eq('opportunity_type', isInternshipMode ? 'internship' : 'volunteer')
           .order('posted_at', { ascending: false });
 
         if (categoryFilter && categoryFilter !== 'all') {
@@ -128,7 +131,7 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
     };
 
     fetchOpportunities();
-  }, [searchQuery, categoryFilter, memoizedUserLocation, calculateDistance, parseLocationCoordinates]);
+  }, [searchQuery, categoryFilter, memoizedUserLocation, calculateDistance, parseLocationCoordinates, isInternshipMode]);
 
   return { opportunities, loading, error };
 };

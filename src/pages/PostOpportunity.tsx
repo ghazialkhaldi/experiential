@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, MapPin, Calendar, Users, Clock, FileText } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, Users, Clock, FileText, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from "@/hooks/use-toast";
+import { useMode } from '@/contexts/ModeContext';
 import AuthButton from "@/components/AuthButton";
 import OrganizationSetup from "@/components/OrganizationSetup";
 
@@ -18,6 +19,7 @@ const PostOpportunity = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
+  const { isInternshipMode } = useMode();
   const { organization, loading, hasIncompleteOrganization, hasIncompleteOrgData, profile } = useProfile();
   const [submitting, setSubmitting] = useState(false);
 
@@ -62,7 +64,8 @@ const PostOpportunity = () => {
           requirements: formData.requirements,
           location: location,
           max_volunteers: formData.max_volunteers ? parseInt(formData.max_volunteers) : null,
-          expires_at: formData.expires_at ? new Date(formData.expires_at).toISOString() : null
+          expires_at: formData.expires_at ? new Date(formData.expires_at).toISOString() : null,
+          opportunity_type: isInternshipMode ? 'internship' : 'volunteer'
         });
 
       if (error) {
@@ -192,11 +195,15 @@ const PostOpportunity = () => {
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl flex items-center">
-              <FileText className="h-6 w-6 mr-2 text-blue-600" />
-              Post New Opportunity
+              {isInternshipMode ? (
+                <Briefcase className="h-6 w-6 mr-2 text-blue-600" />
+              ) : (
+                <FileText className="h-6 w-6 mr-2 text-blue-600" />
+              )}
+              {isInternshipMode ? 'Post New Internship' : 'Post New Opportunity'}
             </CardTitle>
             <CardDescription>
-              Create a volunteer opportunity for {organization.name}
+              Create {isInternshipMode ? 'an internship opportunity' : 'a volunteer opportunity'} for {organization.name}
             </CardDescription>
           </CardHeader>
           <CardContent>

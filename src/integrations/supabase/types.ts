@@ -69,6 +69,7 @@ export type Database = {
           is_active: boolean | null
           location: string
           max_volunteers: number | null
+          opportunity_type: string
           organization_id: string
           posted_at: string
           requirements: string | null
@@ -86,6 +87,7 @@ export type Database = {
           is_active?: boolean | null
           location: string
           max_volunteers?: number | null
+          opportunity_type?: string
           organization_id: string
           posted_at?: string
           requirements?: string | null
@@ -103,6 +105,7 @@ export type Database = {
           is_active?: boolean | null
           location?: string
           max_volunteers?: number | null
+          opportunity_type?: string
           organization_id?: string
           posted_at?: string
           requirements?: string | null
