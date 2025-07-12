@@ -15,6 +15,7 @@ import AuthButton from '@/components/AuthButton';
 import { Progress } from '@/components/ui/progress';
 import { CalendarIcon, Building, Clock, MapPin, Plus, Target, TrendingUp, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useMode } from '@/contexts/ModeContext';
 
 interface LogExperienceForm {
   title: string;
@@ -61,6 +62,7 @@ const mockExperiences: any[] = [];
 
 const TrackExperience = () => {
   const { user } = useAuth();
+  const { isInternshipMode } = useMode();
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [experienceGoal, setExperienceGoal] = useState(() => {
@@ -72,10 +74,10 @@ const TrackExperience = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-background'}`}>
         <div className="container mx-auto px-4 py-8 max-w-2xl text-center">
-          <h1 className="text-4xl font-bold mb-4">Track Your Experience</h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <h1 className={`text-4xl font-bold mb-4 ${isInternshipMode ? 'text-white' : ''}`}>Track Your Experience</h1>
+          <p className={`text-xl mb-8 ${isInternshipMode ? 'text-gray-300' : 'text-muted-foreground'}`}>
             Please sign in to track your internships and work experience.
           </p>
           <AuthButton />
@@ -122,15 +124,15 @@ const TrackExperience = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-background'}`}>
       <Sidebar />
       
       <main className="lg:ml-64">
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Track Your Experience</h1>
-              <p className="text-xl text-muted-foreground">
+              <h1 className={`text-4xl font-bold mb-2 ${isInternshipMode ? 'text-white' : ''}`}>Track Your Experience</h1>
+              <p className={`text-xl ${isInternshipMode ? 'text-gray-300' : 'text-muted-foreground'}`}>
                 Log your internships and work experience to build your professional portfolio
               </p>
             </div>
@@ -139,41 +141,41 @@ const TrackExperience = () => {
 
           {/* Overview Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <Card>
+            <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Experience</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className={`text-sm font-medium ${isInternshipMode ? 'text-gray-200' : ''}`}>Total Experience</CardTitle>
+                <Clock className={`h-4 w-4 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`} />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{totalMonths} months</div>
-                <p className="text-xs text-muted-foreground">
+                <div className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : ''}`}>{totalMonths} months</div>
+                <p className={`text-xs ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
                   Professional experience gained
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Goal Progress</CardTitle>
-                <Target className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className={`text-sm font-medium ${isInternshipMode ? 'text-gray-200' : ''}`}>Goal Progress</CardTitle>
+                <Target className={`h-4 w-4 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`} />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{Math.round(progressPercentage)}%</div>
+                <div className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : ''}`}>{Math.round(progressPercentage)}%</div>
                 <Progress value={progressPercentage} className="mt-2" />
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className={`text-xs mt-2 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
                   {totalMonths} of {experienceGoal} months
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Positions Held</CardTitle>
-                <Briefcase className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className={`text-sm font-medium ${isInternshipMode ? 'text-gray-200' : ''}`}>Positions Held</CardTitle>
+                <Briefcase className={`h-4 w-4 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`} />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{mockExperiences.length}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : ''}`}>{mockExperiences.length}</div>
+                <p className={`text-xs ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
                   Different roles completed
                 </p>
               </CardContent>
@@ -184,13 +186,13 @@ const TrackExperience = () => {
             {/* Experience Tracking Section */}
             <div className="space-y-6">
               {/* Set Goal Section */}
-              <Card>
+              <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className={`flex items-center gap-2 ${isInternshipMode ? 'text-white' : ''}`}>
                     <Target className="h-5 w-5" />
                     Experience Goal
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className={isInternshipMode ? 'text-gray-400' : ''}>
                     Set your target months of professional experience
                   </CardDescription>
                 </CardHeader>
@@ -200,31 +202,31 @@ const TrackExperience = () => {
                       type="number"
                       value={experienceGoal}
                       onChange={(e) => handleSetGoal(parseInt(e.target.value) || 6)}
-                      className="w-24"
+                      className={`w-24 ${isInternshipMode ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
                       min="1"
                       max="60"
                     />
-                    <span className="text-sm text-muted-foreground">months</span>
+                    <span className={`text-sm ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>months</span>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Quick Stats */}
-              <Card>
+              <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className={`flex items-center gap-2 ${isInternshipMode ? 'text-white' : ''}`}>
                     <TrendingUp className="h-5 w-5" />
                     Quick Stats
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Most Common Skill:</span>
-                    <Badge variant="secondary">{getMostCommonSkill()}</Badge>
+                    <span className={isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}>Most Common Skill:</span>
+                    <Badge variant="secondary" className={isInternshipMode ? 'bg-gray-700 text-gray-200' : ''}>{getMostCommonSkill()}</Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Average Duration:</span>
-                    <span className="font-medium">
+                    <span className={isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}>Average Duration:</span>
+                    <span className={`font-medium ${isInternshipMode ? 'text-white' : ''}`}>
                       {mockExperiences.length > 0 ? Math.round(totalMonths / mockExperiences.length) : 0} months
                     </span>
                   </div>
@@ -239,10 +241,10 @@ const TrackExperience = () => {
                     Log Experience
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className={`sm:max-w-md ${isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}`}>
                   <DialogHeader>
-                    <DialogTitle>Log Work Experience</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className={isInternshipMode ? 'text-white' : ''}>Log Work Experience</DialogTitle>
+                    <DialogDescription className={isInternshipMode ? 'text-gray-400' : ''}>
                       Add your internship or work experience to track your professional growth.
                     </DialogDescription>
                   </DialogHeader>
@@ -308,31 +310,31 @@ const TrackExperience = () => {
               </Dialog>
 
               {/* Recent Experience */}
-              <Card>
+              <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
                 <CardHeader>
-                  <CardTitle>Recent Experience</CardTitle>
-                  <CardDescription>Your latest internships and work experience</CardDescription>
+                  <CardTitle className={isInternshipMode ? 'text-white' : ''}>Recent Experience</CardTitle>
+                  <CardDescription className={isInternshipMode ? 'text-gray-400' : ''}>Your latest internships and work experience</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {mockExperiences.length === 0 ? (
-                      <div className="text-center py-8 text-muted-foreground">
+                      <div className={`text-center py-8 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
                         <Briefcase className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p className="text-lg font-medium mb-2">No experience logged yet</p>
+                        <p className={`text-lg font-medium mb-2 ${isInternshipMode ? 'text-gray-300' : ''}`}>No experience logged yet</p>
                         <p className="text-sm">Click "Log Experience" to add your first internship or work experience.</p>
                       </div>
                     ) : (
                       mockExperiences.map((experience) => (
                         <div key={experience.id} className="border-l-2 border-primary pl-4">
-                          <h3 className="font-semibold">{experience.title}</h3>
-                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                          <h3 className={`font-semibold ${isInternshipMode ? 'text-white' : ''}`}>{experience.title}</h3>
+                          <p className={`text-sm flex items-center gap-1 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
                             <Building className="h-3 w-3" />
                             {experience.company} • {experience.duration}
                           </p>
-                          <p className="text-sm mt-1">{experience.description}</p>
+                          <p className={`text-sm mt-1 ${isInternshipMode ? 'text-gray-300' : ''}`}>{experience.description}</p>
                           <div className="flex gap-1 mt-2">
                             {experience.skills.split(', ').map((skill) => (
-                              <Badge key={skill} variant="outline" className="text-xs">
+                              <Badge key={skill} variant="outline" className={`text-xs ${isInternshipMode ? 'border-gray-600 text-gray-300' : ''}`}>
                                 {skill}
                               </Badge>
                             ))}
@@ -347,13 +349,13 @@ const TrackExperience = () => {
 
             {/* Calendar and Upcoming Internships */}
             <div className="space-y-6">
-              <Card>
+              <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className={`flex items-center gap-2 ${isInternshipMode ? 'text-white' : ''}`}>
                     <CalendarIcon className="h-5 w-5" />
                     Internship Calendar
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className={isInternshipMode ? 'text-gray-400' : ''}>
                     Plan ahead for upcoming internship opportunities
                   </CardDescription>
                 </CardHeader>
@@ -362,40 +364,40 @@ const TrackExperience = () => {
                     mode="single"
                     selected={selectedDate}
                     onSelect={setSelectedDate}
-                    className={cn("w-full justify-center pointer-events-auto")}
+                    className={cn("w-full justify-center pointer-events-auto", isInternshipMode ? 'text-white [&_.rdp-day]:text-gray-300 [&_.rdp-day_button:hover]:bg-gray-700' : '')}
                   />
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
                 <CardHeader>
-                  <CardTitle>Upcoming Internships</CardTitle>
-                  <CardDescription>
+                  <CardTitle className={isInternshipMode ? 'text-white' : ''}>Upcoming Internships</CardTitle>
+                  <CardDescription className={isInternshipMode ? 'text-gray-400' : ''}>
                     Seasonal internship opportunities to apply for
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {upcomingInternships.map((internship) => (
-                      <div key={internship.id} className="p-4 border rounded-lg space-y-2">
+                      <div key={internship.id} className={`p-4 border rounded-lg space-y-2 ${isInternshipMode ? 'border-gray-600 bg-gray-700/50' : ''}`}>
                         <div className="flex justify-between items-start">
-                          <h3 className="font-semibold">{internship.title}</h3>
-                          <Badge variant="outline">{internship.season}</Badge>
+                          <h3 className={`font-semibold ${isInternshipMode ? 'text-white' : ''}`}>{internship.title}</h3>
+                          <Badge variant="outline" className={isInternshipMode ? 'border-gray-500 text-gray-300' : ''}>{internship.season}</Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <p className={`text-sm flex items-center gap-1 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
                           <Building className="h-3 w-3" />
                           {internship.company}
                         </p>
-                        <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <p className={`text-sm flex items-center gap-1 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
                           <MapPin className="h-3 w-3" />
                           {internship.location}
                         </p>
-                        <div className="flex justify-between text-xs text-muted-foreground">
+                        <div className={`flex justify-between text-xs ${isInternshipMode ? 'text-gray-500' : 'text-muted-foreground'}`}>
                           <span>Duration: {internship.duration}</span>
                           <span>Apply by: {internship.applicationDeadline}</span>
                         </div>
-                        <Separator className="my-2" />
-                        <Button variant="outline" size="sm" className="w-full">
+                        <Separator className={`my-2 ${isInternshipMode ? 'bg-gray-600' : ''}`} />
+                        <Button variant="outline" size="sm" className={`w-full ${isInternshipMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : ''}`}>
                           Learn More
                         </Button>
                       </div>
