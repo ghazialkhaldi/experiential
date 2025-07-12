@@ -580,61 +580,99 @@ const Index = () => {
       />
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-green-600 text-white">
+      <section className={`py-16 text-white ${
+        isInternshipMode 
+          ? 'bg-gradient-to-r from-indigo-600 to-purple-600' 
+          : 'bg-gradient-to-r from-blue-600 to-green-600'
+      }`}>
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <BookOpen className="h-16 w-16 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold mb-4">Ready for College Applications?</h2>
+          {isInternshipMode ? (
+            <Briefcase className="h-16 w-16 mx-auto mb-6" />
+          ) : (
+            <BookOpen className="h-16 w-16 mx-auto mb-6" />
+          )}
+          <h2 className="text-3xl font-bold mb-4">
+            {isInternshipMode ? 'Ready to Build Your Professional Network?' : 'Ready for College Applications?'}
+          </h2>
           <p className="text-xl mb-8 opacity-90">
-            Access our comprehensive university resources guide to make the most of your volunteer experience.
+            {isInternshipMode 
+              ? 'Access our comprehensive career resources to maximize your internship search and professional development.'
+              : 'Access our comprehensive university resources guide to make the most of your volunteer experience.'
+            }
           </p>
-          <Link to="/resources">
+          <Link to={isInternshipMode ? "/career-resources" : "/resources"}>
             <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-              Explore University Resources
+              {isInternshipMode ? 'Explore Career Resources' : 'Explore University Resources'}
             </Button>
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className={`py-12 ${isInternshipMode ? 'bg-gray-900' : 'bg-gray-900'} text-white`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <Users className="h-6 w-6" />
-                <span className="text-xl font-bold">VolunteerHub</span>
+                {isInternshipMode ? (
+                  <Briefcase className="h-6 w-6" />
+                ) : (
+                  <Users className="h-6 w-6" />
+                )}
+                <span className="text-xl font-bold">
+                  {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                </span>
               </div>
               <p className="text-gray-400">
-                Connecting high school students with meaningful volunteer opportunities.
+                {isInternshipMode 
+                  ? 'Connecting ambitious professionals with career-launching opportunities.'
+                  : 'Connecting high school students with meaningful volunteer opportunities.'
+                }
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">For Students</h3>
+              <h3 className="font-semibold mb-4">
+                {isInternshipMode ? 'For Job Seekers' : 'For Students'}
+              </h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link to="/" className="hover:text-white">Find Opportunities</Link></li>
+                <li><Link to="/" className="hover:text-white">
+                  {isInternshipMode ? 'Find Internships' : 'Find Opportunities'}
+                </Link></li>
                 <li><button onClick={handleCreateProfile} className="hover:text-white">Create Profile</button></li>
-                <li><Link to="/track-hours" className="hover:text-white">Track Hours</Link></li>
+                <li><Link to="/track-hours" className="hover:text-white">
+                  {isInternshipMode ? 'Track Experience' : 'Track Hours'}
+                </Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">For Organizations</h3>
+              <h3 className="font-semibold mb-4">
+                {isInternshipMode ? 'For Companies' : 'For Organizations'}
+              </h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link to="/post-opportunity" className="hover:text-white">Post Opportunities</Link></li>
+                <li><Link to="/post-opportunity" className="hover:text-white">
+                  {isInternshipMode ? 'Post Internships' : 'Post Opportunities'}
+                </Link></li>
                 <li><Link to="/manage-opportunities" className="hover:text-white">Manage Applications</Link></li>
-                <li><Link to="/manage-opportunities" className="hover:text-white">Organization Dashboard</Link></li>
+                <li><Link to="/manage-opportunities" className="hover:text-white">
+                  {isInternshipMode ? 'Company Dashboard' : 'Organization Dashboard'}
+                </Link></li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Resources</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link to="/resources" className="hover:text-white">University Guide</Link></li>
-                <li><Link to="/resources" className="hover:text-white">Volunteer Tips</Link></li>
+                <li><Link to={isInternshipMode ? "/career-resources" : "/resources"} className="hover:text-white">
+                  {isInternshipMode ? 'Career Guide' : 'University Guide'}
+                </Link></li>
+                <li><Link to={isInternshipMode ? "/career-resources" : "/resources"} className="hover:text-white">
+                  {isInternshipMode ? 'Interview Tips' : 'Volunteer Tips'}
+                </Link></li>
                 <li><a href="#" className="hover:text-white">Contact Support</a></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 VolunteerHub. Made for students, by students.</p>
+            <p>&copy; 2024 {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}. {isInternshipMode ? 'Empowering careers.' : 'Made for students, by students.'}</p>
           </div>
         </div>
       </footer>
