@@ -236,7 +236,7 @@ const TrackExperience = () => {
               {/* Log Experience Button */}
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button size="lg" className="w-full">
+                  <Button size="lg" className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white border-0">
                     <Plus className="h-4 w-4 mr-2" />
                     Log Experience
                   </Button>
@@ -295,12 +295,12 @@ const TrackExperience = () => {
                     </div>
 
                     <div className="flex gap-3 pt-4">
-                      <Button type="submit" className="flex-1">Log Experience</Button>
+                      <Button type="submit" className="flex-1 bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white border-0">Log Experience</Button>
                       <Button 
                         type="button" 
                         variant="outline" 
                         onClick={() => setIsDialogOpen(false)}
-                        className="flex-1"
+                        className={`flex-1 ${isInternshipMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : ''}`}
                       >
                         Cancel
                       </Button>
@@ -397,7 +397,7 @@ const TrackExperience = () => {
                           <span>Apply by: {internship.applicationDeadline}</span>
                         </div>
                         <Separator className={`my-2 ${isInternshipMode ? 'bg-gray-600' : ''}`} />
-                        <Button variant="outline" size="sm" className={`w-full ${isInternshipMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : ''}`}>
+                        <Button variant="outline" size="sm" className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white border-0">
                           Learn More
                         </Button>
                       </div>
