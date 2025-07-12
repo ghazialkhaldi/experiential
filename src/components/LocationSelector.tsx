@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MapPin, ChevronDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useMode } from "@/contexts/ModeContext";
 import {
   Popover,
   PopoverContent,
@@ -33,6 +34,7 @@ const LocationSelector = ({
 }: LocationSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const { isInternshipMode } = useMode();
 
   const getDisplayText = () => {
     if (loading) return "Detecting...";
@@ -60,22 +62,34 @@ const LocationSelector = ({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="h-12 px-4 bg-white/90 border-gray-200 hover:bg-gray-50 justify-between min-w-[180px]"
+          className={`h-12 px-4 justify-between min-w-[180px] ${
+            isInternshipMode 
+              ? 'bg-gray-700/90 border-gray-600 hover:bg-gray-600 text-white' 
+              : 'bg-white/90 border-gray-200 hover:bg-gray-50'
+          }`}
         >
           <div className="flex items-center space-x-2">
             {loading ? (
-              <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+              <Loader2 className={`h-4 w-4 animate-spin ${
+                isInternshipMode ? 'text-blue-400' : 'text-blue-500'
+              }`} />
             ) : (
-              <MapPin className="h-4 w-4 text-blue-500" />
+              <MapPin className={`h-4 w-4 ${
+                isInternshipMode ? 'text-blue-400' : 'text-blue-500'
+              }`} />
             )}
             <span className="text-sm font-medium truncate max-w-[120px]">
               {getDisplayText()}
             </span>
           </div>
-          <ChevronDown className="h-4 w-4 text-gray-400" />
+          <ChevronDown className={`h-4 w-4 ${
+            isInternshipMode ? 'text-gray-400' : 'text-gray-400'
+          }`} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="start">
+      <PopoverContent className={`w-80 p-4 ${
+        isInternshipMode ? 'bg-gray-800 border-gray-600' : ''
+      }`} align="start">
         <div className="space-y-4">
           <div>
             <h4 className="font-medium text-sm mb-2">Current Location</h4>

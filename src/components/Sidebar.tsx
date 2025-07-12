@@ -192,7 +192,7 @@ const Sidebar = () => {
               <ul className="space-y-3">
                 <li>
                   <Link
-                    to="/resources"
+                    to={isInternshipMode ? "/career-resources" : "/resources"}
                     className={`flex items-center space-x-3 transition-colors ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
@@ -206,7 +206,7 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <Link
-                    to="/resources"
+                    to={isInternshipMode ? "/career-resources" : "/resources"}
                     className={`flex items-center space-x-3 transition-colors ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 

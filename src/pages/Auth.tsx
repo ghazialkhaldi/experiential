@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, ArrowLeft } from "lucide-react";
+import { Users, ArrowLeft, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useMode } from "@/contexts/ModeContext";
 import type { Database } from "@/integrations/supabase/types";
 
 type VolunteerCategory = Database['public']['Enums']['volunteer_category'];
@@ -19,6 +20,7 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+  const { isInternshipMode } = useMode();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -266,27 +268,45 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
+    <div className={`min-h-screen flex items-center justify-center p-4 ${
+      isInternshipMode 
+        ? 'bg-gradient-to-br from-gray-900 to-gray-800' 
+        : 'bg-gradient-to-br from-blue-50 to-green-50'
+    }`}>
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center mb-8">
-          <Link to="/" className="flex items-center text-gray-600 hover:text-blue-600 mb-4">
+          <Link to="/" className={`flex items-center mb-4 transition-colors ${
+            isInternshipMode 
+              ? 'text-gray-300 hover:text-blue-400' 
+              : 'text-gray-600 hover:text-blue-600'
+          }`}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
           </Link>
         </div>
         
         <div className="flex items-center justify-center mb-8">
-          <Users className="h-8 w-8 text-blue-600 mr-2" />
-          <span className="text-2xl font-bold text-gray-900">VolunteerHub</span>
+          {isInternshipMode ? (
+            <Briefcase className="h-8 w-8 text-blue-400 mr-2" />
+          ) : (
+            <Users className="h-8 w-8 text-blue-600 mr-2" />
+          )}
+          <span className={`text-2xl font-bold ${
+            isInternshipMode ? 'text-white' : 'text-gray-900'
+          }`}>
+            {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+          </span>
         </div>
 
-        <Card>
+        <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader>
-            <CardTitle>{isLogin ? 'Welcome Back' : 'Create Account'}</CardTitle>
-            <CardDescription>
+            <CardTitle className={isInternshipMode ? 'text-white' : ''}>
+              {isLogin ? 'Welcome Back' : 'Create Account'}
+            </CardTitle>
+            <CardDescription className={isInternshipMode ? 'text-gray-300' : ''}>
               {isLogin 
-                ? 'Sign in to your volunteer account' 
-                : 'Join our community of volunteers'
+                ? `Sign in to your ${isInternshipMode ? 'career' : 'volunteer'} account` 
+                : `Join our community of ${isInternshipMode ? 'professionals' : 'volunteers'}`
               }
             </CardDescription>
           </CardHeader>
@@ -363,9 +383,13 @@ const Auth = () => {
                       <SelectTrigger>
                         <SelectValue placeholder="Select your role" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="volunteer">Volunteer</SelectItem>
-                        <SelectItem value="volunteer_searcher">Looking for Volunteers</SelectItem>
+                      <SelectContent className={isInternshipMode ? 'bg-gray-700 border-gray-600' : ''}>
+                        <SelectItem value="volunteer">
+                          {isInternshipMode ? 'Job Seeker' : 'Volunteer'}
+                        </SelectItem>
+                        <SelectItem value="volunteer_searcher">
+                          {isInternshipMode ? 'Looking for Talent' : 'Looking for Volunteers'}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -471,7 +495,9 @@ const Auth = () => {
                       </div>
 
                       <div className="space-y-3">
-                        <Label>Volunteer Interests (optional)</Label>
+                        <Label className={isInternshipMode ? 'text-gray-300' : ''}>
+                          {isInternshipMode ? 'Career Interests (optional)' : 'Volunteer Interests (optional)'}
+                        </Label>
                         <div className="space-y-2">
                           {categories.map((category) => (
                             <div key={category.value} className="flex items-center space-x-2">
