@@ -673,7 +673,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}. {isInternshipMode ? 'Empowering careers.' : 'Made for students, by students.'}</p>
+            <p>&copy; 2025 {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}. {isInternshipMode ? 'Empowering careers.' : 'Made for students, by students.'}</p>
           </div>
         </div>
       </footer>
