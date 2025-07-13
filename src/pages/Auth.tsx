@@ -349,47 +349,50 @@ const Auth = () => {
                 <>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name</Label>
+                      <Label htmlFor="firstName" className={isInternshipMode ? 'text-purple-200' : ''}>First Name</Label>
                       <Input
                         id="firstName"
                         value={formData.firstName}
                         onChange={(e) => handleInputChange('firstName', e.target.value)}
+                        className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="lastName">Last Name</Label>
+                      <Label htmlFor="lastName" className={isInternshipMode ? 'text-purple-200' : ''}>Last Name</Label>
                       <Input
                         id="lastName"
                         value={formData.lastName}
                         onChange={(e) => handleInputChange('lastName', e.target.value)}
+                        className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
                         required
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="birthday">Birthday</Label>
+                    <Label htmlFor="birthday" className={isInternshipMode ? 'text-purple-200' : ''}>Birthday</Label>
                     <Input
                       id="birthday"
                       type="date"
                       value={formData.birthday}
                       onChange={(e) => handleInputChange('birthday', e.target.value)}
+                      className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
                       required
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="role">I am a...</Label>
+                    <Label htmlFor="role" className={isInternshipMode ? 'text-purple-200' : ''}>I am a...</Label>
                     <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your role" />
+                      <SelectTrigger className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}>
+                        <SelectValue placeholder="Select your role" className={isInternshipMode ? 'text-purple-300' : ''} />
                       </SelectTrigger>
                       <SelectContent className={isInternshipMode ? 'bg-gray-700 border-gray-600' : ''}>
-                        <SelectItem value="volunteer">
+                        <SelectItem value="volunteer" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>
                           {isInternshipMode ? 'Job Seeker' : 'Volunteer'}
                         </SelectItem>
-                        <SelectItem value="volunteer_searcher">
+                        <SelectItem value="volunteer_searcher" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>
                           {isInternshipMode ? 'Looking for Talent' : 'Looking for Volunteers'}
                         </SelectItem>
                       </SelectContent>
@@ -398,129 +401,137 @@ const Auth = () => {
 
                   {formData.role === 'volunteer_searcher' && (
                     <>
-                      <div className="space-y-2">
-                        <Label htmlFor="organizationName">Organization Name *</Label>
-                        <Input
-                          id="organizationName"
-                          value={formData.organizationName}
-                          onChange={(e) => handleInputChange('organizationName', e.target.value)}
-                          placeholder="Enter organization name"
-                          required
-                        />
-                      </div>
+                       <div className="space-y-2">
+                         <Label htmlFor="organizationName" className={isInternshipMode ? 'text-purple-200' : ''}>Organization Name *</Label>
+                         <Input
+                           id="organizationName"
+                           value={formData.organizationName}
+                           onChange={(e) => handleInputChange('organizationName', e.target.value)}
+                           placeholder="Enter organization name"
+                           className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
+                           required
+                         />
+                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="organizationCategory">Organization Category *</Label>
-                        <Select value={formData.organizationCategory} onValueChange={(value) => handleInputChange('organizationCategory', value)}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select organization category" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="education">Education</SelectItem>
-                            <SelectItem value="environment">Environment</SelectItem>
-                            <SelectItem value="animal_care">Animal Care</SelectItem>
-                            <SelectItem value="community_service">Community Service</SelectItem>
-                            <SelectItem value="healthcare">Healthcare</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                       <div className="space-y-2">
+                         <Label htmlFor="organizationCategory" className={isInternshipMode ? 'text-purple-200' : ''}>Organization Category *</Label>
+                         <Select value={formData.organizationCategory} onValueChange={(value) => handleInputChange('organizationCategory', value)}>
+                           <SelectTrigger className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}>
+                             <SelectValue placeholder="Select organization category" className={isInternshipMode ? 'text-purple-300' : ''} />
+                           </SelectTrigger>
+                           <SelectContent className={isInternshipMode ? 'bg-gray-700 border-gray-600' : ''}>
+                             <SelectItem value="education" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Education</SelectItem>
+                             <SelectItem value="environment" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Environment</SelectItem>
+                             <SelectItem value="animal_care" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Animal Care</SelectItem>
+                             <SelectItem value="community_service" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Community Service</SelectItem>
+                             <SelectItem value="healthcare" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Healthcare</SelectItem>
+                             <SelectItem value="other" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Other</SelectItem>
+                           </SelectContent>
+                         </Select>
+                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="organizationDescription">Organization Description (optional)</Label>
-                        <Input
-                          id="organizationDescription"
-                          value={formData.organizationDescription}
-                          onChange={(e) => handleInputChange('organizationDescription', e.target.value)}
-                          placeholder="Brief description of your organization"
-                        />
-                      </div>
+                       <div className="space-y-2">
+                         <Label htmlFor="organizationDescription" className={isInternshipMode ? 'text-purple-200' : ''}>Organization Description (optional)</Label>
+                         <Input
+                           id="organizationDescription"
+                           value={formData.organizationDescription}
+                           onChange={(e) => handleInputChange('organizationDescription', e.target.value)}
+                           placeholder="Brief description of your organization"
+                           className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
+                         />
+                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="address">Address *</Label>
-                        <Input
-                          id="address"
-                          value={formData.address}
-                          onChange={(e) => handleInputChange('address', e.target.value)}
-                          placeholder="Street address"
-                          required
-                        />
-                      </div>
+                       <div className="space-y-2">
+                         <Label htmlFor="address" className={isInternshipMode ? 'text-purple-200' : ''}>Address *</Label>
+                         <Input
+                           id="address"
+                           value={formData.address}
+                           onChange={(e) => handleInputChange('address', e.target.value)}
+                           placeholder="Street address"
+                           className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
+                           required
+                         />
+                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="city">City *</Label>
-                          <Input
-                            id="city"
-                            value={formData.city}
-                            onChange={(e) => handleInputChange('city', e.target.value)}
-                            placeholder="City"
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="state">State *</Label>
-                          <Input
-                            id="state"
-                            value={formData.state}
-                            onChange={(e) => handleInputChange('state', e.target.value)}
-                            placeholder="State"
-                            required
-                          />
-                        </div>
-                      </div>
+                       <div className="grid grid-cols-2 gap-4">
+                         <div className="space-y-2">
+                           <Label htmlFor="city" className={isInternshipMode ? 'text-purple-200' : ''}>City *</Label>
+                           <Input
+                             id="city"
+                             value={formData.city}
+                             onChange={(e) => handleInputChange('city', e.target.value)}
+                             placeholder="City"
+                             className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
+                             required
+                           />
+                         </div>
+                         <div className="space-y-2">
+                           <Label htmlFor="state" className={isInternshipMode ? 'text-purple-200' : ''}>State *</Label>
+                           <Input
+                             id="state"
+                             value={formData.state}
+                             onChange={(e) => handleInputChange('state', e.target.value)}
+                             placeholder="State"
+                             className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
+                             required
+                           />
+                         </div>
+                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="zipCode">ZIP Code *</Label>
-                        <Input
-                          id="zipCode"
-                          value={formData.zipCode}
-                          onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                          placeholder="ZIP Code"
-                          required
-                        />
-                      </div>
+                       <div className="space-y-2">
+                         <Label htmlFor="zipCode" className={isInternshipMode ? 'text-purple-200' : ''}>ZIP Code *</Label>
+                         <Input
+                           id="zipCode"
+                           value={formData.zipCode}
+                           onChange={(e) => handleInputChange('zipCode', e.target.value)}
+                           placeholder="ZIP Code"
+                           className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
+                           required
+                         />
+                       </div>
                     </>
                   )}
 
                   {formData.role === 'volunteer' && (
                     <>
-                      <div className="space-y-2">
-                        <Label htmlFor="age">Age (optional)</Label>
-                        <Input
-                          id="age"
-                          type="number"
-                          value={formData.age}
-                          onChange={(e) => handleInputChange('age', e.target.value)}
-                          placeholder="Enter your age"
-                        />
-                      </div>
+                       <div className="space-y-2">
+                         <Label htmlFor="age" className={isInternshipMode ? 'text-purple-200' : ''}>Age (optional)</Label>
+                         <Input
+                           id="age"
+                           type="number"
+                           value={formData.age}
+                           onChange={(e) => handleInputChange('age', e.target.value)}
+                           placeholder="Enter your age"
+                           className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
+                         />
+                       </div>
 
-                      <div className="space-y-3">
-                        <Label className={isInternshipMode ? 'text-gray-300' : ''}>
-                          {isInternshipMode ? 'Career Interests (optional)' : 'Volunteer Interests (optional)'}
-                        </Label>
-                        <div className="space-y-2">
-                          {categories.map((category) => (
-                            <div key={category.value} className="flex items-center space-x-2">
-                              <Checkbox
-                                id={category.value}
-                                checked={formData.preferences.includes(category.value)}
-                                onCheckedChange={(checked) => 
-                                  handlePreferenceChange(category.value, checked as boolean)
-                                }
-                              />
-                              <Label htmlFor={category.value} className="text-sm font-normal">
-                                {category.label}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
+                       <div className="space-y-3">
+                         <Label className={isInternshipMode ? 'text-purple-200' : ''}>
+                           {isInternshipMode ? 'Career Interests (optional)' : 'Volunteer Interests (optional)'}
+                         </Label>
+                         <div className="space-y-2">
+                           {categories.map((category) => (
+                             <div key={category.value} className="flex items-center space-x-2">
+                               <Checkbox
+                                 id={category.value}
+                                 checked={formData.preferences.includes(category.value)}
+                                 onCheckedChange={(checked) => 
+                                   handlePreferenceChange(category.value, checked as boolean)
+                                 }
+                                 className={isInternshipMode ? 'border-purple-500/30 data-[state=checked]:bg-purple-600' : ''}
+                               />
+                               <Label htmlFor={category.value} className={`text-sm font-normal ${isInternshipMode ? 'text-purple-200' : ''}`}>
+                                 {category.label}
+                               </Label>
+                             </div>
+                           ))}
+                         </div>
+                       </div>
+                     </>
+                   )}
+                 </>
+               )}
 
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
