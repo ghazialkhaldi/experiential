@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import LocationSelector from "@/components/LocationSelector";
 import { isNewOpportunity, formatTimeAgo } from "@/utils/dateUtils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const Index = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const isMobile = useIsMobile();
   
   // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
   // Location hook
@@ -156,6 +158,7 @@ const Index = () => {
               </span>
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">
+              {/* Desktop navigation - hide some items on mobile */}
               <Link to="/" className={`font-medium transition-colors duration-200 relative group ${
                 isInternshipMode 
                   ? 'text-gray-300 hover:text-blue-400' 
@@ -166,38 +169,43 @@ const Index = () => {
                   isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
                 }`}></span>
               </Link>
-              <Link to={isInternshipMode ? "/career-resources" : "/resources"} className={`font-medium text-sm transition-colors duration-200 relative group ${
-                isInternshipMode 
-                  ? 'text-gray-300 hover:text-blue-400' 
-                  : 'text-gray-700 hover:text-blue-600'
-              }`}>
-                {isInternshipMode ? 'Career Resources' : 'University Resources'}
-                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
-                  isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
-                }`}></span>
-              </Link>
-              {user && (
-                <Link to="/manage-opportunities" className={`font-medium transition-colors duration-200 relative group ${
-                  isInternshipMode 
-                    ? 'text-gray-300 hover:text-blue-400' 
-                    : 'text-gray-700 hover:text-blue-600'
-                }`}>
-                  Manage
-                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
-                    isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
-                  }`}></span>
-                </Link>
+              
+              {!isMobile && (
+                <>
+                  <Link to={isInternshipMode ? "/career-resources" : "/resources"} className={`font-medium text-sm transition-colors duration-200 relative group ${
+                    isInternshipMode 
+                      ? 'text-gray-300 hover:text-blue-400' 
+                      : 'text-gray-700 hover:text-blue-600'
+                  }`}>
+                    {isInternshipMode ? 'Career Resources' : 'University Resources'}
+                    <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
+                      isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
+                    }`}></span>
+                  </Link>
+                  {user && (
+                    <Link to="/manage-opportunities" className={`font-medium transition-colors duration-200 relative group ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-700 hover:text-blue-600'
+                    }`}>
+                      Manage
+                      <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
+                        isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
+                      }`}></span>
+                    </Link>
+                  )}
+                  <AuthButton />
+                  <Link to="/post-opportunity">
+                    <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
+                      isInternshipMode 
+                        ? 'bg-blue-600 hover:bg-blue-700' 
+                        : 'bg-blue-600 hover:bg-blue-700'
+                    }`}>
+                      {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
+                    </Button>
+                  </Link>
+                </>
               )}
-              <AuthButton />
-              <Link to="/post-opportunity">
-                <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
-                  isInternshipMode 
-                    ? 'bg-blue-600 hover:bg-blue-700' 
-                    : 'bg-blue-600 hover:bg-blue-700'
-                }`}>
-                  {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
-                </Button>
-              </Link>
             </div>
           </div>
         </div>

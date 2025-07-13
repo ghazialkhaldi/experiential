@@ -12,19 +12,23 @@ import {
   BookOpen, 
   Lightbulb, 
   Phone,
-  Briefcase
+  Briefcase,
+  LogIn
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
 import { useMode } from "@/contexts/ModeContext";
+import { useIsMobile } from "@/hooks/use-mobile";
+import AuthButton from "@/components/AuthButton";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
   const { mode, setMode, isInternshipMode } = useMode();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -135,8 +139,38 @@ const Sidebar = () => {
                     <span>{isInternshipMode ? 'Track Experience' : 'Track Hours'}</span>
                   </Link>
                 </li>
+                
+                {/* Mobile-only Auth options */}
+                {isMobile && !user && (
+                  <li>
+                    <Link
+                      to="/auth"
+                      className={`flex items-center space-x-3 transition-colors ${
+                        isInternshipMode 
+                          ? 'text-gray-300 hover:text-blue-400' 
+                          : 'text-gray-600 hover:text-blue-600'
+                      }`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <LogIn className="h-4 w-4" />
+                      <span>Sign In</span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
+
+            {/* Mobile Auth Button for logged in users */}
+            {isMobile && user && (
+              <div className={`pb-4 ${isInternshipMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                <h3 className={`font-semibold mb-4 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                  Account
+                </h3>
+                <div className="px-2">
+                  <AuthButton />
+                </div>
+              </div>
+            )}
 
             {/* For Organizations */}
             <div>
