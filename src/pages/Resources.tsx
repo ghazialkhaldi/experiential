@@ -90,10 +90,10 @@ const Resources = () => {
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
               <Users className="h-8 w-8 text-blue-600" />
               <span className="text-2xl font-bold text-gray-900">VolunteerHub</span>
-            </div>
+            </Link>
             <div className="flex items-center space-x-6">
               <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
                 Opportunities
@@ -322,7 +322,7 @@ const Resources = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 VolunteerHub. Made for students, by students.</p>
+            <p>&copy; 2025 VolunteerHub. Made for students, by students.</p>
           </div>
         </div>
       </footer>

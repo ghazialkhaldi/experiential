@@ -15,42 +15,42 @@ const CareerResources = () => {
       description: "Learn how to create a compelling resume that stands out to employers",
       category: "Career Prep",
       icon: FileText,
-      link: "#"
+      link: "https://www.indeed.com/career-advice/resumes-cover-letters/how-to-make-a-resume"
     },
     {
       title: "Interview Preparation",
       description: "Master the art of interviewing with our comprehensive preparation guide",
       category: "Interview Skills",
       icon: Lightbulb,
-      link: "#"
+      link: "https://www.glassdoor.com/blog/common-interview-questions/"
     },
     {
       title: "Industry Insights",
       description: "Explore different career paths and industry trends",
       category: "Career Exploration",
       icon: TrendingUp,
-      link: "#"
+      link: "https://www.bls.gov/ooh/"
     },
     {
       title: "Networking Strategies",
       description: "Build professional relationships that advance your career",
       category: "Professional Growth",
       icon: Users,
-      link: "#"
+      link: "https://www.linkedin.com/advice/0/how-do-you-network-effectively-your-industry"
     },
     {
       title: "Salary Negotiation",
       description: "Learn how to negotiate fair compensation packages",
       category: "Career Advancement",
       icon: TrendingUp,
-      link: "#"
+      link: "https://www.harvard.edu/sites/default/files/content/salary_negotiation.pdf"
     },
     {
       title: "Professional Portfolio",
       description: "Showcase your work and accomplishments effectively",
       category: "Career Prep",
       icon: Briefcase,
-      link: "#"
+      link: "https://www.portfolio.dev/guides/how-to-create-a-professional-portfolio"
     }
   ];
 
@@ -60,13 +60,13 @@ const CareerResources = () => {
       <nav className="bg-gray-800/80 backdrop-blur-md shadow-sm border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2 fade-in">
+            <Link to="/" className="flex items-center space-x-2 fade-in transition-colors hover:opacity-80">
               <div className="relative">
                 <Briefcase className="h-8 w-8 text-blue-400 floating" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
               </div>
               <span className="text-2xl font-bold text-white">InternshipHub</span>
-            </div>
+            </Link>
             <div className="flex items-center space-x-6 fade-in-delayed">
               <Link to="/" className="text-gray-300 hover:text-blue-400 font-medium transition-colors duration-200 relative group">
                 Internships
@@ -152,12 +152,11 @@ const CareerResources = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Button 
-                      variant="outline" 
-                      className="w-full border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+                     <Button 
+                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
                       asChild
                     >
-                      <a href={resource.link} className="flex items-center justify-center">
+                      <a href={resource.link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Learn More
                       </a>
@@ -189,11 +188,11 @@ const CareerResources = () => {
                 Find Internships
               </Button>
             </Link>
-            <Link to="/post-opportunity">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 transform transition-all duration-200 hover:scale-105 px-8 py-4">
-                Post an Internship
-              </Button>
-            </Link>
+               <Link to="/post-opportunity">
+                <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 transform transition-all duration-200 hover:scale-105 px-8 py-4">
+                  Post an Internship
+                </Button>
+              </Link>
           </div>
         </div>
       </section>

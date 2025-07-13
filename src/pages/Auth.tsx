@@ -270,14 +270,14 @@ const Auth = () => {
   return (
     <div className={`min-h-screen flex items-center justify-center p-4 ${
       isInternshipMode 
-        ? 'bg-gradient-to-br from-gray-900 to-gray-800' 
+        ? 'bg-gradient-to-br from-purple-900 via-gray-900 to-gray-800' 
         : 'bg-gradient-to-br from-blue-50 to-green-50'
     }`}>
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center mb-8">
           <Link to="/" className={`flex items-center mb-4 transition-colors ${
             isInternshipMode 
-              ? 'text-gray-300 hover:text-blue-400' 
+              ? 'text-purple-300 hover:text-purple-400' 
               : 'text-gray-600 hover:text-blue-600'
           }`}>
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -287,23 +287,23 @@ const Auth = () => {
         
         <div className="flex items-center justify-center mb-8">
           {isInternshipMode ? (
-            <Briefcase className="h-8 w-8 text-blue-400 mr-2" />
+            <Briefcase className="h-8 w-8 text-purple-400 mr-2" />
           ) : (
             <Users className="h-8 w-8 text-blue-600 mr-2" />
           )}
           <span className={`text-2xl font-bold ${
-            isInternshipMode ? 'text-white' : 'text-gray-900'
+            isInternshipMode ? 'text-purple-200' : 'text-gray-900'
           }`}>
             {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
           </span>
         </div>
 
-        <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
+        <Card className={isInternshipMode ? 'bg-gray-800/90 border-purple-500/30 backdrop-blur-sm' : ''}>
           <CardHeader>
-            <CardTitle className={isInternshipMode ? 'text-white' : ''}>
+            <CardTitle className={isInternshipMode ? 'text-purple-200' : ''}>
               {isLogin ? 'Welcome Back' : 'Create Account'}
             </CardTitle>
-            <CardDescription className={isInternshipMode ? 'text-gray-300' : ''}>
+            <CardDescription className={isInternshipMode ? 'text-purple-300' : ''}>
               {isLogin 
                 ? `Sign in to your ${isInternshipMode ? 'career' : 'volunteer'} account` 
                 : `Join our community of ${isInternshipMode ? 'professionals' : 'volunteers'}`
@@ -313,23 +313,25 @@ const Auth = () => {
           <CardContent>
             <form onSubmit={isLogin ? handleLogin : handleSignUp} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className={isInternshipMode ? 'text-purple-200' : ''}>Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
+                  className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className={isInternshipMode ? 'text-purple-200' : ''}>Password</Label>
                 <Input
                   id="password"
                   type="password"
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
+                  className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
                   required
                 />
                 {!isLogin && passwordErrors.length > 0 && (
