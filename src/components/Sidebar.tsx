@@ -74,7 +74,11 @@ const Sidebar = () => {
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center space-x-2">
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+              onClick={() => setIsOpen(false)}
+            >
               {isInternshipMode ? (
                 <Briefcase className="h-8 w-8 text-blue-400" />
               ) : (
@@ -83,7 +87,7 @@ const Sidebar = () => {
               <span className={`text-xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
                 {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
               </span>
-            </div>
+            </Link>
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>
               <X className={`h-6 w-6 ${isInternshipMode ? 'text-gray-300' : ''}`} />
             </Button>
