@@ -76,8 +76,11 @@ const Sidebar = () => {
           <div className="flex items-center justify-between mb-8">
             <Link 
               to="/" 
-              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
-              onClick={() => setIsOpen(false)}
+              className="flex items-center space-x-2 hover:opacity-80 transition-opacity cursor-pointer"
+              onClick={(e) => {
+                console.log('Logo clicked!');
+                setIsOpen(false);
+              }}
             >
               {isInternshipMode ? (
                 <Briefcase className="h-8 w-8 text-blue-400" />
