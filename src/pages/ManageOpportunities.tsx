@@ -17,6 +17,8 @@ import { useApplications } from '@/hooks/useApplications';
 import ApplicationCard from '@/components/ApplicationCard';
 import AuthButton from '@/components/AuthButton';
 import { useToast } from '@/hooks/use-toast';
+import { useMode } from '@/contexts/ModeContext';
+import { Briefcase } from 'lucide-react';
 
 interface OrganizationOpportunity {
   id: string;
@@ -48,6 +50,7 @@ const ManageOpportunities = () => {
   const { user } = useAuth();
   const { applications } = useApplications();
   const { toast } = useToast();
+  const { isInternshipMode } = useMode();
 
   useEffect(() => {
     if (user) {
@@ -220,20 +223,26 @@ const ManageOpportunities = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-        <nav className="bg-white shadow-sm border-b">
+      <div className={`min-h-screen ${isInternshipMode ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-gradient-to-br from-blue-50 to-green-50'}`}>
+        <nav className={`shadow-sm border-b ${isInternshipMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                <Users className="h-8 w-8 text-blue-600" />
-                <span className="text-2xl font-bold text-gray-900">VolunteerHub</span>
+                {isInternshipMode ? (
+                  <Briefcase className="h-8 w-8 text-blue-400" />
+                ) : (
+                  <Users className="h-8 w-8 text-blue-600" />
+                )}
+                <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                  {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                </span>
               </Link>
               <div className="flex items-center space-x-6">
-                <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
-                  Opportunities
+                <Link to="/" className={`font-medium ${isInternshipMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'}`}>
+                  {isInternshipMode ? 'Internships' : 'Opportunities'}
                 </Link>
-                <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium">
-                  University Resources
+                <Link to={isInternshipMode ? "/career-resources" : "/resources"} className={`font-medium ${isInternshipMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'}`}>
+                  {isInternshipMode ? 'Career Resources' : 'University Resources'}
                 </Link>
                 <AuthButton />
               </div>
@@ -246,7 +255,7 @@ const ManageOpportunities = () => {
             <CardHeader className="text-center">
               <CardTitle>Authentication Required</CardTitle>
               <CardDescription>
-                Please sign in to manage your organization's opportunities and applications.
+                Please sign in to manage your {isInternshipMode ? "company's internships" : "organization's opportunities"} and applications.
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center">
@@ -259,30 +268,36 @@ const ManageOpportunities = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-gradient-to-br from-blue-50 to-green-50'}`}>
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b">
+      <nav className={`shadow-sm border-b ${isInternshipMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <Users className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">VolunteerHub</span>
+              {isInternshipMode ? (
+                <Briefcase className="h-8 w-8 text-blue-400" />
+              ) : (
+                <Users className="h-8 w-8 text-blue-600" />
+              )}
+              <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+              </span>
             </Link>
             <div className="flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
-                Opportunities
+              <Link to="/" className={`font-medium ${isInternshipMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'}`}>
+                {isInternshipMode ? 'Internships' : 'Opportunities'}
               </Link>
-              <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium">
-                University Resources
+              <Link to={isInternshipMode ? "/career-resources" : "/resources"} className={`font-medium ${isInternshipMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'}`}>
+                {isInternshipMode ? 'Career Resources' : 'University Resources'}
               </Link>
-              <Link to="/manage-opportunities" className="text-blue-600 font-medium">
+              <Link to="/manage-opportunities" className={`font-medium ${isInternshipMode ? 'text-blue-400' : 'text-blue-600'}`}>
                 Manage
               </Link>
               <AuthButton />
               <Link to="/post-opportunity">
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className={`${isInternshipMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Post Opportunity
+                  {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
                 </Button>
               </Link>
             </div>
@@ -292,13 +307,19 @@ const ManageOpportunities = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Opportunities</h1>
-          <p className="text-gray-600">View and manage your organization's volunteer opportunities and applications.</p>
+          <h1 className={`text-3xl font-bold mb-2 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+            {isInternshipMode ? 'Company Dashboard' : 'Manage Opportunities'}
+          </h1>
+          <p className={isInternshipMode ? 'text-gray-300' : 'text-gray-600'}>
+            View and manage your {isInternshipMode ? "company's internship postings" : "organization's volunteer opportunities"} and applications.
+          </p>
         </div>
 
         <Tabs defaultValue="opportunities" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="opportunities">My Opportunities</TabsTrigger>
+            <TabsTrigger value="opportunities">
+              {isInternshipMode ? 'My Internships' : 'My Opportunities'}
+            </TabsTrigger>
             <TabsTrigger value="applications">Applications</TabsTrigger>
           </TabsList>
 
@@ -313,13 +334,17 @@ const ManageOpportunities = () => {
               </div>
             ) : opportunities.length === 0 ? (
               <div className="text-center py-12">
-                <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No opportunities yet</h3>
-                <p className="text-gray-600 mb-4">Start by posting your first volunteer opportunity.</p>
+                <FileText className={`h-16 w-16 mx-auto mb-4 ${isInternshipMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                <h3 className={`text-lg font-medium mb-2 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
+                  {isInternshipMode ? 'No internships yet' : 'No opportunities yet'}
+                </h3>
+                <p className={`mb-4 ${isInternshipMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  Start by posting your first {isInternshipMode ? 'internship posting' : 'volunteer opportunity'}.
+                </p>
                 <Link to="/post-opportunity">
                   <Button className="bg-blue-600 hover:bg-blue-700">
                     <Plus className="h-4 w-4 mr-2" />
-                    Post Opportunity
+                    {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
                   </Button>
                 </Link>
               </div>
