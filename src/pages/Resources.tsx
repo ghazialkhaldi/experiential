@@ -88,12 +88,12 @@ const Resources = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-purple-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/30 to-blue-100/50 relative overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-cyan-400/8 to-white"></div>
-      <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/25 rounded-full blur-2xl animate-pulse"></div>
-      <div className="absolute top-20 right-20 w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
-      <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-purple-400/15 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/20 to-blue-100/30"></div>
+      <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/15 rounded-full blur-2xl animate-pulse"></div>
+      <div className="absolute top-20 right-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+      <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-purple-400/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
       {/* Navigation */}
       <nav className="bg-transparent backdrop-blur-md shadow-sm border-b border-blue-200/30 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
