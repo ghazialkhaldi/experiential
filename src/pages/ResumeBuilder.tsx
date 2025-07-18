@@ -278,8 +278,8 @@ const ResumeBuilder = () => {
                 <span className="text-2xl font-bold text-white">InternshipHub</span>
               </Link>
               <div className="flex items-center space-x-4">
-                <Button onClick={() => setPreviewMode(false)} variant="outline" className="text-white border-gray-600">
-                  <ArrowLeft className="h-4 w-4 mr-2 text-purple-400" />
+                <Button onClick={() => setPreviewMode(false)} className="btn-purple-rainbow">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Editor
                 </Button>
                 <Button onClick={downloadResume} className="btn-purple-rainbow">
