@@ -2,7 +2,7 @@ import { ArrowLeft, CheckCircle, Circle, Plus, Trash2, Edit3, GraduationCap, Boo
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -23,9 +23,13 @@ interface ChecklistSection {
 }
 
 const UniversityChecklist = () => {
+  const location = useLocation();
   const [customItem, setCustomItem] = useState("");
   const [editingItem, setEditingItem] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
+  
+  // Check if accessed from sidebar (no referrer from resources page)
+  const isFromSidebar = !document.referrer.includes('/resources') && location.state?.fromSidebar !== false;
 
   const [checklists, setChecklists] = useState<ChecklistSection[]>([
     {
@@ -176,12 +180,14 @@ const UniversityChecklist = () => {
 
       {/* Back Button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <Link to="/resources">
-          <Button variant="ghost" className="mb-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to University Resources
-          </Button>
-        </Link>
+        {!isFromSidebar && (
+          <Link to="/resources">
+            <Button variant="ghost" className="mb-4">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to University Resources
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Header */}
@@ -347,32 +353,34 @@ const UniversityChecklist = () => {
         </div>
       </section>
 
-      {/* Action Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-600/20"></div>
-        <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
-          <BookOpen className="h-16 w-16 mx-auto mb-6" />
-          <h2 className="text-4xl font-bold mb-4">Stay on Track to Success</h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Keep checking off items and build the strong application profile that will get you into your dream university.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/resources">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 transform transition-all duration-200 hover:scale-105">
-                Back to Resources
-              </Button>
-            </Link>
-            <Link to="/">
-              <Button size="lg" className="bg-white/20 text-white hover:bg-white/30 border border-white/30 transform transition-all duration-200 hover:scale-105">
-                Find Volunteer Opportunities
-              </Button>
-            </Link>
+      {/* Action Section - Only show if not from sidebar */}
+      {!isFromSidebar && (
+        <section className="py-16 bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-600/20"></div>
+          <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          
+          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
+            <BookOpen className="h-16 w-16 mx-auto mb-6" />
+            <h2 className="text-4xl font-bold mb-4">Stay on Track to Success</h2>
+            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+              Keep checking off items and build the strong application profile that will get you into your dream university.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/resources">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 transform transition-all duration-200 hover:scale-105">
+                  Back to Resources
+                </Button>
+              </Link>
+              <Link to="/">
+                <Button size="lg" className="bg-white/20 text-white hover:bg-white/30 border border-white/30 transform transition-all duration-200 hover:scale-105">
+                  Find Volunteer Opportunities
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 };
