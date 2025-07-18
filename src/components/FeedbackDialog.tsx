@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -36,16 +37,18 @@ export const FeedbackDialog = ({ children }: FeedbackDialogProps) => {
     try {
       const feedbackData = {
         ...data,
-        rating: rating || undefined,
-        timestamp: new Date().toISOString()
+        rating: rating || undefined
       };
 
-      // For now, we'll simulate the API call
-      // In a real implementation, this would call a Supabase edge function
-      console.log('Feedback submitted:', feedbackData);
+      console.log('Submitting feedback:', feedbackData);
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { error } = await supabase.functions.invoke('send-feedback', {
+        body: feedbackData
+      });
+
+      if (error) {
+        throw error;
+      }
       
       toast({
         title: "Feedback Sent!",
