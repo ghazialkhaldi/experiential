@@ -14,7 +14,8 @@ import {
   Phone,
   Briefcase,
   LogIn,
-  FileText
+  FileText,
+  CheckSquare
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -265,6 +266,18 @@ const Sidebar = () => {
                     <span>{isInternshipMode ? 'Career Guide' : 'University Guide'}</span>
                   </Link>
                 </li>
+                {!isInternshipMode && (
+                  <li>
+                    <Link
+                      to="/university-checklist"
+                      className="flex items-center space-x-3 transition-colors text-gray-600 hover:text-blue-600"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <CheckSquare className="h-4 w-4" />
+                      <span>University Checklist</span>
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <Link
                     to={isInternshipMode ? "/career-resources" : "/resources"}

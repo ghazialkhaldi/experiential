@@ -95,7 +95,7 @@ const Resources = () => {
       <div className="absolute top-20 right-20 w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
       <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-purple-400/15 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-blue-100 relative z-20">
+      <nav className="bg-transparent backdrop-blur-md shadow-sm border-b border-blue-200/30 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
@@ -110,7 +110,7 @@ const Resources = () => {
                 University Resources
               </Link>
               <AuthButton />
-              <Button className="btn-rainbow text-white">
+              <Button className="btn-rainbow">
                 Post Opportunity
               </Button>
             </div>
@@ -132,17 +132,7 @@ const Resources = () => {
       <section className="py-12 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <div className="fade-in">
-            <svg className="h-16 w-16 mx-auto mb-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="rainbowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#3B82F6" />
-                  <stop offset="50%" stopColor="#06B6D4" />
-                  <stop offset="100%" stopColor="#8B5CF6" />
-                </linearGradient>
-              </defs>
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z" stroke="url(#rainbowGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              <path d="m6 14 2 2 6-4" stroke="url(#rainbowGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            </svg>
+            <GraduationCap className="h-16 w-16 mx-auto mb-6 text-blue-600" />
             <h1 className="text-6xl font-bold text-gray-900 mb-4 leading-tight">
               University Resources for
               <span className="text-gradient-rainbow block">Volunteer Students</span>
@@ -157,7 +147,7 @@ const Resources = () => {
       </section>
 
       {/* Quick Stats */}
-      <section className="py-8 bg-white/80 backdrop-blur-sm relative z-10">
+      <section className="py-8 bg-transparent backdrop-blur-sm relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
             <div className="p-4 stat-card">
@@ -205,7 +195,7 @@ const Resources = () => {
                     {guide.description}
                   </CardDescription>
                   <Button 
-                    className={guide.featured ? "btn-rainbow text-white w-full" : "btn-rainbow text-white w-full"} 
+                    className="btn-rainbow w-full" 
                     asChild
                   >
                     <a href={guide.url} target="_blank" rel="noopener noreferrer">
@@ -221,7 +211,7 @@ const Resources = () => {
       </section>
 
       {/* Scholarship Opportunities */}
-      <section className="py-16 bg-white/80 backdrop-blur-sm relative z-10">
+      <section className="py-16 bg-transparent backdrop-blur-sm relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center mb-8">
             <Award className="h-8 w-8 text-cyan-600 mr-3" />
@@ -230,7 +220,7 @@ const Resources = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {scholarshipOpportunities.map((scholarship, index) => (
-              <Card key={index} className="card-hover bg-white/90 backdrop-blur-sm border-0 shadow-lg">
+              <Card key={index} className="card-hover bg-white/60 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-xl text-cyan-600">{scholarship.name}</CardTitle>
                   <div className="flex justify-between items-center">
@@ -250,7 +240,7 @@ const Resources = () => {
                       <strong>Requirements:</strong> {scholarship.requirements}
                     </p>
                   </div>
-                  <Button className="btn-rainbow text-white w-full" asChild>
+                  <Button className="btn-rainbow w-full" asChild>
                     <a href={scholarship.url} target="_blank" rel="noopener noreferrer">
                       Learn More
                       <ExternalLink className="h-4 w-4 ml-2" />
@@ -273,7 +263,7 @@ const Resources = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {universitySpotlight.map((university, index) => (
-              <Card key={index} className="card-hover bg-white/90 backdrop-blur-sm border-0 shadow-lg">
+              <Card key={index} className="card-hover bg-white/60 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-xl text-purple-600">{university.name}</CardTitle>
                   <CardDescription className="font-medium text-gray-700">
@@ -298,7 +288,7 @@ const Resources = () => {
       <section className="py-16 bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-600/20"></div>
         <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-pulse" style={{animationDelay: "1s"}}></div>
         
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
           <CheckSquare className="h-16 w-16 mx-auto mb-6" />
@@ -307,26 +297,8 @@ const Resources = () => {
             Track your progress with customizable checklists designed specifically for university applications and volunteer requirements.
           </p>
           <Link to="/university-checklist">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 transform transition-all duration-200 hover:scale-105 mb-4">
-              Access University Checklist
-            </Button>
-          </Link>
-        </div>
-      </section>
-
-      {/* Action Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-600/20"></div>
-        
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
-          <BookOpen className="h-16 w-16 mx-auto mb-6" />
-          <h2 className="text-4xl font-bold mb-4">Start Building Your Story Today</h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Don't wait until senior year. Start volunteering now to build the experience that will set you apart.
-          </p>
-          <Link to="/">
             <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 transform transition-all duration-200 hover:scale-105">
-              Find Volunteer Opportunities
+              Access University Checklist
             </Button>
           </Link>
         </div>

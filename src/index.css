@@ -146,11 +146,17 @@ All colors MUST be HSL.
   }
   
   .btn-rainbow {
-    @apply bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-600 hover:from-blue-600 hover:via-cyan-500 hover:to-purple-700 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl;
+    @apply bg-white text-gray-900 border-2 border-transparent bg-clip-padding hover:bg-gray-50 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl;
+    background-image: linear-gradient(white, white), linear-gradient(135deg, #3B82F6, #06B6D4, #8B5CF6);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
   }
   
   .btn-purple-rainbow {
-    @apply bg-gradient-to-r from-purple-500 via-pink-400 to-indigo-600 hover:from-purple-600 hover:via-pink-500 hover:to-indigo-700 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl;
+    @apply bg-white text-gray-900 border-2 border-transparent bg-clip-padding hover:bg-gray-50 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl;
+    background-image: linear-gradient(white, white), linear-gradient(135deg, #8B5CF6, #EC4899, #4F46E5);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
   }
 }
 
