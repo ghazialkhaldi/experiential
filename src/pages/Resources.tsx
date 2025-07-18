@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
+import { FeedbackDialog } from "@/components/FeedbackDialog";
 
 const Resources = () => {
   const collegeGuides = [
@@ -338,7 +339,13 @@ const Resources = () => {
               <ul className="space-y-2 text-gray-300">
                 <li><Link to="/resources" className="hover:text-white transition-colors">University Guide</Link></li>
                 <li><a href="#" className="hover:text-white transition-colors">Volunteer Tips</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Give Feedback</a></li>
+                <li>
+                  <FeedbackDialog>
+                    <button className="hover:text-white transition-colors text-left">
+                      Give Feedback
+                    </button>
+                  </FeedbackDialog>
+                </li>
               </ul>
             </div>
           </div>

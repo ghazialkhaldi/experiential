@@ -24,6 +24,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMode } from "@/contexts/ModeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AuthButton from "@/components/AuthButton";
+import { FeedbackDialog } from "@/components/FeedbackDialog";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -293,18 +294,19 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className={`flex items-center space-x-3 transition-colors ${
-                      isInternshipMode 
-                        ? 'text-gray-300 hover:text-blue-400' 
-                        : 'text-gray-600 hover:text-blue-600'
-                    }`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Phone className="h-4 w-4" />
-                    <span>Give Feedback</span>
-                  </a>
+                  <FeedbackDialog>
+                    <button
+                      className={`flex items-center space-x-3 transition-colors w-full text-left ${
+                        isInternshipMode 
+                          ? 'text-gray-300 hover:text-blue-400' 
+                          : 'text-gray-600 hover:text-blue-600'
+                      }`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Phone className="h-4 w-4" />
+                      <span>Give Feedback</span>
+                    </button>
+                  </FeedbackDialog>
                 </li>
               </ul>
             </div>
