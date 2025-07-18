@@ -13,7 +13,8 @@ import {
   Lightbulb, 
   Phone,
   Briefcase,
-  LogIn
+  LogIn,
+  FileText
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -147,6 +148,20 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 
+                {/* Resume Builder - Only for internship mode */}
+                {isInternshipMode && (
+                  <li>
+                    <Link
+                      to="/resume-builder"
+                      className="flex items-center space-x-3 transition-colors text-gray-300 hover:text-blue-400"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>Create Resume</span>
+                    </Link>
+                  </li>
+                )}
+                
                 {/* Mobile-only Auth options */}
                 {isMobile && !user && (
                   <li>
@@ -275,7 +290,7 @@ const Sidebar = () => {
                     onClick={() => setIsOpen(false)}
                   >
                     <Phone className="h-4 w-4" />
-                    <span>Contact Support</span>
+                    <span>Give Feedback</span>
                   </a>
                 </li>
               </ul>

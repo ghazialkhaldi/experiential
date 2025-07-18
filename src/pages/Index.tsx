@@ -306,15 +306,15 @@ const Index = () => {
                   <div className="md:col-span-2 relative group">
                     <Search className={`absolute left-3 top-3 h-5 w-5 transition-colors duration-200 ${
                       isInternshipMode 
-                        ? 'text-gray-400 group-focus-within:text-blue-400' 
+                        ? 'text-gray-400 group-focus-within:text-purple-400' 
                         : 'text-gray-400 group-focus-within:text-blue-500'
                     }`} />
                     <Input 
                       placeholder={isInternshipMode ? "Search internship opportunities..." : "Search volunteer opportunities..."} 
                       className={`pl-10 h-12 transition-all duration-200 ${
                         isInternshipMode 
-                          ? 'border-gray-600 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 bg-gray-700/90 text-white placeholder:text-gray-400' 
-                          : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/90'
+                          ? 'border-gray-600 focus:border-purple-400 bg-gray-700/90 text-white placeholder:text-gray-400 rainbow-ring-purple' 
+                          : 'border-gray-200 focus:border-blue-500 bg-white/90 rainbow-ring-blue'
                       }`}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}

@@ -1,5 +1,5 @@
 
-import { ArrowLeft, BookOpen, GraduationCap, FileText, Award, Users, Calendar, Target, ExternalLink } from "lucide-react";
+import { ArrowLeft, BookOpen, GraduationCap, FileText, Award, Users, Calendar, Target, ExternalLink, CheckSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -45,21 +45,24 @@ const Resources = () => {
       amount: "$5,000 - $1,000",
       deadline: "November 5, 2024",
       description: "Recognizes students for outstanding volunteer service in their communities.",
-      requirements: "Grades 5-12, significant volunteer service"
+      requirements: "Grades 5-12, significant volunteer service",
+      url: "https://www.prudential.com/links/about/community-spirit-awards"
     },
     {
       name: "Coca-Cola Scholars Program",
       amount: "$20,000",
       deadline: "October 31, 2024",
       description: "Awards based on leadership, service, and academic excellence.",
-      requirements: "High school seniors, leadership in community service"
+      requirements: "High school seniors, leadership in community service",
+      url: "https://www.coca-colascholarsfoundation.org/apply/"
     },
     {
-      name: "Jefferson Award for Public Service",
-      amount: "$1,000",
+      name: "The Diana Award",
+      amount: "$1,000 - $5,000",
       deadline: "Rolling",
-      description: "Celebrates students who demonstrate commitment to public service.",
-      requirements: "Ages 14-25, documented community service"
+      description: "Recognizes young people making positive change in their communities.",
+      requirements: "Ages 9-25, community service leadership",
+      url: "https://diana-award.org.uk/award/"
     }
   ];
 
@@ -85,9 +88,14 @@ const Resources = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-purple-50 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-cyan-400/8 to-white"></div>
+      <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/25 rounded-full blur-2xl animate-pulse"></div>
+      <div className="absolute top-20 right-20 w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+      <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-purple-400/15 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b">
+      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-blue-100 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
@@ -102,7 +110,7 @@ const Resources = () => {
                 University Resources
               </Link>
               <AuthButton />
-              <Button className="bg-blue-600 hover:bg-blue-700">
+              <Button className="btn-rainbow text-white">
                 Post Opportunity
               </Button>
             </div>
@@ -111,7 +119,7 @@ const Resources = () => {
       </nav>
 
       {/* Back Button */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-10">
         <Link to="/">
           <Button variant="ghost" className="mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -121,37 +129,51 @@ const Resources = () => {
       </div>
 
       {/* Header */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <GraduationCap className="h-16 w-16 text-blue-600 mx-auto mb-6" />
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            University Resources for
-            <span className="text-green-600"> Volunteer Students</span>
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Everything you need to leverage your volunteer experience for college applications, scholarships, and future success.
-          </p>
+          <div className="fade-in">
+            <svg className="h-16 w-16 mx-auto mb-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="rainbowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#3B82F6" />
+                  <stop offset="50%" stopColor="#06B6D4" />
+                  <stop offset="100%" stopColor="#8B5CF6" />
+                </linearGradient>
+              </defs>
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z" stroke="url(#rainbowGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <path d="m6 14 2 2 6-4" stroke="url(#rainbowGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            </svg>
+            <h1 className="text-6xl font-bold text-gray-900 mb-4 leading-tight">
+              University Resources for
+              <span className="text-gradient-rainbow block">Volunteer Students</span>
+            </h1>
+          </div>
+          <div className="fade-in-delayed">
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              Everything you need to leverage your volunteer experience for college applications, scholarships, and future success.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Quick Stats */}
-      <section className="py-8 bg-white">
+      <section className="py-8 bg-white/80 backdrop-blur-sm relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-            <div className="p-4">
+            <div className="p-4 stat-card">
               <div className="text-3xl font-bold text-blue-600 mb-2">89%</div>
               <div className="text-gray-600 text-sm">of colleges value community service</div>
             </div>
-            <div className="p-4">
-              <div className="text-3xl font-bold text-green-600 mb-2">$2.4B</div>
+            <div className="p-4 stat-card">
+              <div className="text-3xl font-bold text-cyan-600 mb-2">$2.4B</div>
               <div className="text-gray-600 text-sm">in service-based scholarships annually</div>
             </div>
-            <div className="p-4">
+            <div className="p-4 stat-card">
               <div className="text-3xl font-bold text-purple-600 mb-2">25%</div>
               <div className="text-gray-600 text-sm">admission boost with volunteer work</div>
             </div>
-            <div className="p-4">
-              <div className="text-3xl font-bold text-orange-600 mb-2">200+</div>
+            <div className="p-4 stat-card">
+              <div className="text-3xl font-bold text-indigo-600 mb-2">200+</div>
               <div className="text-gray-600 text-sm">universities with service requirements</div>
             </div>
           </div>
@@ -168,10 +190,10 @@ const Resources = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {collegeGuides.map((guide, index) => (
-              <Card key={index} className={`hover:shadow-lg transition-shadow cursor-pointer ${guide.featured ? 'border-blue-200 bg-blue-50' : ''}`}>
+              <Card key={index} className={`card-hover cursor-pointer bg-white/90 backdrop-blur-sm border-0 shadow-lg ${guide.featured ? 'border-blue-200' : ''}`}>
                 <CardHeader>
                   <div className="flex justify-between items-start mb-2">
-                    <Badge variant={guide.featured ? "default" : "secondary"} className={guide.featured ? "bg-blue-600" : ""}>
+                    <Badge variant={guide.featured ? "default" : "secondary"} className={guide.featured ? "btn-rainbow text-white border-0" : ""}>
                       {guide.category}
                     </Badge>
                     <span className="text-sm text-gray-500">{guide.readTime}</span>
@@ -182,7 +204,10 @@ const Resources = () => {
                   <CardDescription className="text-gray-600 mb-4">
                     {guide.description}
                   </CardDescription>
-                  <Button variant={guide.featured ? "default" : "outline"} className="w-full" asChild>
+                  <Button 
+                    className={guide.featured ? "btn-rainbow text-white w-full" : "btn-rainbow text-white w-full"} 
+                    asChild
+                  >
                     <a href={guide.url} target="_blank" rel="noopener noreferrer">
                       Read Study
                       <ExternalLink className="h-4 w-4 ml-2" />
@@ -196,20 +221,20 @@ const Resources = () => {
       </section>
 
       {/* Scholarship Opportunities */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white/80 backdrop-blur-sm relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center mb-8">
-            <Award className="h-8 w-8 text-green-600 mr-3" />
+            <Award className="h-8 w-8 text-cyan-600 mr-3" />
             <h2 className="text-3xl font-bold text-gray-900">Service-Based Scholarships</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {scholarshipOpportunities.map((scholarship, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index} className="card-hover bg-white/90 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-xl text-green-600">{scholarship.name}</CardTitle>
+                  <CardTitle className="text-xl text-cyan-600">{scholarship.name}</CardTitle>
                   <div className="flex justify-between items-center">
-                    <Badge variant="outline" className="text-green-700 border-green-200">
+                    <Badge variant="outline" className="text-cyan-700 border-cyan-200 bg-cyan-50">
                       {scholarship.amount}
                     </Badge>
                     <span className="text-sm text-gray-500 flex items-center">
@@ -225,9 +250,11 @@ const Resources = () => {
                       <strong>Requirements:</strong> {scholarship.requirements}
                     </p>
                   </div>
-                  <Button className="w-full bg-green-600 hover:bg-green-700">
-                    Learn More
-                    <ExternalLink className="h-4 w-4 ml-2" />
+                  <Button className="btn-rainbow text-white w-full" asChild>
+                    <a href={scholarship.url} target="_blank" rel="noopener noreferrer">
+                      Learn More
+                      <ExternalLink className="h-4 w-4 ml-2" />
+                    </a>
                   </Button>
                 </CardContent>
               </Card>
@@ -246,7 +273,7 @@ const Resources = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {universitySpotlight.map((university, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index} className="card-hover bg-white/90 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-xl text-purple-600">{university.name}</CardTitle>
                   <CardDescription className="font-medium text-gray-700">
@@ -267,16 +294,38 @@ const Resources = () => {
         </div>
       </section>
 
+      {/* University Checklist Section */}
+      <section className="py-16 bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-600/20"></div>
+        <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
+          <CheckSquare className="h-16 w-16 mx-auto mb-6" />
+          <h2 className="text-4xl font-bold mb-4">Stay Organized with Our University Checklist</h2>
+          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+            Track your progress with customizable checklists designed specifically for university applications and volunteer requirements.
+          </p>
+          <Link to="/university-checklist">
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 transform transition-all duration-200 hover:scale-105 mb-4">
+              Access University Checklist
+            </Button>
+          </Link>
+        </div>
+      </section>
+
       {/* Action Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-green-600 text-white">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+      <section className="py-16 bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-600/20"></div>
+        
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
           <BookOpen className="h-16 w-16 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold mb-4">Start Building Your Story Today</h2>
-          <p className="text-xl mb-8 opacity-90">
+          <h2 className="text-4xl font-bold mb-4">Start Building Your Story Today</h2>
+          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
             Don't wait until senior year. Start volunteering now to build the experience that will set you apart.
           </p>
           <Link to="/">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 transform transition-all duration-200 hover:scale-105">
               Find Volunteer Opportunities
             </Button>
           </Link>
@@ -317,7 +366,7 @@ const Resources = () => {
               <ul className="space-y-2 text-gray-400">
                 <li><Link to="/resources" className="hover:text-white">University Guide</Link></li>
                 <li><a href="#" className="hover:text-white">Volunteer Tips</a></li>
-                <li><a href="#" className="hover:text-white">Contact Support</a></li>
+                <li><a href="#" className="hover:text-white">Give Feedback</a></li>
               </ul>
             </div>
           </div>
