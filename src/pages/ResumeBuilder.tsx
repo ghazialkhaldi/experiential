@@ -447,8 +447,8 @@ const ResumeBuilder = () => {
               onChange={(e) => setResumeName(e.target.value)}
               className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 max-w-xs"
             />
-            <Button onClick={() => setShowResumeManager(true)} variant="outline" className="text-white border-gray-600 hover:bg-gray-800">
-              <FileText className="h-4 w-4 mr-2 text-purple-400" />
+            <Button onClick={() => setShowResumeManager(true)} className="btn-purple-rainbow">
+              <FileText className="h-4 w-4 mr-2" />
               Manage Resumes
             </Button>
           </div>
