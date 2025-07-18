@@ -325,7 +325,7 @@ const ResumeBuilder = () => {
           </div>
           
           <div className="flex justify-center space-x-4 fade-in-delayed-2">
-            <Button onClick={saveResume} className="btn-purple-rainbow text-white">
+            <Button onClick={saveResume} className="btn-purple-rainbow text-gray-900">
               <Save className="h-4 w-4 mr-2" />
               Save Resume
             </Button>
@@ -407,7 +407,7 @@ const ResumeBuilder = () => {
                     Academic background and qualifications
                   </CardDescription>
                 </div>
-                <Button onClick={addEducationEntry} size="sm" className="btn-purple-rainbow text-white">
+                <Button onClick={addEducationEntry} size="sm" className="btn-purple-rainbow text-gray-900">
                   <Plus className="h-4 w-4 mr-1" />
                   Add Education
                 </Button>
@@ -498,7 +498,7 @@ const ResumeBuilder = () => {
                     Previous work experience and internships
                   </CardDescription>
                 </div>
-                <Button onClick={addExperienceEntry} size="sm" className="btn-purple-rainbow text-white">
+                <Button onClick={addExperienceEntry} size="sm" className="btn-purple-rainbow text-gray-900">
                   <Plus className="h-4 w-4 mr-1" />
                   Add Experience
                 </Button>
@@ -535,7 +535,7 @@ const ResumeBuilder = () => {
                 <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-300 mb-2">Drag and drop your resume here, or click to browse</p>
                 <p className="text-gray-500 text-sm">Supports PDF, DOC, DOCX files</p>
-                <Button className="mt-4 btn-purple-rainbow text-white">
+                <Button className="mt-4 btn-purple-rainbow text-gray-900">
                   <Upload className="h-4 w-4 mr-2" />
                   Choose File
                 </Button>

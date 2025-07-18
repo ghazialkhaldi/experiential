@@ -195,10 +195,10 @@ const Resources = () => {
                     {guide.description}
                   </CardDescription>
                   <Button 
-                    className="btn-rainbow w-full" 
+                    className="btn-rainbow w-full text-gray-900" 
                     asChild
                   >
-                    <a href={guide.url} target="_blank" rel="noopener noreferrer">
+                    <a href={guide.url} target="_blank" rel="noopener noreferrer" className="text-gray-900">
                       Read Study
                       <ExternalLink className="h-4 w-4 ml-2" />
                     </a>
@@ -240,8 +240,8 @@ const Resources = () => {
                       <strong>Requirements:</strong> {scholarship.requirements}
                     </p>
                   </div>
-                  <Button className="btn-rainbow w-full" asChild>
-                    <a href={scholarship.url} target="_blank" rel="noopener noreferrer">
+                  <Button className="btn-rainbow w-full text-gray-900" asChild>
+                    <a href={scholarship.url} target="_blank" rel="noopener noreferrer" className="text-gray-900">
                       Learn More
                       <ExternalLink className="h-4 w-4 ml-2" />
                     </a>

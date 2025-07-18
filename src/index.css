@@ -150,6 +150,7 @@ All colors MUST be HSL.
     background-image: linear-gradient(white, white), linear-gradient(135deg, #3B82F6, #06B6D4, #8B5CF6);
     background-origin: border-box;
     background-clip: padding-box, border-box;
+    color: #1f2937 !important;
   }
   
   .btn-purple-rainbow {
@@ -157,6 +158,7 @@ All colors MUST be HSL.
     background-image: linear-gradient(white, white), linear-gradient(135deg, #8B5CF6, #EC4899, #4F46E5);
     background-origin: border-box;
     background-clip: padding-box, border-box;
+    color: #1f2937 !important;
   }
 }
 
