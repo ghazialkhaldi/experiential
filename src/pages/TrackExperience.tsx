@@ -25,38 +25,6 @@ interface LogExperienceForm {
   skills: string;
 }
 
-const upcomingInternships = [
-  {
-    id: 1,
-    title: "Summer Software Engineering Internship",
-    company: "Tech Corp",
-    location: "San Francisco, CA",
-    season: "Summer 2024",
-    duration: "12 weeks",
-    applicationDeadline: "March 15, 2024",
-    startDate: "June 1, 2024"
-  },
-  {
-    id: 2,
-    title: "Fall Business Analytics Internship",
-    company: "Data Solutions Inc",
-    location: "New York, NY",
-    season: "Fall 2024",
-    duration: "16 weeks",
-    applicationDeadline: "July 1, 2024",
-    startDate: "September 1, 2024"
-  },
-  {
-    id: 3,
-    title: "Spring Marketing Internship",
-    company: "Creative Agency",
-    location: "Los Angeles, CA",
-    season: "Spring 2025",
-    duration: "14 weeks",
-    applicationDeadline: "November 15, 2024",
-    startDate: "January 15, 2025"
-  }
-];
 
 const mockExperiences: any[] = [];
 
@@ -369,42 +337,6 @@ const TrackExperience = () => {
                 </CardContent>
               </Card>
 
-              <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
-                <CardHeader>
-                  <CardTitle className={isInternshipMode ? 'text-white' : ''}>Upcoming Internships</CardTitle>
-                  <CardDescription className={isInternshipMode ? 'text-gray-400' : ''}>
-                    Seasonal internship opportunities to apply for
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {upcomingInternships.map((internship) => (
-                      <div key={internship.id} className={`p-4 border rounded-lg space-y-2 ${isInternshipMode ? 'border-gray-600 bg-gray-700/50' : ''}`}>
-                        <div className="flex justify-between items-start">
-                          <h3 className={`font-semibold ${isInternshipMode ? 'text-white' : ''}`}>{internship.title}</h3>
-                          <Badge variant="outline" className={isInternshipMode ? 'border-gray-500 text-gray-300' : ''}>{internship.season}</Badge>
-                        </div>
-                        <p className={`text-sm flex items-center gap-1 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
-                          <Building className="h-3 w-3" />
-                          {internship.company}
-                        </p>
-                        <p className={`text-sm flex items-center gap-1 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
-                          <MapPin className="h-3 w-3" />
-                          {internship.location}
-                        </p>
-                        <div className={`flex justify-between text-xs ${isInternshipMode ? 'text-gray-500' : 'text-muted-foreground'}`}>
-                          <span>Duration: {internship.duration}</span>
-                          <span>Apply by: {internship.applicationDeadline}</span>
-                        </div>
-                        <Separator className={`my-2 ${isInternshipMode ? 'bg-gray-600' : ''}`} />
-                        <Button variant="outline" size="sm" className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white border-0">
-                          Learn More
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
