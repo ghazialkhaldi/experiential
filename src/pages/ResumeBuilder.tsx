@@ -282,8 +282,8 @@ const ResumeBuilder = () => {
                   <ArrowLeft className="h-4 w-4 mr-2 text-purple-400" />
                   Back to Editor
                 </Button>
-                <Button onClick={downloadResume} className="btn-purple-rainbow text-gray-900">
-                  <Download className="h-4 w-4 mr-2 text-purple-400" />
+                <Button onClick={downloadResume} className="btn-purple-rainbow">
+                  <Download className="h-4 w-4 mr-2" />
                   Download PDF
                 </Button>
               </div>
@@ -405,7 +405,7 @@ const ResumeBuilder = () => {
                   Internships
                 </Link>
                 <AuthButton />
-                <Button className="btn-purple-rainbow text-gray-900">
+                <Button className="btn-purple-rainbow">
                   Post Internship
                 </Button>
             </div>
@@ -454,8 +454,8 @@ const ResumeBuilder = () => {
           </div>
           
           <div className="flex justify-center space-x-4 fade-in-delayed-2">
-            <Button onClick={saveResume} className="btn-purple-rainbow text-gray-900">
-              <Save className="h-4 w-4 mr-2 text-purple-600" />
+            <Button onClick={saveResume} className="btn-purple-rainbow">
+              <Save className="h-4 w-4 mr-2" />
               Save Resume
             </Button>
             <Button onClick={() => setPreviewMode(true)} variant="outline" className="text-white border-gray-600 hover:bg-gray-800">
@@ -486,8 +486,8 @@ const ResumeBuilder = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-white">Saved Resumes</h3>
-              <Button onClick={createNewResume} className="btn-purple-rainbow text-gray-900">
-                <Plus className="h-4 w-4 mr-2 text-purple-600" />
+              <Button onClick={createNewResume} className="btn-purple-rainbow">
+                <Plus className="h-4 w-4 mr-2" />
                 New Resume
               </Button>
             </div>
@@ -518,9 +518,9 @@ const ResumeBuilder = () => {
                         <Button
                           onClick={() => loadResume(resume)}
                           size="sm"
-                          className="btn-purple-rainbow text-gray-900 flex-1"
+                          className="btn-purple-rainbow flex-1"
                         >
-                          <Edit3 className="h-4 w-4 mr-1 text-purple-600" />
+                          <Edit3 className="h-4 w-4 mr-1" />
                           Load
                         </Button>
                         <AlertDialog>
@@ -651,7 +651,7 @@ const ResumeBuilder = () => {
                     Academic background and qualifications
                   </CardDescription>
                 </div>
-                <Button onClick={addEducationEntry} size="sm" className="btn-purple-rainbow text-gray-900">
+                <Button onClick={addEducationEntry} size="sm" className="btn-purple-rainbow">
                   <Plus className="h-4 w-4 mr-1" />
                   Add Education
                 </Button>
@@ -742,7 +742,7 @@ const ResumeBuilder = () => {
                     Previous work experience and internships
                   </CardDescription>
                 </div>
-                <Button onClick={addExperienceEntry} size="sm" className="btn-purple-rainbow text-gray-900">
+                <Button onClick={addExperienceEntry} size="sm" className="btn-purple-rainbow">
                   <Plus className="h-4 w-4 mr-1" />
                   Add Experience
                 </Button>
@@ -779,7 +779,7 @@ const ResumeBuilder = () => {
                 <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-300 mb-2">Drag and drop your resume here, or click to browse</p>
                 <p className="text-gray-500 text-sm">Supports PDF, DOC, DOCX files</p>
-                <Button className="mt-4 btn-purple-rainbow text-gray-900">
+                <Button className="mt-4 btn-purple-rainbow">
                   <Upload className="h-4 w-4 mr-2" />
                   Choose File
                 </Button>
