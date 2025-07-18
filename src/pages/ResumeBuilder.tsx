@@ -458,8 +458,8 @@ const ResumeBuilder = () => {
               <Save className="h-4 w-4 mr-2" />
               Save Resume
             </Button>
-            <Button onClick={() => setPreviewMode(true)} variant="outline" className="text-white border-gray-600 hover:bg-gray-800">
-              <Eye className="h-4 w-4 mr-2 text-purple-400" />
+            <Button onClick={() => setPreviewMode(true)} className="btn-purple-rainbow">
+              <Eye className="h-4 w-4 mr-2" />
               Preview
             </Button>
             <Button onClick={downloadResume} variant="outline" className="text-black border-gray-600 hover:bg-gray-800 hover:text-white">
