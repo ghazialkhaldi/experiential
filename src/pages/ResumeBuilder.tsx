@@ -462,8 +462,8 @@ const ResumeBuilder = () => {
               <Eye className="h-4 w-4 mr-2" />
               Preview
             </Button>
-            <Button onClick={downloadResume} variant="outline" className="text-black border-gray-600 hover:bg-gray-800 hover:text-white">
-              <Download className="h-4 w-4 mr-2 text-purple-400" />
+            <Button onClick={downloadResume} className="btn-purple-rainbow">
+              <Download className="h-4 w-4 mr-2" />
               Download PDF
             </Button>
           </div>
