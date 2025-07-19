@@ -105,11 +105,12 @@ const ResumeBuilder = () => {
     ));
   };
 
-  const addEducationEntry = () => {
+  const addEducationEntry = (type: 'university' | 'highschool') => {
     const newEntry = {
       id: Date.now().toString(),
+      type,
       institution: '',
-      degree: '',
+      degree: type === 'university' ? '' : 'High School Diploma',
       field: '',
       graduationYear: '',
       gpa: ''
@@ -168,6 +169,42 @@ const ResumeBuilder = () => {
       section.type === 'achievements' ? {
         ...section,
         data: [...section.data, newAchievement]
+      } : section
+    ));
+  };
+
+  const deleteEducationEntry = (entryId: string) => {
+    setResumeSections(prev => prev.map(section => 
+      section.type === 'education' ? {
+        ...section,
+        data: section.data.filter((entry: any) => entry.id !== entryId)
+      } : section
+    ));
+  };
+
+  const deleteExperienceEntry = (entryId: string) => {
+    setResumeSections(prev => prev.map(section => 
+      section.type === 'experience' ? {
+        ...section,
+        data: section.data.filter((entry: any) => entry.id !== entryId)
+      } : section
+    ));
+  };
+
+  const deleteSkillEntry = (entryId: string) => {
+    setResumeSections(prev => prev.map(section => 
+      section.type === 'skills' ? {
+        ...section,
+        data: section.data.filter((entry: any) => entry.id !== entryId)
+      } : section
+    ));
+  };
+
+  const deleteAchievementEntry = (entryId: string) => {
+    setResumeSections(prev => prev.map(section => 
+      section.type === 'achievements' ? {
+        ...section,
+        data: section.data.filter((entry: any) => entry.id !== entryId)
       } : section
     ));
   };
@@ -651,18 +688,37 @@ const ResumeBuilder = () => {
                     Academic background and qualifications
                   </CardDescription>
                 </div>
-                <Button onClick={addEducationEntry} size="sm" className="btn-purple-rainbow">
-                  <Plus className="h-4 w-4 mr-1" />
-                  Add Education
-                </Button>
+                <div className="flex space-x-2">
+                  <Button onClick={() => addEducationEntry('university')} size="sm" className="btn-purple-rainbow">
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add University
+                  </Button>
+                  <Button onClick={() => addEducationEntry('highschool')} size="sm" variant="outline" className="border-purple-400 text-purple-400 hover:bg-purple-400/20">
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add High School
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {education.map((edu: any, index: number) => (
                 <div key={edu.id} className="p-4 bg-gray-700/50 rounded-lg space-y-3">
+                  <div className="flex justify-between items-center mb-3">
+                    <Badge variant="secondary" className={edu.type === 'university' ? 'bg-blue-600' : 'bg-green-600'}>
+                      {edu.type === 'university' ? 'University' : 'High School'}
+                    </Badge>
+                    <Button
+                      onClick={() => deleteEducationEntry(edu.id)}
+                      size="sm"
+                      variant="outline"
+                      className="border-red-500 text-red-400 hover:bg-red-500/20"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Input
-                      placeholder="Institution Name"
+                      placeholder={edu.type === 'university' ? 'University Name' : 'High School Name'}
                       value={edu.institution}
                       onChange={(e) => {
                         const newEducation = [...education];
@@ -674,7 +730,7 @@ const ResumeBuilder = () => {
                       className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
                     />
                     <Input
-                      placeholder="Degree"
+                      placeholder={edu.type === 'university' ? 'Degree' : 'High School Diploma'}
                       value={edu.degree}
                       onChange={(e) => {
                         const newEducation = [...education];
@@ -686,7 +742,7 @@ const ResumeBuilder = () => {
                       className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
                     />
                     <Input
-                      placeholder="Field of Study"
+                      placeholder={edu.type === 'university' ? 'Field of Study' : 'Concentration/Track (Optional)'}
                       value={edu.field}
                       onChange={(e) => {
                         const newEducation = [...education];
@@ -724,11 +780,13 @@ const ResumeBuilder = () => {
                   />
                 </div>
               ))}
+              {education.length === 0 && (
+                <p className="text-gray-400 text-center py-4">No education entries added yet</p>
+              )}
             </CardContent>
           </Card>
 
-          {/* Add similar sections for Experience, Skills, and Achievements */}
-          {/* (I'll keep this concise, but in a real implementation, these would be fully built out) */}
+          {/* Work Experience */}
 
           <Card className="bg-gray-800/80 border-gray-700">
             <CardHeader>
@@ -748,17 +806,268 @@ const ResumeBuilder = () => {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
-              {experience.length === 0 ? (
-                <p className="text-gray-400 text-center py-4">No work experience added yet</p>
-              ) : (
-                <div className="space-y-4">
-                  {experience.map((exp: any, index: number) => (
-                    <div key={exp.id} className="p-4 bg-gray-700/50 rounded-lg">
-                      <p className="text-white">Experience entry #{index + 1}</p>
-                    </div>
-                  ))}
+            <CardContent className="space-y-4">
+              {experience.map((exp: any, index: number) => (
+                <div key={exp.id} className="p-4 bg-gray-700/50 rounded-lg space-y-3">
+                  <div className="flex justify-between items-center mb-3">
+                    <h4 className="text-white font-medium">Experience #{index + 1}</h4>
+                    <Button
+                      onClick={() => deleteExperienceEntry(exp.id)}
+                      size="sm"
+                      variant="outline"
+                      className="border-red-500 text-red-400 hover:bg-red-500/20"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <Input
+                      placeholder="Company Name"
+                      value={exp.company}
+                      onChange={(e) => {
+                        const newExperience = [...experience];
+                        newExperience[index].company = e.target.value;
+                        setResumeSections(prev => prev.map(section => 
+                          section.type === 'experience' ? { ...section, data: newExperience } : section
+                        ));
+                      }}
+                      className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
+                    />
+                    <Input
+                      placeholder="Position/Role"
+                      value={exp.position}
+                      onChange={(e) => {
+                        const newExperience = [...experience];
+                        newExperience[index].position = e.target.value;
+                        setResumeSections(prev => prev.map(section => 
+                          section.type === 'experience' ? { ...section, data: newExperience } : section
+                        ));
+                      }}
+                      className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
+                    />
+                    <Input
+                      placeholder="Start Date"
+                      value={exp.startDate}
+                      onChange={(e) => {
+                        const newExperience = [...experience];
+                        newExperience[index].startDate = e.target.value;
+                        setResumeSections(prev => prev.map(section => 
+                          section.type === 'experience' ? { ...section, data: newExperience } : section
+                        ));
+                      }}
+                      className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
+                    />
+                    <Input
+                      placeholder="End Date (or 'Present')"
+                      value={exp.endDate}
+                      onChange={(e) => {
+                        const newExperience = [...experience];
+                        newExperience[index].endDate = e.target.value;
+                        setResumeSections(prev => prev.map(section => 
+                          section.type === 'experience' ? { ...section, data: newExperience } : section
+                        ));
+                      }}
+                      className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+                  <Textarea
+                    placeholder="Job description and achievements..."
+                    value={exp.description}
+                    onChange={(e) => {
+                      const newExperience = [...experience];
+                      newExperience[index].description = e.target.value;
+                      setResumeSections(prev => prev.map(section => 
+                        section.type === 'experience' ? { ...section, data: newExperience } : section
+                      ));
+                    }}
+                    className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
+                    rows={3}
+                  />
                 </div>
+              ))}
+              {experience.length === 0 && (
+                <p className="text-gray-400 text-center py-4">No work experience added yet</p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Personal Statement Section */}
+          <Card className="bg-gray-800/80 border-gray-700">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-white flex items-center">
+                    <Target className="h-6 w-6 mr-2 text-green-400" />
+                    Personal Statement
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    A brief paragraph about yourself, your goals and aspirations
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                placeholder="Write a compelling personal statement that showcases your personality, goals, and what makes you unique..."
+                value={personalStatement.statement}
+                onChange={(e) => updatePersonalStatement(e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+                rows={4}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Skills Section */}
+          <Card className="bg-gray-800/80 border-gray-700">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-white flex items-center">
+                    <Star className="h-6 w-6 mr-2 text-yellow-400" />
+                    Skills & Strengths
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Technical and soft skills that highlight your abilities
+                  </CardDescription>
+                </div>
+                <Button onClick={addSkill} size="sm" className="btn-purple-rainbow">
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Skill
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {skills.map((skill: any, index: number) => (
+                <div key={skill.id} className="p-4 bg-gray-700/50 rounded-lg space-y-3">
+                  <div className="flex justify-between items-center mb-3">
+                    <h4 className="text-white font-medium">Skill #{index + 1}</h4>
+                    <Button
+                      onClick={() => deleteSkillEntry(skill.id)}
+                      size="sm"
+                      variant="outline"
+                      className="border-red-500 text-red-400 hover:bg-red-500/20"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <Input
+                      placeholder="Skill Name"
+                      value={skill.name}
+                      onChange={(e) => {
+                        const newSkills = [...skills];
+                        newSkills[index].name = e.target.value;
+                        setResumeSections(prev => prev.map(section => 
+                          section.type === 'skills' ? { ...section, data: newSkills } : section
+                        ));
+                      }}
+                      className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
+                    />
+                    <Select 
+                      value={skill.level} 
+                      onValueChange={(value) => {
+                        const newSkills = [...skills];
+                        newSkills[index].level = value;
+                        setResumeSections(prev => prev.map(section => 
+                          section.type === 'skills' ? { ...section, data: newSkills } : section
+                        ));
+                      }}
+                    >
+                      <SelectTrigger className="bg-gray-600 border-gray-500 text-white">
+                        <SelectValue placeholder="Skill Level" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 border-gray-600">
+                        <SelectItem value="Beginner">Beginner</SelectItem>
+                        <SelectItem value="Intermediate">Intermediate</SelectItem>
+                        <SelectItem value="Advanced">Advanced</SelectItem>
+                        <SelectItem value="Expert">Expert</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              ))}
+              {skills.length === 0 && (
+                <p className="text-gray-400 text-center py-4">No skills added yet</p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Achievements Section */}
+          <Card className="bg-gray-800/80 border-gray-700">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-white flex items-center">
+                    <Award className="h-6 w-6 mr-2 text-yellow-400" />
+                    Achievements & Awards
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Notable achievements, awards, and recognition
+                  </CardDescription>
+                </div>
+                <Button onClick={addAchievement} size="sm" className="btn-purple-rainbow">
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Achievement
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {achievements.map((achievement: any, index: number) => (
+                <div key={achievement.id} className="p-4 bg-gray-700/50 rounded-lg space-y-3">
+                  <div className="flex justify-between items-center mb-3">
+                    <h4 className="text-white font-medium">Achievement #{index + 1}</h4>
+                    <Button
+                      onClick={() => deleteAchievementEntry(achievement.id)}
+                      size="sm"
+                      variant="outline"
+                      className="border-red-500 text-red-400 hover:bg-red-500/20"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <Input
+                      placeholder="Achievement Title"
+                      value={achievement.title}
+                      onChange={(e) => {
+                        const newAchievements = [...achievements];
+                        newAchievements[index].title = e.target.value;
+                        setResumeSections(prev => prev.map(section => 
+                          section.type === 'achievements' ? { ...section, data: newAchievements } : section
+                        ));
+                      }}
+                      className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
+                    />
+                    <Input
+                      placeholder="Date"
+                      value={achievement.date}
+                      onChange={(e) => {
+                        const newAchievements = [...achievements];
+                        newAchievements[index].date = e.target.value;
+                        setResumeSections(prev => prev.map(section => 
+                          section.type === 'achievements' ? { ...section, data: newAchievements } : section
+                        ));
+                      }}
+                      className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+                  <Textarea
+                    placeholder="Description of the achievement..."
+                    value={achievement.description}
+                    onChange={(e) => {
+                      const newAchievements = [...achievements];
+                      newAchievements[index].description = e.target.value;
+                      setResumeSections(prev => prev.map(section => 
+                        section.type === 'achievements' ? { ...section, data: newAchievements } : section
+                      ));
+                    }}
+                    className="bg-gray-600 border-gray-500 text-white placeholder:text-gray-400"
+                    rows={2}
+                  />
+                </div>
+              ))}
+              {achievements.length === 0 && (
+                <p className="text-gray-400 text-center py-4">No achievements added yet</p>
               )}
             </CardContent>
           </Card>
