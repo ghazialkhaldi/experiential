@@ -220,7 +220,10 @@ const Index = () => {
       {/* Google User Notification */}
       {showGoogleNotification && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <GoogleUserNotification onDismiss={() => setShowGoogleNotification(false)} />
+          <GoogleUserNotification onDismiss={() => {
+            console.log('Dismissing Google notification');
+            setShowGoogleNotification(false);
+          }} />
         </div>
       )}
 

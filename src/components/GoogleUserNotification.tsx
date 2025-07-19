@@ -15,13 +15,23 @@ const GoogleUserNotification: React.FC<GoogleUserNotificationProps> = ({ onDismi
   const { profile } = useProfile();
   const { isInternshipMode } = useMode();
 
+  console.log('GoogleUserNotification - User:', user);
+  console.log('GoogleUserNotification - Profile:', profile);
+  console.log('GoogleUserNotification - User metadata:', user?.app_metadata);
+
   // Only show for Google users without a complete profile
   const isGoogleUser = user?.app_metadata?.provider === 'google';
   const needsProfile = !profile?.role;
 
+  console.log('GoogleUserNotification - Is Google user:', isGoogleUser);
+  console.log('GoogleUserNotification - Needs profile:', needsProfile);
+
   if (!isGoogleUser || !needsProfile) {
+    console.log('GoogleUserNotification - Not showing notification');
     return null;
   }
+
+  console.log('GoogleUserNotification - Showing notification');
 
   return (
     <Alert className={`mb-4 ${

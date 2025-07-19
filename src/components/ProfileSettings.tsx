@@ -116,9 +116,16 @@ const ProfileSettings = () => {
   };
 
   // Don't show if user already has a role
+  console.log('ProfileSettings - User:', user);
+  console.log('ProfileSettings - Profile:', profile);
+  console.log('ProfileSettings - Profile role:', profile?.role);
+  
   if (profile?.role) {
+    console.log('ProfileSettings - Not showing, user has role');
     return null;
   }
+
+  console.log('ProfileSettings - Showing profile settings');
 
   return (
     <Card className={`mt-4 ${isInternshipMode ? 'bg-gray-800/90 border-purple-500/30' : ''}`}>
