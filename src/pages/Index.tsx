@@ -23,6 +23,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import LocationSelector from "@/components/LocationSelector";
+import GoogleUserNotification from "@/components/GoogleUserNotification";
 import { isNewOpportunity, formatTimeAgo } from "@/utils/dateUtils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -34,6 +35,7 @@ const Index = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showGoogleNotification, setShowGoogleNotification] = useState(true);
   const isMobile = useIsMobile();
   
   // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
@@ -214,6 +216,13 @@ const Index = () => {
           </div>
         </div>
       </nav>
+
+      {/* Google User Notification */}
+      {showGoogleNotification && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <GoogleUserNotification onDismiss={() => setShowGoogleNotification(false)} />
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">

@@ -23,6 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
 import { useMode } from "@/contexts/ModeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import ProfileSettings from './ProfileSettings';
 import AuthButton from "@/components/AuthButton";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 
@@ -307,6 +308,9 @@ const Sidebar = () => {
                 </li>
               </ul>
             </div>
+            
+            {/* Profile Settings - Shows for Google users without profile */}
+            {user && <ProfileSettings />}
 
             {/* Mode Switch - Made more prominent */}
             <div className={`pt-6 mt-6 border-t ${isInternshipMode ? 'border-gray-700' : 'border-gray-200'}`}>

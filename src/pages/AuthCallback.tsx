@@ -44,31 +44,6 @@ const AuthCallback = () => {
         const user = data.session.user;
         console.log('AuthCallback - User:', user);
         console.log('AuthCallback - App metadata:', user.app_metadata);
-        console.log('AuthCallback - User metadata:', user.user_metadata);
-
-        // Check if this is a Google OAuth user
-        const isGoogleUser = user.app_metadata?.provider === 'google';
-        console.log('AuthCallback - Is Google user:', isGoogleUser);
-        
-        // Check if user has a profile with role
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        console.log('AuthCallback - Profile check:', { profile, profileError, isGoogleUser });
-
-        // If Google user and no profile or no role, redirect to complete profile
-        if (isGoogleUser && (!profile || !profile.role)) {
-          console.log('AuthCallback - Redirecting Google user to complete profile');
-          toast({
-            title: "Welcome!",
-            description: "Please complete your profile to get started.",
-          });
-          navigate('/complete-profile');
-          return;
-        }
 
         setStatus('Setting up your profile...');
 
