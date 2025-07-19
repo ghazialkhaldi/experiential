@@ -323,6 +323,12 @@ const Sidebar = () => {
                   <Switch
                     checked={isInternshipMode}
                     onCheckedChange={(checked) => {
+                      console.log('Switch toggled:', { 
+                        checked, 
+                        currentMode: mode, 
+                        isInternshipMode,
+                        isMobile 
+                      });
                       setMode(checked ? 'internship' : 'volunteer');
                       navigate('/');
                     }}
