@@ -303,8 +303,8 @@ const Auth = () => {
         : 'bg-gradient-to-br from-blue-50 to-green-50'
     }`}>
       <div className="w-full max-w-md">
-        <div className="flex items-center justify-center mb-8">
-          <Link to="/" className={`flex items-center mb-4 transition-colors ${
+        <div className="flex items-center justify-center mb-6">
+          <Link to="/" className={`flex items-center transition-colors ${
             isInternshipMode 
               ? 'text-purple-300 hover:text-purple-400' 
               : 'text-gray-600 hover:text-blue-600'
@@ -314,7 +314,7 @@ const Auth = () => {
           </Link>
         </div>
         
-        <div className="flex items-center justify-center mb-8">
+        <div className="flex items-center justify-center mb-12">
           <span className={`text-3xl font-bold ${
             isInternshipMode ? 'text-purple-200' : 'text-gray-900'
           }`}>
