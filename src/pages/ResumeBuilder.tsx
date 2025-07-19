@@ -528,7 +528,7 @@ const ResumeBuilder = () => {
               <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
                 <Briefcase className={`h-8 w-8 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
                 <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  Experiential
+                  E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span>
                 </span>
               </Link>
               <div className="flex items-center space-x-4">
@@ -653,7 +653,7 @@ const ResumeBuilder = () => {
               <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
                 <Briefcase className={`h-8 w-8 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
                 <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  Experiential
+                  E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span>
                 </span>
               </Link>
               <div className="flex items-center space-x-6">

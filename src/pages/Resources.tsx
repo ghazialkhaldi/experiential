@@ -101,7 +101,7 @@ const Resources = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
               <Users className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">Experiential</span>
+              <span className="text-2xl font-bold text-gray-900">E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span></span>
             </Link>
             <div className="flex items-center space-x-6">
               <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
@@ -310,9 +310,8 @@ const Resources = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Users className="h-6 w-6 text-white" />
-                <span className="text-xl font-bold text-white">Experiential</span>
+              <div className="flex items-center mb-4">
+                <span className="text-xl font-bold text-white">E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span></span>
               </div>
               <p className="text-gray-300">
                 Connecting high school students with meaningful volunteer opportunities.
