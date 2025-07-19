@@ -373,12 +373,12 @@ const Index = () => {
               <div className={`text-5xl font-bold mb-3 fade-in ${
                 isInternshipMode ? 'text-blue-400' : 'text-blue-600'
               }`}>
-                {isInternshipMode ? '77%' : '63%'}
+                {isInternshipMode ? '82%' : '71%'}
               </div>
               <div className={`font-medium ${
                 isInternshipMode ? 'text-gray-300' : 'text-gray-600'
               }`}>
-                {isInternshipMode ? 'Get Full-Time Offers' : 'College Acceptance Rate'}
+                {isInternshipMode ? 'Career Success Rate' : 'University Acceptance Boost'}
               </div>
               <div className={`w-12 h-1 mx-auto mt-4 rounded ${
                 isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
@@ -392,12 +392,12 @@ const Index = () => {
               <div className={`text-5xl font-bold mb-3 ${
                 isInternshipMode ? 'text-green-400' : 'text-green-600'
               }`}>
-                {isInternshipMode ? '2.5M' : '8.1B'}
+                {isInternshipMode ? '3.2M' : '2.8B'}
               </div>
               <div className={`font-medium ${
                 isInternshipMode ? 'text-gray-300' : 'text-gray-600'
               }`}>
-                {isInternshipMode ? 'Open Internships Yearly' : 'Hours Volunteered Annually'}
+                {isInternshipMode ? 'Global Internships Yearly' : 'Hours of Community Service'}
               </div>
               <div className={`w-12 h-1 mx-auto mt-4 rounded ${
                 isInternshipMode ? 'bg-green-400' : 'bg-green-600'
@@ -411,12 +411,12 @@ const Index = () => {
               <div className={`text-5xl font-bold mb-3 ${
                 isInternshipMode ? 'text-purple-400' : 'text-purple-600'
               }`}>
-                {isInternshipMode ? '$21.2B' : '77M'}
+                {isInternshipMode ? '45%' : '89%'}
               </div>
               <div className={`font-medium ${
                 isInternshipMode ? 'text-gray-300' : 'text-gray-600'
               }`}>
-                {isInternshipMode ? 'Economic Value Added' : 'Americans Volunteer'}
+                {isInternshipMode ? 'Salary Increase Post-Internship' : 'Report Personal Growth'}
               </div>
               <div className={`w-12 h-1 mx-auto mt-4 rounded ${
                 isInternshipMode ? 'bg-purple-400' : 'bg-purple-600'
