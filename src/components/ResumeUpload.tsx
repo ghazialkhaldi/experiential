@@ -49,7 +49,10 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
           sortBy: { column: 'created_at', order: 'desc' }
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading saved resumes:', error);
+        return;
+      }
 
       const resumes: SavedResume[] = data?.map(file => ({
         name: file.name,

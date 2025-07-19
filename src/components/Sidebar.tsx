@@ -150,19 +150,21 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 
-                {/* Resume Builder - Only for internship mode */}
-                {isInternshipMode && (
-                  <li>
-                    <Link
-                      to="/resume-builder"
-                      className="flex items-center space-x-3 transition-colors text-gray-300 hover:text-blue-400"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <FileText className="h-4 w-4" />
-                      <span>Create Resume</span>
-                    </Link>
-                  </li>
-                )}
+                {/* Resume Builder - Available in both modes */}
+                <li>
+                  <Link
+                    to="/resume-builder"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span>Resume Builder</span>
+                  </Link>
+                </li>
                 
                 {/* Mobile-only Auth options */}
                 {isMobile && !user && (
