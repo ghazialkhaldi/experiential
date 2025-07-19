@@ -70,11 +70,11 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full w-80 transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 left-0 h-full w-80 transform transition-transform duration-300 ease-in-out z-50 overflow-y-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } ${isInternshipMode ? 'bg-gray-900 shadow-2xl' : 'bg-white shadow-lg'}`}
       >
-        <div className="p-6">
+        <div className="p-6 pb-8">{/* Added extra bottom padding to ensure mode switch is accessible */}
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <Link 
