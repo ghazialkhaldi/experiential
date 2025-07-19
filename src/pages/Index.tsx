@@ -49,7 +49,7 @@ const Index = () => {
   
   // Show latest opportunities on home page with location-based sorting
   const { opportunities, loading, error } = useOpportunities('', 'all', userLocation);
-  const { hasIncompleteOrganization, hasIncompleteOrgData, loading: profileLoading } = useProfile();
+  const { profile, organization, loading: profileLoading } = useProfile();
   const { user } = useAuth();
 
   // Hero text rotation - moved before conditional return
@@ -76,8 +76,11 @@ const Index = () => {
     return heroTexts[randomIndex];
   }, [heroTexts]);
 
-  // Check if we need to show organization setup - AFTER all hooks
-  const needsOrganizationSetup = hasIncompleteOrganization || hasIncompleteOrgData;
+  // Check if we need to show organization setup
+  const needsOrganizationSetup = (profile?.role === 'volunteer_searcher' && !organization) || !!localStorage.getItem('incompleteOrgData');
+  
+  // Check if user is an organization (should see post opportunity button)
+  const isOrganization = profile?.role === 'volunteer_searcher' || !!organization;
 
   // Show organization setup if needed
   if (needsOrganizationSetup && !profileLoading) {
@@ -194,15 +197,17 @@ const Index = () => {
                     </Link>
                   )}
                   <AuthButton />
-                  <Link to="/post-opportunity">
-                    <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
-                      isInternshipMode 
-                        ? 'bg-blue-600 hover:bg-blue-700' 
-                        : 'bg-blue-600 hover:bg-blue-700'
-                    }`}>
-                      {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
-                    </Button>
-                  </Link>
+                  {isOrganization && (
+                    <Link to="/post-opportunity">
+                      <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
+                        isInternshipMode 
+                          ? 'bg-blue-600 hover:bg-blue-700' 
+                          : 'bg-blue-600 hover:bg-blue-700'
+                      }`}>
+                        {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
+                      </Button>
+                    </Link>
+                  )}
                 </>
               )}
             </div>

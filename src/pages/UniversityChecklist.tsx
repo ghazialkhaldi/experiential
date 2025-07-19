@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ChecklistItem {
   id: string;
@@ -24,6 +25,7 @@ interface ChecklistSection {
 
 const UniversityChecklist = () => {
   const location = useLocation();
+  const isMobile = useIsMobile();
   const [customItem, setCustomItem] = useState("");
   const [editingItem, setEditingItem] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
@@ -158,20 +160,24 @@ const UniversityChecklist = () => {
       <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-              <span className="text-2xl font-bold text-gray-900">E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span></span>
+            {/* Mobile: Center the logo, Desktop: Left align */}
+            <Link to="/" className={`flex items-center space-x-2 transition-colors hover:opacity-80 ${
+              isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : ''
+            }`}>
+              <span className="text-2xl font-bold text-gray-900">E<span className="text-blue-500">x</span>per<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-sm">•</span></span>ent<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-sm">•</span></span>al<span className="text-blue-500">.</span></span>
             </Link>
             <div className="flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
-                Opportunities
-              </Link>
-              <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium">
-                University Resources
-              </Link>
+              {!isMobile && (
+                <>
+                  <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
+                    Opportunities
+                  </Link>
+                  <Link to="/resources" className="text-gray-700 hover:text-blue-600 font-medium">
+                    University Resources
+                  </Link>
+                </>
+              )}
               <AuthButton />
-              <Button className="btn-rainbow text-white">
-                Post Opportunity
-              </Button>
             </div>
           </div>
         </div>
