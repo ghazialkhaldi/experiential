@@ -41,6 +41,31 @@ const AuthCallback = () => {
           return;
         }
 
+        const user = data.session.user;
+
+        // Check if this is a Google OAuth user without a complete profile
+        const isGoogleUser = user.app_metadata?.provider === 'google';
+        
+        // Check if user has a profile with role
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        console.log('Profile check:', { profile, profileError, isGoogleUser });
+
+        // If Google user and no profile or no role, redirect to complete profile
+        if (isGoogleUser && (!profile || !profile.role)) {
+          console.log('Redirecting Google user to complete profile');
+          toast({
+            title: "Welcome!",
+            description: "Please complete your profile to get started.",
+          });
+          navigate('/complete-profile');
+          return;
+        }
+
         setStatus('Setting up your profile...');
 
         // Get pending signup data from localStorage

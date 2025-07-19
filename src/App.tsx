@@ -12,6 +12,7 @@ import UniversityChecklist from "./pages/UniversityChecklist";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
+import CompleteProfile from "./pages/CompleteProfile";
 import PostOpportunity from "./pages/PostOpportunity";
 import ManageOpportunities from "./pages/ManageOpportunities";
 import SearchResults from "./pages/SearchResults";
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/auth-callback" element={<AuthCallback />} />
+            <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/post-opportunity" element={<PostOpportunity />} />
             <Route path="/manage-opportunities" element={<ManageOpportunities />} />
             <Route path="/track-hours" element={<TrackHours />} />
