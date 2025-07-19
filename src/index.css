@@ -160,7 +160,39 @@ All colors MUST be HSL.
     background-clip: padding-box, border-box;
     color: #1f2937 !important;
   }
-}
+  }
+  
+  .i-blue-dot {
+    position: relative;
+    color: inherit;
+  }
+  
+  .i-blue-dot::before {
+    content: '•';
+    position: absolute;
+    top: -0.2em;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #3b82f6;
+    font-size: 0.3em;
+    line-height: 1;
+  }
+  
+  .i-blue-dot-white {
+    position: relative;
+    color: inherit;
+  }
+  
+  .i-blue-dot-white::before {
+    content: '•';
+    position: absolute;
+    top: -0.2em;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #3b82f6;
+    font-size: 0.3em;
+    line-height: 1;
+  }
 
 @layer base {
   * {

@@ -86,7 +86,7 @@ const Sidebar = () => {
               }}
             >
               <span className={`text-xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                E<span className="text-blue-500">x</span>per<span className="text-blue-500">i</span>ent<span className="text-blue-500">i</span>al<span className="text-blue-500">.</span>
+                E<span className="text-blue-500">x</span>per<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-xs">•</span></span>ent<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-xs">•</span></span>al<span className="text-blue-500">.</span>
               </span>
             </Link>
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>
