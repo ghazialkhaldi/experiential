@@ -616,12 +616,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                {isInternshipMode ? (
-                  <Briefcase className="h-6 w-6" />
-                ) : (
-                  <Users className="h-6 w-6" />
-                )}
+              <div className="mb-4">
                 <span className="text-xl font-bold">
                   E<span className="text-blue-500">x</span>per<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-xs">•</span></span>ent<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-xs">•</span></span>al<span className="text-blue-500">.</span>
                 </span>
