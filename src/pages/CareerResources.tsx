@@ -65,7 +65,7 @@ const CareerResources = () => {
                 <Briefcase className="h-8 w-8 text-blue-400 floating" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
               </div>
-              <span className="text-2xl font-bold text-white">InternshipHub</span>
+              <span className="text-2xl font-bold text-white">Experiential</span>
             </Link>
             <div className="flex items-center space-x-6 fade-in-delayed">
               <Link to="/" className="text-gray-300 hover:text-blue-400 font-medium transition-colors duration-200 relative group">

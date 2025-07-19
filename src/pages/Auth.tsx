@@ -323,7 +323,7 @@ const Auth = () => {
           <span className={`text-2xl font-bold ${
             isInternshipMode ? 'text-purple-200' : 'text-gray-900'
           }`}>
-            {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+            Experiential
           </span>
         </div>
 

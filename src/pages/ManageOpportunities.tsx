@@ -234,7 +234,7 @@ const ManageOpportunities = () => {
                   <Users className="h-8 w-8 text-blue-600" />
                 )}
                 <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                  Experiential
                 </span>
               </Link>
               <div className="flex items-center space-x-6">
@@ -280,7 +280,7 @@ const ManageOpportunities = () => {
                 <Users className="h-8 w-8 text-blue-600" />
               )}
               <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                Experiential
               </span>
             </Link>
             <div className="flex items-center space-x-6">

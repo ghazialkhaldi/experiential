@@ -116,7 +116,7 @@ const SearchResults = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <Users className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">VolunteerHub</span>
+              <span className="text-2xl font-bold text-gray-900">Experiential</span>
             </div>
             <div className="flex items-center space-x-6">
               <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">

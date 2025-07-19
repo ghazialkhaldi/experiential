@@ -85,13 +85,8 @@ const Sidebar = () => {
                 setIsOpen(false);
               }}
             >
-              {isInternshipMode ? (
-                <Briefcase className="h-8 w-8 text-blue-400" />
-              ) : (
-                <Users className="h-8 w-8 text-blue-600" />
-              )}
               <span className={`text-xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                E<span className="text-blue-500">x</span>periential
               </span>
             </Link>
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>

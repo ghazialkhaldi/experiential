@@ -145,16 +145,10 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2 fade-in">
-              <div className="relative">
-                <Users className={`h-8 w-8 floating ${
-                  isInternshipMode ? 'text-blue-400' : 'text-blue-600'
-                }`} />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-              </div>
               <span className={`text-2xl font-bold ${
                 isInternshipMode ? 'text-white' : 'text-gray-900'
               }`}>
-                {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                E<span className="text-blue-500">x</span>periential
               </span>
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">
@@ -629,7 +623,7 @@ const Index = () => {
                   <Users className="h-6 w-6" />
                 )}
                 <span className="text-xl font-bold">
-                  {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                  Experiential
                 </span>
               </div>
               <p className="text-gray-400">
@@ -681,7 +675,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}. {isInternshipMode ? 'Empowering careers.' : 'Made for students, by students.'}</p>
+            <p>&copy; 2025 Experiential. {isInternshipMode ? 'Empowering careers.' : 'Made for students, by students.'}</p>
           </div>
         </div>
       </footer>

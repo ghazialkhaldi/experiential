@@ -156,7 +156,7 @@ const AuthCallback = () => {
         setStatus('Account setup complete!');
         
         toast({
-          title: "Welcome to VolunteerHub!",
+          title: "Welcome to Experiential!",
           description: "Your account has been verified and set up successfully.",
         });
 
@@ -186,7 +186,7 @@ const AuthCallback = () => {
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center mb-8">
           <Users className="h-8 w-8 text-blue-600 mr-2" />
-          <span className="text-2xl font-bold text-gray-900">VolunteerHub</span>
+          <span className="text-2xl font-bold text-gray-900">Experiential</span>
         </div>
 
         <Card>

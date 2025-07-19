@@ -101,7 +101,7 @@ const Resources = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
               <Users className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">VolunteerHub</span>
+              <span className="text-2xl font-bold text-gray-900">Experiential</span>
             </Link>
             <div className="flex items-center space-x-6">
               <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
@@ -312,7 +312,7 @@ const Resources = () => {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <Users className="h-6 w-6 text-white" />
-                <span className="text-xl font-bold text-white">VolunteerHub</span>
+                <span className="text-xl font-bold text-white">Experiential</span>
               </div>
               <p className="text-gray-300">
                 Connecting high school students with meaningful volunteer opportunities.
@@ -350,7 +350,7 @@ const Resources = () => {
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
-            <p>&copy; 2025 VolunteerHub. Made for students, by students.</p>
+            <p>&copy; 2025 Experiential. Made for students, by students.</p>
           </div>
         </div>
       </footer>

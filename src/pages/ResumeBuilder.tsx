@@ -528,7 +528,7 @@ const ResumeBuilder = () => {
               <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
                 <Briefcase className={`h-8 w-8 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
                 <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                  Experiential
                 </span>
               </Link>
               <div className="flex items-center space-x-4">
@@ -653,7 +653,7 @@ const ResumeBuilder = () => {
               <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
                 <Briefcase className={`h-8 w-8 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
                 <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                  Experiential
                 </span>
               </Link>
               <div className="flex items-center space-x-6">

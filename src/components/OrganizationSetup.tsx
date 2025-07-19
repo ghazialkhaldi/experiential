@@ -164,7 +164,7 @@ const OrganizationSetup: React.FC<OrganizationSetupProps> = ({ onComplete, initi
               <CardTitle>Organization Information Required</CardTitle>
             </div>
             <CardDescription>
-              Please complete your organization profile to continue using VolunteerHub.
+              Please complete your organization profile to continue using Experiential.
             </CardDescription>
           </CardHeader>
           <CardContent>

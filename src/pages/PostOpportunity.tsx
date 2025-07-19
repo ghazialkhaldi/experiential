@@ -183,7 +183,7 @@ const PostOpportunity = () => {
               <span className={`text-2xl font-bold ${
                 isInternshipMode ? 'text-white' : 'text-gray-900'
               }`}>
-                {isInternshipMode ? 'InternshipHub' : 'VolunteerHub'}
+                Experiential
               </span>
             </div>
             <div className="flex items-center space-x-6">

@@ -97,7 +97,7 @@ export const FeedbackDialog = ({ children }: FeedbackDialogProps) => {
             Give Feedback
           </DialogTitle>
           <DialogDescription>
-            Help us improve VolunteerHub with your feedback and suggestions.
+            Help us improve Experiential with your feedback and suggestions.
           </DialogDescription>
         </DialogHeader>
         
