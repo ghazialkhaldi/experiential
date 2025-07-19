@@ -26,7 +26,7 @@ const AuthButton = () => {
     return (
       <Button 
         variant="outline" 
-        className="border-blue-600 text-blue-600 hover:bg-blue-50"
+        className="border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-200 hover:scale-105"
         onClick={() => navigate('/auth')}
       >
         Sign In
@@ -36,7 +36,7 @@ const AuthButton = () => {
 
   if (loading) {
     return (
-      <Button variant="outline" className="border-blue-600 text-blue-600" disabled>
+      <Button variant="outline" className="border-blue-600 text-blue-600 transition-all duration-200" disabled>
         Loading...
       </Button>
     );
@@ -45,7 +45,7 @@ const AuthButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+        <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-200 hover:scale-105">
           {isOrganization ? (
             <Building className="h-4 w-4 mr-2" />
           ) : (
