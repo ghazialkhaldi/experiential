@@ -31,7 +31,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "VolunteerHub <onboarding@resend.dev>",
-      to: ["ghazialkhaldi99@gmail.com"],
+      to: ["feedback@experiential.care"],
       subject: `New Feedback: ${subject}`,
       html: `
         <h1>New Feedback Received</h1>
