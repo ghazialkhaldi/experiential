@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from '@/integrations/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
@@ -33,7 +34,8 @@ const PostOpportunity = () => {
     time_commitment: '',
     requirements: '',
     max_volunteers: '',
-    expires_at: ''
+    expires_at: '',
+    resume_required: false
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,7 +67,8 @@ const PostOpportunity = () => {
           location: location,
           max_volunteers: formData.max_volunteers ? parseInt(formData.max_volunteers) : null,
           expires_at: formData.expires_at ? new Date(formData.expires_at).toISOString() : null,
-          opportunity_type: isInternshipMode ? 'internship' : 'volunteer'
+          opportunity_type: isInternshipMode ? 'internship' : 'volunteer',
+          resume_required: formData.resume_required
         });
 
       if (error) {
@@ -327,6 +330,23 @@ const PostOpportunity = () => {
                   onChange={(e) => setFormData({...formData, expires_at: e.target.value})}
                   className={isInternshipMode ? 'bg-gray-700/50 border-gray-600 text-gray-200' : ''}
                 />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="resume_required"
+                  checked={formData.resume_required}
+                  onCheckedChange={(checked) => setFormData({...formData, resume_required: checked as boolean})}
+                  className={isInternshipMode ? 'border-gray-600 data-[state=checked]:bg-blue-600' : ''}
+                />
+                <Label 
+                  htmlFor="resume_required" 
+                  className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
+                    isInternshipMode ? 'text-gray-300' : ''
+                  }`}
+                >
+                  Require resume for applications
+                </Label>
               </div>
 
               <div className={`p-4 rounded-lg ${

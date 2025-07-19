@@ -22,6 +22,7 @@ export type Database = {
           id: string
           message: string | null
           opportunity_id: string
+          resume_url: string | null
           status: string
           updated_at: string
           user_id: string
@@ -33,6 +34,7 @@ export type Database = {
           id?: string
           message?: string | null
           opportunity_id: string
+          resume_url?: string | null
           status?: string
           updated_at?: string
           user_id: string
@@ -44,6 +46,7 @@ export type Database = {
           id?: string
           message?: string | null
           opportunity_id?: string
+          resume_url?: string | null
           status?: string
           updated_at?: string
           user_id?: string
@@ -73,6 +76,7 @@ export type Database = {
           organization_id: string
           posted_at: string
           requirements: string | null
+          resume_required: boolean | null
           time_commitment: string
           title: string
           updated_at: string
@@ -91,6 +95,7 @@ export type Database = {
           organization_id: string
           posted_at?: string
           requirements?: string | null
+          resume_required?: boolean | null
           time_commitment: string
           title: string
           updated_at?: string
@@ -109,6 +114,7 @@ export type Database = {
           organization_id?: string
           posted_at?: string
           requirements?: string | null
+          resume_required?: boolean | null
           time_commitment?: string
           title?: string
           updated_at?: string

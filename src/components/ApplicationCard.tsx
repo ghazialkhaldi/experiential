@@ -1,4 +1,4 @@
-import { Clock, Mail, User, MessageSquare } from 'lucide-react';
+import { Clock, Mail, User, MessageSquare, FileText, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +12,7 @@ interface Application {
   applicant_email: string;
   applicant_name: string;
   message: string | null;
+  resume_url: string | null;
   status: string;
   applied_at: string;
   updated_at: string;
@@ -74,6 +75,15 @@ const ApplicationCard = ({ application, showOpportunityTitle = false }: Applicat
     }
   };
 
+  const handleResumeDownload = () => {
+    if (application.resume_url) {
+      const link = document.createElement('a');
+      link.href = application.resume_url;
+      link.download = `${application.applicant_name.replace(/\s+/g, '_')}_resume`;
+      link.click();
+    }
+  };
+
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader>
@@ -119,6 +129,26 @@ const ApplicationCard = ({ application, showOpportunityTitle = false }: Applicat
               <p className="text-gray-700 bg-gray-50 p-3 rounded-lg text-sm">
                 {application.message}
               </p>
+            </div>
+          )}
+
+          {application.resume_url && (
+            <div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center text-gray-600">
+                  <FileText className="h-4 w-4 mr-2" />
+                  <span className="font-medium">Resume:</span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleResumeDownload}
+                  className="flex items-center space-x-1"
+                >
+                  <Download className="h-3 w-3" />
+                  <span>Download</span>
+                </Button>
+              </div>
             </div>
           )}
           

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import ResumeUpload from '@/components/ResumeUpload';
 import {
   Dialog,
   DialogContent,
@@ -27,6 +28,7 @@ interface Opportunity {
   posted_at: string;
   max_volunteers: number | null;
   current_volunteers: number;
+  resume_required?: boolean;
   organization: {
     name: string;
     id: string;
@@ -43,6 +45,7 @@ const OpportunityDetailDialog = ({ opportunity, open, onOpenChange }: Opportunit
   const [applicantName, setApplicantName] = useState('');
   const [applicantEmail, setApplicantEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { user } = useAuth();
@@ -70,9 +73,18 @@ const OpportunityDetailDialog = ({ opportunity, open, onOpenChange }: Opportunit
       return;
     }
 
+    if (opportunity.resume_required && !resumeUrl) {
+      toast({
+        title: "Resume Required",
+        description: "Please upload your resume to apply for this opportunity.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsSubmitting(true);
-      await applyToOpportunity(opportunity.id, applicantName, applicantEmail, message);
+      await applyToOpportunity(opportunity.id, applicantName, applicantEmail, message, resumeUrl);
       
       toast({
         title: "Application Submitted!",
@@ -82,6 +94,7 @@ const OpportunityDetailDialog = ({ opportunity, open, onOpenChange }: Opportunit
       setApplicantName('');
       setApplicantEmail('');
       setMessage('');
+      setResumeUrl(null);
       onOpenChange(false);
     } catch (error: any) {
       toast({
@@ -199,6 +212,12 @@ const OpportunityDetailDialog = ({ opportunity, open, onOpenChange }: Opportunit
                     rows={4}
                   />
                 </div>
+                
+                <ResumeUpload
+                  onResumeSelect={setResumeUrl}
+                  selectedResumeUrl={resumeUrl}
+                  required={opportunity.resume_required}
+                />
                 <Button 
                   onClick={handleApply}
                   disabled={isSubmitting}

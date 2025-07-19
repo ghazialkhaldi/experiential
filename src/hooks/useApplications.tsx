@@ -9,6 +9,7 @@ interface Application {
   applicant_email: string;
   applicant_name: string;
   message: string | null;
+  resume_url: string | null;
   status: string;
   applied_at: string;
   updated_at: string;
@@ -73,7 +74,8 @@ export const useApplications = (opportunityId?: string) => {
     opportunityId: string,
     applicantName: string,
     applicantEmail: string,
-    message?: string
+    message?: string,
+    resumeUrl?: string | null
   ) => {
     if (!user) {
       throw new Error('You must be logged in to apply');
@@ -88,6 +90,7 @@ export const useApplications = (opportunityId?: string) => {
           applicant_name: applicantName,
           applicant_email: applicantEmail,
           message: message || null,
+          resume_url: resumeUrl || null,
         })
         .select()
         .single();

@@ -13,6 +13,7 @@ interface Opportunity {
   posted_at: string;
   max_volunteers: number | null;
   current_volunteers: number;
+  resume_required?: boolean;
   distance?: number;
   organization: {
     name: string;
