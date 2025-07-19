@@ -315,15 +315,10 @@ const Auth = () => {
         </div>
         
         <div className="flex items-center justify-center mb-8">
-          {isInternshipMode ? (
-            <Briefcase className="h-8 w-8 text-purple-400 mr-2" />
-          ) : (
-            <Users className="h-8 w-8 text-blue-600 mr-2" />
-          )}
-          <span className={`text-2xl font-bold ${
+          <span className={`text-3xl font-bold ${
             isInternshipMode ? 'text-purple-200' : 'text-gray-900'
           }`}>
-            E<span className="text-blue-500">x</span>per<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-xs">•</span></span>ent<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-xs">•</span></span>al<span className="text-blue-500">.</span>
+            E<span className="text-blue-500">x</span>per<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-sm">•</span></span>ent<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-sm">•</span></span>al<span className="text-blue-500">.</span>
           </span>
         </div>
 
