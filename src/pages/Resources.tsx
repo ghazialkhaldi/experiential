@@ -11,11 +11,11 @@ const Resources = () => {
   const collegeGuides = [
     {
       title: "How Community Service Impacts College Admissions",
-      description: "Research from NACAC (National Association for College Admission Counseling) shows 89% of colleges consider community service in admissions.",
+      description: "How communtiy service can have an impact on your college admissions by IvyWise.",
       category: "Research",
-      readTime: "8 min read",
+      readTime: "4 min read",
       featured: true,
-      url: "https://www.nacacnet.org/news--publications/Research/"
+      url: "https://www.ivywise.com/blog/does-community-service-matter-in-the-college-admissions-process"
     },
     {
       title: "The Economic Value of Volunteering (Independent Sector Study)",
@@ -100,7 +100,6 @@ const Resources = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-              <Users className="h-8 w-8 text-blue-600" />
               <span className="text-2xl font-bold text-gray-900">E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span></span>
             </Link>
             <div className="flex items-center space-x-6">

@@ -177,9 +177,7 @@ const PostOpportunity = () => {
             <div className="flex items-center space-x-2">
               {isInternshipMode ? (
                 <Briefcase className="h-8 w-8 text-blue-400" />
-              ) : (
-                <Users className="h-8 w-8 text-blue-600" />
-              )}
+              ) : null}
               <span className={`text-2xl font-bold ${
                 isInternshipMode ? 'text-white' : 'text-gray-900'
               }`}>
