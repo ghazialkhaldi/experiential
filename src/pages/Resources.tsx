@@ -11,11 +11,11 @@ const Resources = () => {
   const collegeGuides = [
     {
       title: "How Community Service Impacts College Admissions",
-      description: "Research from NACAC (National Association for College Admission Counseling) shows 89% of colleges consider community service in admissions.",
+      description: "How communtiy service can have an impact on your college admissions by IvyWise.",
       category: "Research",
-      readTime: "8 min read",
+      readTime: "4 min read",
       featured: true,
-      url: "https://www.nacacnet.org/news--publications/Research/"
+      url: "https://www.ivywise.com/blog/does-community-service-matter-in-the-college-admissions-process"
     },
     {
       title: "The Economic Value of Volunteering (Independent Sector Study)",
