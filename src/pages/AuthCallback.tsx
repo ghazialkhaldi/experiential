@@ -167,17 +167,30 @@ const AuthCallback = () => {
           .maybeSingle();
 
         const needsProfileCompletion = !profileData?.role;
+        const isGoogleUser = user.app_metadata?.provider === 'google';
         
         if (needsProfileCompletion) {
-          toast({
-            title: "Welcome to Experiential!",
-            description: "Please complete your profile to get started.",
-          });
+          if (isGoogleUser) {
+            // For Google users, redirect to home page where they can use the sidebar notification
+            toast({
+              title: "Welcome to Experiential!",
+              description: "Please complete your profile using the sidebar to get started.",
+            });
 
-          // Redirect to profile completion
-          setTimeout(() => {
-            navigate('/complete-profile');
-          }, 1500);
+            setTimeout(() => {
+              navigate('/');
+            }, 1500);
+          } else {
+            // For non-Google users, use the existing flow
+            toast({
+              title: "Welcome to Experiential!",
+              description: "Please complete your profile to get started.",
+            });
+
+            setTimeout(() => {
+              navigate('/complete-profile');
+            }, 1500);
+          }
         } else {
           toast({
             title: "Welcome back to Experiential!",
