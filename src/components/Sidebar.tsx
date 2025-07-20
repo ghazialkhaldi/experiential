@@ -13,6 +13,7 @@ import {
   Lightbulb, 
   Phone,
   Briefcase,
+  Heart,
   LogIn,
   FileText,
   CheckSquare
@@ -120,6 +121,20 @@ const Sidebar = () => {
                   >
                     <Search className="h-4 w-4" />
                     <span>{isInternshipMode ? 'Find Internships' : 'Find Opportunities'}</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/discover"
+                    className={`flex items-center space-x-3 transition-colors ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Heart className="h-4 w-4" />
+                    <span>Discover</span>
                   </Link>
                 </li>
                 <li>

@@ -16,6 +16,7 @@ import CompleteProfile from "./pages/CompleteProfile";
 import PostOpportunity from "./pages/PostOpportunity";
 import ManageOpportunities from "./pages/ManageOpportunities";
 import SearchResults from "./pages/SearchResults";
+import Discover from "./pages/Discover";
 import TrackHours from "./pages/TrackHours";
 import TrackExperience from "./pages/TrackExperience";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/search" element={<SearchResults />} />
+            <Route path="/discover" element={<Discover />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/career-resources" element={<CareerResources />} />
             <Route path="/university-checklist" element={<UniversityChecklist />} />
