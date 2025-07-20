@@ -11,13 +11,21 @@ interface GoogleUserNotificationProps {
 }
 
 const GoogleUserNotification: React.FC<GoogleUserNotificationProps> = ({ onDismiss }) => {
-  const { user } = useAuth();
-  const { profile } = useProfile();
+  const { user, loading } = useAuth();
+  const { profile, loading: profileLoading } = useProfile();
   const { isInternshipMode } = useMode();
 
   console.log('GoogleUserNotification - User:', user);
   console.log('GoogleUserNotification - Profile:', profile);
+  console.log('GoogleUserNotification - Auth loading:', loading);
+  console.log('GoogleUserNotification - Profile loading:', profileLoading);
   console.log('GoogleUserNotification - User metadata:', user?.app_metadata);
+
+  // Don't show anything while loading
+  if (loading || profileLoading) {
+    console.log('GoogleUserNotification - Still loading, not showing');
+    return null;
+  }
 
   // Only show for Google users without a complete profile
   const isGoogleUser = user?.app_metadata?.provider === 'google';
