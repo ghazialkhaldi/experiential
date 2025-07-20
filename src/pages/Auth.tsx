@@ -155,7 +155,7 @@ const Auth = () => {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      const redirectUrl = `${window.location.origin}/auth-callback`;
+      const redirectUrl = `https://yourdomain.com/auth-callback`;
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -199,7 +199,7 @@ const Auth = () => {
     }
 
     try {
-      const redirectUrl = `${window.location.origin}/auth-callback`;
+      const redirectUrl = `https://yourdomain.com/auth-callback`;
       
       console.log('Signup data being stored:', {
         preferences: formData.preferences,
