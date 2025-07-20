@@ -167,6 +167,43 @@ const AuthCallback = () => {
           .maybeSingle();
 
         const needsProfileCompletion = !profileData?.role;
+                const isGoogleUser = user.app_metadata?.provider === 'google';
+        
+        if (needsProfileCompletion) {
+          if (isGoogleUser) {
+            // For Google users, redirect to home page where they can use the sidebar notification
+            toast({
+              title: "Welcome to Experiential!",
+              description: "Please complete your profile using the sidebar to get started.",
+            });
+
+            setTimeout(() => {
+              navigate('/');
+            }, 1500);
+          } else {
+            // For non-Google users, use the existing flow
+            toast({
+              title: "Welcome to Experiential!",
+              description: "Please complete your profile to get started.",
+            });
+
+            setTimeout(() => {
+              navigate('/complete-profile');
+            }, 1500);
+          }
+        } else {
+          toast({
+            title: "Welcome back to Experiential!",
+            description: "Your account has been verified and set up successfully.",
+          });
+        // Check if user needs to complete profile (especially for Google users)
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        const needsProfileCompletion = !profileData?.role;
         const isGoogleUser = user.app_metadata?.provider === 'google';
         
         if (needsProfileCompletion) {
@@ -197,6 +234,11 @@ const AuthCallback = () => {
             description: "Your account has been verified and set up successfully.",
           });
 
+          // Small delay to show success message
+          setTimeout(() => {
+            navigate('/');
+          }, 2000);
+        }
           // Small delay to show success message
           setTimeout(() => {
             navigate('/');
