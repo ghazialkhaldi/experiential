@@ -385,7 +385,7 @@ const Index = () => {
               <div className={`text-5xl font-bold mb-3 fade-in ${
                 isInternshipMode ? 'text-blue-400' : 'text-blue-600'
               }`}>
-                {isInternshipMode ? '82%' : '71%'}
+                {isInternshipMode ? '82%' : '72%'}
               </div>
               <div className={`font-medium ${
                 isInternshipMode ? 'text-gray-300' : 'text-gray-600'
