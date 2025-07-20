@@ -159,15 +159,36 @@ const AuthCallback = () => {
 
         setStatus('Account setup complete!');
         
-        toast({
-          title: "Welcome to Experiential!",
-          description: "Your account has been verified and set up successfully.",
-        });
+        // Check if user needs to complete profile (especially for Google users)
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .maybeSingle();
 
-        // Small delay to show success message
-        setTimeout(() => {
-          navigate('/');
-        }, 2000);
+        const needsProfileCompletion = !profileData?.role;
+        
+        if (needsProfileCompletion) {
+          toast({
+            title: "Welcome to Experiential!",
+            description: "Please complete your profile to get started.",
+          });
+
+          // Redirect to profile completion
+          setTimeout(() => {
+            navigate('/complete-profile');
+          }, 1500);
+        } else {
+          toast({
+            title: "Welcome back to Experiential!",
+            description: "Your account has been verified and set up successfully.",
+          });
+
+          // Small delay to show success message
+          setTimeout(() => {
+            navigate('/');
+          }, 2000);
+        }
 
       } catch (error) {
         console.error('Callback processing error:', error);
