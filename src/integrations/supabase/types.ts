@@ -129,6 +129,27 @@ export type Database = {
           },
         ]
       }
+      opportunity_likes: {
+        Row: {
+          created_at: string
+          id: string
+          opportunity_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          opportunity_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          opportunity_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       organizations: {
         Row: {
           address_line1: string
@@ -213,6 +234,27 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_opportunities: {
+        Row: {
+          created_at: string
+          id: string
+          opportunity_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          opportunity_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          opportunity_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       volunteer_hours: {
         Row: {
           category: string | null
@@ -286,7 +328,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_opportunity_like_count: {
+        Args: { opportunity_id_param: string }
+        Returns: number
+      }
+      has_user_liked_opportunity: {
+        Args: { user_id_param: string; opportunity_id_param: string }
+        Returns: boolean
+      }
+      has_user_saved_opportunity: {
+        Args: { user_id_param: string; opportunity_id_param: string }
+        Returns: boolean
+      }
     }
     Enums: {
       user_role: "volunteer" | "volunteer_searcher"
