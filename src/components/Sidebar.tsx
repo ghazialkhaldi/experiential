@@ -88,9 +88,9 @@ const Sidebar = () => {
             >
               <span className={`text-xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
                 {isInternshipMode ? (
-                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-16" />
+                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-16 w-auto" />
                 ) : (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16" />
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
                 )}
               </span>
             </Link>
