@@ -155,7 +155,7 @@ const Auth = () => {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      const redirectUrl = `https://yourdomain.com/auth-callback`;
+      const redirectUrl = `https://www.experiential.care`;
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -199,7 +199,7 @@ const Auth = () => {
     }
 
     try {
-      const redirectUrl = `https://yourdomain.com/auth-callback`;
+      const redirectUrl = `https://www.experiential.care`;
       
       console.log('Signup data being stored:', {
         preferences: formData.preferences,
