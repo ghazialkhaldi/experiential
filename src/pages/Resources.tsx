@@ -11,11 +11,11 @@ const Resources = () => {
   const collegeGuides = [
     {
       title: "How Community Service Impacts College Admissions",
-      description: "Research from NACAC (National Association for College Admission Counseling) shows 89% of colleges consider community service in admissions.",
-      category: "Research",
-      readTime: "8 min read",
+      description: "Consider community service as a vital component of your college application.",
+      category: "Community Service",
+      readTime: "4 min read",
       featured: true,
-      url: "https://www.nacacnet.org/news--publications/Research/"
+      url: "https://www.ivywise.com/blog/does-community-service-matter-in-the-college-admissions-process/"
     },
     {
       title: "The Economic Value of Volunteering (Independent Sector Study)",
@@ -29,14 +29,14 @@ const Resources = () => {
       description: "Comprehensive data on volunteering trends, demographics, and impact on communities across America.",
       category: "Government Data",
       readTime: "10 min read",
-      url: "https://americorps.gov/about/our-impact/research-reports"
+      url: "https://www.americorps.gov/newsroom/press-release/more-757-million-people-volunteered-america-americorps-reports"
     },
     {
-      title: "Do Good Institute - University of Maryland Research",
-      description: "Academic research on civic engagement and service-learning effectiveness in higher education.",
-      category: "Academic Research",
+      title: "Benefits of Community Engagement in Higher Education",
+      description: "Academic research on community engagement and service-learning effectiveness in higher education.",
+      category: "Community Service",
       readTime: "7 min read",
-      url: "https://dogood.umd.edu/research"
+      url: "https://www.wcsu.edu/community-engagement/benefits-of-volunteering/"
     }
   ];
 
