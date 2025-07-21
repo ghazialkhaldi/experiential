@@ -42,11 +42,19 @@ const ProfileSettings = () => {
     setLoading(true);
 
     try {
-      // First, update the user's profile with role
+      // First, ensure the user's profile record exists and update it with role
       const { error: profileError } = await supabase
         .from('profiles')
-        .update({ role: formData.role as 'volunteer' | 'volunteer_searcher' })
-        .eq('id', user.id);
+        .upsert({ 
+          id: user.id,
+          first_name: user.user_metadata?.first_name || '',
+          last_name: user.user_metadata?.last_name || '',
+          birthday: user.user_metadata?.birthday || null,
+          role: formData.role as 'volunteer' | 'volunteer_searcher',
+          age: null // Will be calculated if birthday exists
+        }, { 
+          onConflict: 'id' 
+        });
 
       if (profileError) {
         throw profileError;
@@ -115,13 +123,17 @@ const ProfileSettings = () => {
     }
   };
 
-  // Don't show if user already has a role
+  // Don't show if user already has a role in profiles table OR in user_metadata
   console.log('ProfileSettings - User:', user);
   console.log('ProfileSettings - Profile:', profile);
   console.log('ProfileSettings - Profile role:', profile?.role);
+  console.log('ProfileSettings - User metadata role:', user?.user_metadata?.role);
   
-  if (profile?.role) {
-    console.log('ProfileSettings - Not showing, user has role');
+  // Check both profile.role and user_metadata.role
+  const hasRole = profile?.role || user?.user_metadata?.role;
+  
+  if (hasRole) {
+    console.log('ProfileSettings - Not showing, user has role:', hasRole);
     return null;
   }
 
