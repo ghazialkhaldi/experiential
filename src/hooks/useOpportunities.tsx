@@ -11,6 +11,7 @@ interface Opportunity {
   requirements: string | null;
   location: string;
   posted_at: string;
+  opportunity_type: string;
   max_volunteers: number | null;
   current_volunteers: number;
   resume_required?: boolean;
