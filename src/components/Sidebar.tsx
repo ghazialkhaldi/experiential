@@ -16,7 +16,9 @@ import {
   Heart,
   LogIn,
   FileText,
-  CheckSquare
+  CheckSquare,
+  Crown,
+  Zap
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -24,6 +26,7 @@ import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
 import { useMode } from "@/contexts/ModeContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useSubscription } from "@/hooks/useSubscription";
 import ProfileSettings from './ProfileSettings';
 import AuthButton from "@/components/AuthButton";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
@@ -32,6 +35,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
   const { mode, setMode, isInternshipMode } = useMode();
+  const { subscribed, subscription_tier, createCheckoutSession, manageSubscription, loading } = useSubscription();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
@@ -100,6 +104,42 @@ const Sidebar = () => {
             </Button>
           </div>
 
+          {/* Pro Subscription Button - Shiny and prominent */}
+          <div className="mb-6">
+            {subscribed ? (
+              <Button
+                onClick={() => {
+                  manageSubscription();
+                  setIsOpen(false);
+                }}
+                className="w-full relative overflow-hidden bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 text-yellow-900 font-bold py-3 px-4 rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105"
+                disabled={loading}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                <div className="flex items-center justify-center space-x-2 relative z-10">
+                  <Crown className="h-5 w-5" />
+                  <span>Pro Active</span>
+                  <Settings className="h-4 w-4" />
+                </div>
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  createCheckoutSession();
+                  setIsOpen(false);
+                }}
+                className="w-full relative overflow-hidden bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105"
+                disabled={loading}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                <div className="flex items-center justify-center space-x-2 relative z-10">
+                  <Zap className="h-5 w-5" />
+                  <span>Get Pro - $4.99/mo</span>
+                </div>
+                <div className="text-xs opacity-90 mt-1">Priority applications</div>
+              </Button>
+            )}
+          </div>
 
           {/* Navigation Sections */}
           <div className="space-y-8">

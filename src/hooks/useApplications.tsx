@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import { useSubscription } from './useSubscription';
 
 interface Application {
   id: string;
@@ -26,6 +27,7 @@ export const useApplications = (opportunityId?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+  const { subscribed } = useSubscription();
 
   useEffect(() => {
     if (user) {
@@ -47,6 +49,7 @@ export const useApplications = (opportunityId?: string) => {
             )
           )
         `)
+        .order('is_pro_user', { ascending: false })
         .order('applied_at', { ascending: false });
 
       if (opportunityId) {
@@ -91,6 +94,7 @@ export const useApplications = (opportunityId?: string) => {
           applicant_email: applicantEmail,
           message: message || null,
           resume_url: resumeUrl || null,
+          is_pro_user: subscribed,
         })
         .select()
         .single();
