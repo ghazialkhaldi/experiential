@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, MapPin, Calendar, Users, Clock, FileText, Briefcase } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, Users, Clock, FileText, Briefcase, CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from '@/integrations/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
@@ -14,6 +16,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from "@/hooks/use-toast";
 import { useMode } from '@/contexts/ModeContext';
 import AuthButton from "@/components/AuthButton";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 
 const PostOpportunity = () => {
@@ -35,6 +39,9 @@ const PostOpportunity = () => {
     expires_at: '',
     resume_required: false
   });
+
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +72,8 @@ const PostOpportunity = () => {
           location: location,
           max_volunteers: formData.max_volunteers ? parseInt(formData.max_volunteers) : null,
           expires_at: formData.expires_at ? new Date(formData.expires_at).toISOString() : null,
+          start_date: startDate ? format(startDate, 'yyyy-MM-dd') : null,
+          end_date: endDate ? format(endDate, 'yyyy-MM-dd') : null,
           opportunity_type: isInternshipMode ? 'internship' : 'volunteer',
           resume_required: formData.resume_required
         });
@@ -306,8 +315,73 @@ const PostOpportunity = () => {
                 />
               </div>
 
+              {/* Start and End Dates */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className={isInternshipMode ? 'text-gray-300' : ''}>
+                    Start Date *
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !startDate && "text-muted-foreground",
+                          isInternshipMode ? 'bg-gray-700/50 border-gray-600 text-gray-200 hover:bg-gray-600' : ''
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {startDate ? format(startDate, "PPP") : <span>Pick start date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={startDate}
+                        onSelect={setStartDate}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className={isInternshipMode ? 'text-gray-300' : ''}>
+                    End Date *
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !endDate && "text-muted-foreground",
+                          isInternshipMode ? 'bg-gray-700/50 border-gray-600 text-gray-200 hover:bg-gray-600' : ''
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {endDate ? format(endDate, "PPP") : <span>Pick end date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={endDate}
+                        onSelect={setEndDate}
+                        disabled={(date) => !startDate || date < startDate}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="expires_at" className={isInternshipMode ? 'text-gray-300' : ''}>Expiration Date</Label>
+                <Label htmlFor="expires_at" className={isInternshipMode ? 'text-gray-300' : ''}>Application Deadline (Optional)</Label>
                 <Input
                   id="expires_at"
                   type="date"

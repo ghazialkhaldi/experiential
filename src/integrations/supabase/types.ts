@@ -70,6 +70,7 @@ export type Database = {
           created_at: string
           current_volunteers: number | null
           description: string
+          end_date: string | null
           expires_at: string | null
           id: string
           is_active: boolean | null
@@ -80,6 +81,7 @@ export type Database = {
           posted_at: string
           requirements: string | null
           resume_required: boolean | null
+          start_date: string | null
           time_commitment: string
           title: string
           updated_at: string
@@ -89,6 +91,7 @@ export type Database = {
           created_at?: string
           current_volunteers?: number | null
           description: string
+          end_date?: string | null
           expires_at?: string | null
           id?: string
           is_active?: boolean | null
@@ -99,6 +102,7 @@ export type Database = {
           posted_at?: string
           requirements?: string | null
           resume_required?: boolean | null
+          start_date?: string | null
           time_commitment: string
           title: string
           updated_at?: string
@@ -108,6 +112,7 @@ export type Database = {
           created_at?: string
           current_volunteers?: number | null
           description?: string
+          end_date?: string | null
           expires_at?: string | null
           id?: string
           is_active?: boolean | null
@@ -118,6 +123,7 @@ export type Database = {
           posted_at?: string
           requirements?: string | null
           resume_required?: boolean | null
+          start_date?: string | null
           time_commitment?: string
           title?: string
           updated_at?: string
@@ -383,6 +389,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_opportunities: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_opportunity_like_count: {
         Args: { opportunity_id_param: string }
         Returns: number
