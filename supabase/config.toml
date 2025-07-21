@@ -1,1 +1,4 @@
 project_id = "cbylovabchsfrhmmndbn"
+
+[functions.cleanup-opportunities]
+verify_jwt = false
