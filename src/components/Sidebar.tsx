@@ -135,7 +135,7 @@ const Sidebar = () => {
                 <div className="flex flex-col items-center justify-center relative z-10">
                   <div className="flex items-center space-x-2 mb-1">
                     <Zap className="h-5 w-5" />
-                    <span className="text-base font-bold">Get Pro</span>
+                    <span className="text-lg font-bold">Get Pro</span>
                   </div>
                   <div className="text-sm font-medium">$4.99/month</div>
                   <div className="text-xs opacity-90 mt-1">Priority applications</div>
