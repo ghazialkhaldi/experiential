@@ -1,0 +1,26 @@
+{
+  "appId": "app.lovable.75132a79160548ad89e678237d9547f6",
+  "appName": "experiential",
+  "webDir": "dist",
+  "server": {
+    "url": "https://75132a79-1605-48ad-89e6-78237d9547f6.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffffff",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "androidSpinnerStyle": "large",
+      "iosSpinnerStyle": "small",
+      "spinnerColor": "#999999",
+      "splashFullScreen": true,
+      "splashImmersive": true,
+      "layoutName": "launch_screen",
+      "useDialog": true
+    }
+  }
+}
