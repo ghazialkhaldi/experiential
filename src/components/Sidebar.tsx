@@ -357,7 +357,7 @@ const Sidebar = () => {
                       onClick={() => setIsOpen(false)}
                     >
                       <Phone className="h-4 w-4" />
-                      <span>Give Feedback</span>
+                      <span>Give Feedback/Support</span>
                     </button>
                   </FeedbackDialog>
                 </li>
