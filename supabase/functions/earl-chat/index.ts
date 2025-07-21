@@ -67,9 +67,9 @@ Always stay positive and focus on encouraging civic engagement and community inv
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'gpt-4o-mini', // Using more cost-effective model
         messages: messages,
-        max_tokens: 500,
+        max_tokens: 300, // Reduced for efficiency
         temperature: 0.7,
       }),
     });
