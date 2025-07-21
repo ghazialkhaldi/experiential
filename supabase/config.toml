@@ -1,4 +1,1 @@
 project_id = "cbylovabchsfrhmmndbn"
-
-[functions.earl-chat]
-verify_jwt = false

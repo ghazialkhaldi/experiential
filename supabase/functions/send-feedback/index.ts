@@ -30,7 +30,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Received feedback:", { name, email, type, subject, message, rating });
 
     const emailResponse = await resend.emails.send({
-      from: "VolunteerHub <onboarding@resend.dev>",
+      from: "Experiential <onboarding@resend.dev>",
       to: ["feedback@experiential.care"],
       subject: `New Feedback: ${subject}`,
       html: `
@@ -43,7 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
         <p>${message.replace(/\n/g, '<br>')}</p>
         
         <hr>
-        <p><em>This feedback was submitted through the VolunteerHub platform.</em></p>
+        <p><em>This feedback was submitted through the Experiential platform.</em></p>
       `,
     });
 
