@@ -18,7 +18,8 @@ import {
   FileText,
   CheckSquare,
   Crown,
-  Zap
+  Zap,
+  CreditCard
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -365,6 +366,21 @@ const Sidebar = () => {
             
             {/* Profile Settings - Shows for Google users without profile */}
             {user && <ProfileSettings />}
+
+            {/* Quick Billing Access for logged in users */}
+            {user && (
+              <div className="mb-4">
+                <Link to="/billing" onClick={() => setIsOpen(false)}>
+                  <Button 
+                    variant="ghost" 
+                    className={`w-full justify-start ${isInternshipMode ? 'text-gray-300 hover:text-blue-400 hover:bg-gray-800' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'}`}
+                  >
+                    <CreditCard className="h-4 w-4 mr-3" />
+                    Billing & Subscription
+                  </Button>
+                </Link>
+              </div>
+            )}
 
             {/* Mode Switch - Made more prominent */}
             <div className={`pt-6 mt-6 border-t ${isInternshipMode ? 'border-gray-700' : 'border-gray-200'}`}>
