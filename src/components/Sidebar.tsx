@@ -128,15 +128,18 @@ const Sidebar = () => {
                   createCheckoutSession();
                   setIsOpen(false);
                 }}
-                className="w-full relative overflow-hidden bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105"
+                className="w-full relative overflow-hidden bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600 text-white font-bold py-4 px-4 rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105"
                 disabled={loading}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-                <div className="flex items-center justify-center space-x-2 relative z-10">
-                  <Zap className="h-5 w-5" />
-                  <span>Get Pro - $4.99/mo</span>
+                <div className="flex flex-col items-center justify-center relative z-10">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Zap className="h-5 w-5" />
+                    <span className="text-base font-bold">Get Pro</span>
+                  </div>
+                  <div className="text-sm font-medium">$4.99/month</div>
+                  <div className="text-xs opacity-90 mt-1">Priority applications</div>
                 </div>
-                <div className="text-xs opacity-90 mt-1">Priority applications</div>
               </Button>
             )}
           </div>
