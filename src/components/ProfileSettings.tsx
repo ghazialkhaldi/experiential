@@ -124,20 +124,11 @@ const ProfileSettings = () => {
   };
 
   // Don't show if user already has a role in profiles table OR in user_metadata
-  console.log('ProfileSettings - User:', user);
-  console.log('ProfileSettings - Profile:', profile);
-  console.log('ProfileSettings - Profile role:', profile?.role);
-  console.log('ProfileSettings - User metadata role:', user?.user_metadata?.role);
-  
-  // Check both profile.role and user_metadata.role
   const hasRole = profile?.role || user?.user_metadata?.role;
   
   if (hasRole) {
-    console.log('ProfileSettings - Not showing, user has role:', hasRole);
     return null;
   }
-
-  console.log('ProfileSettings - Showing profile settings');
 
   return (
     <Card className={`mt-4 ${isInternshipMode ? 'bg-gray-800/90 border-purple-500/30' : ''}`}>
