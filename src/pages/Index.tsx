@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
-import OrganizationSetup from "@/components/OrganizationSetup";
+
 import OpportunityDetailDialog from "@/components/OpportunityDetailDialog";
 import { useOpportunities } from "@/hooks/useOpportunities";
 import { useProfile } from "@/hooks/useProfile";
@@ -78,23 +78,8 @@ const Index = () => {
     return heroTexts[randomIndex];
   }, [heroTexts]);
 
-  // Check if we need to show organization setup
-  const needsOrganizationSetup = (profile?.role === 'volunteer_searcher' && !organization) || !!localStorage.getItem('incompleteOrgData');
-  
   // Check if user is an organization (should see post opportunity button)
   const isOrganization = profile?.role === 'volunteer_searcher' || !!organization;
-
-  // Show organization setup if needed
-  if (needsOrganizationSetup && !profileLoading) {
-    return (
-      <OrganizationSetup 
-        onComplete={() => {
-          // Refresh the page to show the normal interface
-          window.location.reload();
-        }}
-      />
-    );
-  }
 
   const handleSearch = () => {
     const params = new URLSearchParams();

@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from "@/hooks/use-toast";
 import { useMode } from '@/contexts/ModeContext';
 import AuthButton from "@/components/AuthButton";
-import OrganizationSetup from "@/components/OrganizationSetup";
+
 
 const PostOpportunity = () => {
   const navigate = useNavigate();
@@ -24,8 +24,6 @@ const PostOpportunity = () => {
   const { organization, loading, hasIncompleteOrganization, hasIncompleteOrgData, profile } = useProfile();
   const [submitting, setSubmitting] = useState(false);
 
-  // Check for incomplete organization setup
-  const needsOrganizationSetup = (hasIncompleteOrganization || hasIncompleteOrgData) && profile?.role === 'volunteer_searcher';
 
   const [formData, setFormData] = useState({
     title: '',
@@ -118,17 +116,6 @@ const PostOpportunity = () => {
     );
   }
 
-  // Show organization setup if needed
-  if (needsOrganizationSetup && !loading) {
-    return (
-      <OrganizationSetup 
-        onComplete={() => {
-          // Navigate back to the post opportunity page
-          window.location.reload();
-        }}
-      />
-    );
-  }
 
   if (!organization && profile?.role === 'volunteer_searcher') {
     return (

@@ -60,37 +60,6 @@ const ProfileSettings = () => {
         throw profileError;
       }
 
-      // If volunteer_searcher, create organization
-      if (formData.role === 'volunteer_searcher') {
-        if (!formData.organizationName || !formData.address || !formData.city || !formData.state || !formData.zipCode) {
-          toast({
-            variant: "destructive",
-            title: "Missing Required Fields",
-            description: "Please fill in all required organization fields.",
-          });
-          setLoading(false);
-          return;
-        }
-
-        const orgData = {
-          user_id: user.id,
-          name: formData.organizationName,
-          category: formData.organizationCategory || null,
-          description: formData.organizationDescription || null,
-          address_line1: formData.address,
-          city: formData.city,
-          state: formData.state,
-          zip_code: formData.zipCode
-        };
-
-        const { error: orgError } = await supabase
-          .from('organizations')
-          .insert(orgData);
-
-        if (orgError) {
-          throw orgError;
-        }
-      }
 
       toast({
         title: "Profile Updated!",
@@ -160,94 +129,6 @@ const ProfileSettings = () => {
             </Select>
           </div>
 
-          {formData.role === 'volunteer_searcher' && (
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="organizationName" className={isInternshipMode ? 'text-purple-200' : ''}>Organization Name *</Label>
-                <Input
-                  id="organizationName"
-                  value={formData.organizationName}
-                  onChange={(e) => handleInputChange('organizationName', e.target.value)}
-                  placeholder="Enter organization name"
-                  className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="organizationCategory" className={isInternshipMode ? 'text-purple-200' : ''}>Category</Label>
-                <Select value={formData.organizationCategory} onValueChange={(value) => handleInputChange('organizationCategory', value)}>
-                  <SelectTrigger className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}>
-                    <SelectValue placeholder="Select category (optional)" />
-                  </SelectTrigger>
-                  <SelectContent className={isInternshipMode ? 'bg-gray-700 border-gray-600' : ''}>
-                    <SelectItem value="education" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Education</SelectItem>
-                    <SelectItem value="environment" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Environment</SelectItem>
-                    <SelectItem value="animal_care" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Animal Care</SelectItem>
-                    <SelectItem value="community_service" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Community Service</SelectItem>
-                    <SelectItem value="healthcare" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Healthcare</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="organizationDescription" className={isInternshipMode ? 'text-purple-200' : ''}>Description</Label>
-                <Textarea
-                  id="organizationDescription"
-                  value={formData.organizationDescription}
-                  onChange={(e) => handleInputChange('organizationDescription', e.target.value)}
-                  placeholder="Brief description (optional)"
-                  className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="address" className={isInternshipMode ? 'text-purple-200' : ''}>Address *</Label>
-                <Input
-                  id="address"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
-                  placeholder="Street address"
-                  className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="city" className={isInternshipMode ? 'text-purple-200' : ''}>City *</Label>
-                  <Input
-                    id="city"
-                    value={formData.city}
-                    onChange={(e) => handleInputChange('city', e.target.value)}
-                    className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="state" className={isInternshipMode ? 'text-purple-200' : ''}>State *</Label>
-                  <Input
-                    id="state"
-                    value={formData.state}
-                    onChange={(e) => handleInputChange('state', e.target.value)}
-                    className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="zipCode" className={isInternshipMode ? 'text-purple-200' : ''}>ZIP Code *</Label>
-                <Input
-                  id="zipCode"
-                  value={formData.zipCode}
-                  onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                  className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100 placeholder:text-purple-300' : ''}
-                  required
-                />
-              </div>
-            </>
-          )}
 
           <Button 
             type="submit" 
