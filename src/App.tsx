@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ModeProvider } from "./contexts/ModeContext";
+import EarlAssistant from "./components/EarlAssistant";
 import Index from "./pages/Index";
 import Resources from "./pages/Resources";
 import CareerResources from "./pages/CareerResources";
@@ -48,6 +49,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <EarlAssistant />
         </BrowserRouter>
       </TooltipProvider>
     </ModeProvider>
