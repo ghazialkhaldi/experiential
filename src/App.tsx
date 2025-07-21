@@ -19,6 +19,8 @@ import SearchResults from "./pages/SearchResults";
 import Discover from "./pages/Discover";
 import TrackHours from "./pages/TrackHours";
 import TrackExperience from "./pages/TrackExperience";
+import ProFeatures from "./pages/ProFeatures";
+import Billing from "./pages/Billing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +47,8 @@ const App = () => (
             <Route path="/manage-opportunities" element={<ManageOpportunities />} />
             <Route path="/track-hours" element={<TrackHours />} />
             <Route path="/track-experience" element={<TrackExperience />} />
+            <Route path="/pro" element={<ProFeatures />} />
+            <Route path="/billing" element={<Billing />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
