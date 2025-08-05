@@ -570,21 +570,12 @@ const Auth = () => {
                    <Label htmlFor="terms" className={`text-sm leading-relaxed ${isInternshipMode ? 'text-purple-200' : 'text-gray-600'}`}>
                      I agree to the{' '}
                      <a 
-                       href={`${window.location.origin}/terms-and-conditions`}
+                       href={`${window.location.origin}/legal`}
                        target="_blank" 
                        rel="noopener noreferrer"
                        className={`underline ${isInternshipMode ? 'text-purple-300 hover:text-purple-400' : 'text-blue-600 hover:text-blue-700'}`}
                      >
-                       Terms and Conditions
-                     </a>
-                     {' '}and{' '}
-                     <a 
-                       href={`${window.location.origin}/privacy-policy`}
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       className={`underline ${isInternshipMode ? 'text-purple-300 hover:text-purple-400' : 'text-blue-600 hover:text-blue-700'}`}
-                     >
-                       Privacy Policy
+                       Terms and Conditions and Privacy Policy
                      </a>
                    </Label>
                  </div>
