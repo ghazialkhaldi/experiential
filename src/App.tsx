@@ -21,6 +21,8 @@ import TrackHours from "./pages/TrackHours";
 import TrackExperience from "./pages/TrackExperience";
 import ProFeatures from "./pages/ProFeatures";
 import Billing from "./pages/Billing";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -49,6 +51,8 @@ const App = () => (
             <Route path="/track-experience" element={<TrackExperience />} />
             <Route path="/pro" element={<ProFeatures />} />
             <Route path="/billing" element={<Billing />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

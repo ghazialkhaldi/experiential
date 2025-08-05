@@ -39,6 +39,8 @@ const Auth = () => {
     zipCode: ''
   });
   
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -557,7 +559,38 @@ const Auth = () => {
                  </>
                )}
 
-              <Button type="submit" className="w-full" disabled={loading}>
+               {!isLogin && (
+                 <div className="flex items-start space-x-2 mt-4">
+                   <Checkbox
+                     id="terms"
+                     checked={acceptedTerms}
+                     onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
+                     className={isInternshipMode ? 'border-purple-500/30 data-[state=checked]:bg-purple-600 mt-1' : 'mt-1'}
+                   />
+                   <Label htmlFor="terms" className={`text-sm leading-relaxed ${isInternshipMode ? 'text-purple-200' : 'text-gray-600'}`}>
+                     I agree to the{' '}
+                     <a 
+                       href="/terms-and-conditions" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       className={`underline ${isInternshipMode ? 'text-purple-300 hover:text-purple-400' : 'text-blue-600 hover:text-blue-700'}`}
+                     >
+                       Terms and Conditions
+                     </a>
+                     {' '}and{' '}
+                     <a 
+                       href="/privacy-policy" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       className={`underline ${isInternshipMode ? 'text-purple-300 hover:text-purple-400' : 'text-blue-600 hover:text-blue-700'}`}
+                     >
+                       Privacy Policy
+                     </a>
+                   </Label>
+                 </div>
+               )}
+
+              <Button type="submit" className="w-full" disabled={loading || (!isLogin && !acceptedTerms)}>
                 {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
               </Button>
             </form>
