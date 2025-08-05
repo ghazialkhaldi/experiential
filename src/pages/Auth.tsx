@@ -569,23 +569,23 @@ const Auth = () => {
                    />
                    <Label htmlFor="terms" className={`text-sm leading-relaxed ${isInternshipMode ? 'text-purple-200' : 'text-gray-600'}`}>
                      I agree to the{' '}
-                     <Link 
-                       to="/terms-and-conditions" 
+                     <a 
+                       href="/terms-and-conditions" 
                        target="_blank" 
                        rel="noopener noreferrer"
                        className={`underline ${isInternshipMode ? 'text-purple-300 hover:text-purple-400' : 'text-blue-600 hover:text-blue-700'}`}
                      >
                        Terms and Conditions
-                     </Link>
+                     </a>
                      {' '}and{' '}
-                     <Link 
-                       to="/privacy-policy" 
+                     <a 
+                       href="/privacy-policy" 
                        target="_blank" 
                        rel="noopener noreferrer"
                        className={`underline ${isInternshipMode ? 'text-purple-300 hover:text-purple-400' : 'text-blue-600 hover:text-blue-700'}`}
                      >
                        Privacy Policy
-                     </Link>
+                     </a>
                    </Label>
                  </div>
                )}
