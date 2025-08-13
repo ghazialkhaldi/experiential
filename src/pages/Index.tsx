@@ -220,9 +220,19 @@ const Index = () => {
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         {!isInternshipMode ? (
           <>
-            {/* Light Mode Background Elements */}
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-blue-400/8 to-white"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-green-500/5 to-transparent"></div>
+            {/* Light Mode Wavy Diagonal Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-cyan-500/10 to-transparent" 
+                 style={{
+                   clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)',
+                   transform: 'skewY(-3deg)',
+                   transformOrigin: 'top left'
+                 }}></div>
+            <div className="absolute inset-0 bg-gradient-to-bl from-blue-500/15 via-indigo-400/8 to-transparent"
+                 style={{
+                   clipPath: 'polygon(15% 0, 100% 0, 100% 100%, 0 100%)',
+                   transform: 'skewY(2deg)',
+                   transformOrigin: 'top right'
+                 }}></div>
             
             {/* Circles with varying opacity that fade towards bottom */}
             <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/25 rounded-full blur-2xl animate-pulse"></div>
@@ -242,9 +252,19 @@ const Index = () => {
           </>
         ) : (
           <>
-            {/* Dark Mode Background Elements */}
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 via-purple-600/10 to-gray-900"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/15 via-indigo-500/8 to-transparent"></div>
+            {/* Dark Mode Wavy Diagonal Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/25 via-purple-500/12 to-transparent"
+                 style={{
+                   clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)',
+                   transform: 'skewY(-3deg)',
+                   transformOrigin: 'top left'
+                 }}></div>
+            <div className="absolute inset-0 bg-gradient-to-bl from-purple-600/20 via-indigo-500/10 to-transparent"
+                 style={{
+                   clipPath: 'polygon(15% 0, 100% 0, 100% 100%, 0 100%)',
+                   transform: 'skewY(2deg)',
+                   transformOrigin: 'top right'
+                 }}></div>
             
             {/* Dark mode circles */}
             <div className="absolute top-10 left-10 w-48 h-48 bg-blue-500/30 rounded-full blur-2xl animate-pulse"></div>
