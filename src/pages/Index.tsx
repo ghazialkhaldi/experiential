@@ -217,7 +217,7 @@ const Index = () => {
       )}
 
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className={`py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden ${!isInternshipMode ? 'stripe-gradient-section' : ''}`}>
         {!isInternshipMode ? (
           <>
             {/* Light Mode Background Elements */}
@@ -267,7 +267,7 @@ const Index = () => {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="fade-in">
             <h1 className={`text-6xl font-bold mb-6 leading-tight drop-shadow-sm ${
-              isInternshipMode ? 'text-white' : 'text-gray-900'
+              isInternshipMode ? 'text-white' : 'text-gray-800'
             }`}>
               {currentHeroText.firstPart}
               <span className={`block ${

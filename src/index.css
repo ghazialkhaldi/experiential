@@ -49,6 +49,13 @@ All colors MUST be HSL.
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary-blue)) 0%, hsl(var(--accent-cyan)) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(var(--accent-purple)) 0%, hsl(var(--accent-pink)) 100%);
     --gradient-subtle: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--primary-blue) / 0.05) 100%);
+    
+    /* Stripe-inspired diagonal wavy gradients */
+    --gradient-diagonal-1: linear-gradient(135deg, hsl(217 91% 60% / 0.1) 0%, hsl(187 85% 53% / 0.05) 50%, transparent 100%);
+    --gradient-diagonal-2: linear-gradient(-45deg, hsl(250 84% 54% / 0.08) 0%, hsl(333 71% 51% / 0.04) 100%);
+    --gradient-wavy: radial-gradient(ellipse 80% 50% at 20% -20%, hsl(217 91% 60% / 0.12), transparent 60%), 
+                     radial-gradient(ellipse 80% 70% at 90% 110%, hsl(187 85% 53% / 0.08), transparent 60%),
+                     linear-gradient(135deg, hsl(250 84% 54% / 0.03) 0%, transparent 50%, hsl(333 71% 51% / 0.03) 100%);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -137,7 +144,54 @@ All colors MUST be HSL.
   }
   
   .hero-bg {
-    background: var(--gradient-subtle);
+    background: var(--gradient-wavy);
+    position: relative;
+  }
+  
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-diagonal-1);
+    z-index: 1;
+  }
+  
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-diagonal-2);
+    z-index: 2;
+  }
+  
+  .stripe-gradient-section {
+    background: var(--gradient-wavy);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stripe-gradient-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: var(--gradient-diagonal-1);
+    transform: rotate(-12deg);
+    z-index: 1;
+  }
+  
+  .stripe-gradient-section::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: var(--gradient-diagonal-2);
+    transform: rotate(15deg);
+    z-index: 2;
   }
   
   .rainbow-ring-blue {
