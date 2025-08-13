@@ -265,7 +265,7 @@ const AuthCallback = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center mb-8">
-                <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16" />
+                <img src="/Experiential 4.png" alt="Experiential Logo" className="h-16 w-auto" />
         </div>
 
         <Card>

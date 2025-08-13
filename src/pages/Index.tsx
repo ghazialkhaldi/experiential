@@ -141,11 +141,7 @@ const Index = () => {
               <span className={`text-2xl font-bold ${
                 isInternshipMode ? 'text-white' : 'text-gray-900'
               }`}>
-                {isInternshipMode ? (
-                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-28 w-auto" />
-                ) : (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
-                )}
+                <img src="/Experiential 4.png" alt="Experiential Logo" className="h-20 w-auto" />
               </span>
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">
@@ -629,7 +625,7 @@ const Index = () => {
             <div>
               <div className="mb-4">
                 <span className="text-xl font-bold">
-                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-20" />
+                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-20 w-auto" />
                 </span>
               </div>
               <p className="text-gray-400">
