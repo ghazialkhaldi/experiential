@@ -38,26 +38,17 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    /* Stripe-inspired Design System Colors */
+    /* Design System Colors */
     --primary-blue: 217.2 91.2% 59.8%;
     --secondary-blue: 213 94% 68%;
     --accent-cyan: 187 85% 53%;
     --accent-purple: 250 84% 54%;
     --accent-pink: 333 71% 51%;
-    --neutral-50: 0 0% 98%;
-    --neutral-100: 0 0% 96%;
-    --neutral-900: 0 0% 9%;
     
-    /* Stripe-style Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(320 60% 60%) 0%, hsl(260 80% 65%) 25%, hsl(200 90% 60%) 50%, hsl(180 85% 55%) 75%, hsl(40 95% 70%) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--primary-blue) / 0.03) 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-    --gradient-border: linear-gradient(135deg, hsl(var(--primary-blue) / 0.2) 0%, hsl(var(--accent-cyan) / 0.2) 100%);
-    
-    /* Glass morphism effects */
-    --glass-bg: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.16);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary-blue)) 0%, hsl(var(--accent-cyan)) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--accent-purple)) 0%, hsl(var(--accent-pink)) 100%);
+    --gradient-subtle: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--primary-blue) / 0.05) 100%);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -109,14 +100,6 @@ All colors MUST be HSL.
 }
 
 @layer components {
-  /* Stripe-inspired text gradients */
-  .text-gradient-hero {
-    background: var(--gradient-hero);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
   .text-gradient-blue {
     @apply bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent;
   }
@@ -125,35 +108,36 @@ All colors MUST be HSL.
     @apply bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-600 bg-clip-text text-transparent;
   }
   
-  /* Glass morphism cards */
-  .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+  .text-gradient-purple-rainbow {
+    @apply bg-gradient-to-r from-purple-500 via-pink-400 to-indigo-600 bg-clip-text text-transparent;
   }
   
-  .stripe-card {
-    @apply rounded-2xl border border-neutral-200/20 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:border-blue-200/40;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:shadow-blue-500/25;
   }
   
-  .hero-section {
-    background: var(--gradient-hero);
-    position: relative;
+  .stat-card {
+    @apply transform transition-all duration-500 hover:scale-110 hover:shadow-lg;
   }
   
-  .hero-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.9) 100%);
-    pointer-events: none;
+  .fade-in {
+    @apply animate-fade-in;
   }
   
-  .floating-element {
+  .fade-in-delayed {
+    @apply animate-fade-in [animation-delay:200ms];
+  }
+  
+  .fade-in-delayed-2 {
+    @apply animate-fade-in [animation-delay:400ms];
+  }
+  
+  .floating {
     @apply animate-pulse;
-    animation-duration: 4s;
+  }
+  
+  .hero-bg {
+    background: var(--gradient-subtle);
   }
   
   .rainbow-ring-blue {
