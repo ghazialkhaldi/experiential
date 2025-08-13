@@ -5,9 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
+import { useMode } from '@/contexts/ModeContext';
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 
 const Resources = () => {
+  const { isInternshipMode } = useMode();
   const collegeGuides = [
     {
       title: "How Community Service Impacts College Admissions",
@@ -100,7 +102,11 @@ const Resources = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-                <img src="/Experiential 4.png" alt="Experiential Logo" className="h-16 w-auto" />
+                {isInternshipMode ? (
+                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-16 w-auto" />
+                ) : (
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
+                )}
             </Link>
             <div className="flex items-center space-x-6">
               <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
@@ -310,7 +316,11 @@ const Resources = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
-                <img src="/Experiential 4.png" alt="Experiential Logo" className="h-6 w-auto" />
+                {isInternshipMode ? (
+                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-6 w-auto" />
+                ) : (
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-6 w-auto" />
+                )}
               </div>
               <p className="text-gray-300">
                 Connecting high school students with meaningful volunteer opportunities.

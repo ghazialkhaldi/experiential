@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, CheckCircle, Loader2 } from 'lucide-react';
+import { useMode } from '@/contexts/ModeContext';
 import type { Database } from '@/integrations/supabase/types';
 
 type VolunteerCategory = Database['public']['Enums']['volunteer_category'];
@@ -13,6 +14,7 @@ const AuthCallback = () => {
   const [status, setStatus] = useState('Processing your account...');
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isInternshipMode } = useMode();
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -265,7 +267,11 @@ const AuthCallback = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center mb-8">
-                <img src="/Experiential 4.png" alt="Experiential Logo" className="h-16 w-auto" />
+                {isInternshipMode ? (
+                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-16 w-auto" />
+                ) : (
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
+                )}
         </div>
 
         <Card>

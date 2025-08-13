@@ -232,7 +232,11 @@ const ManageOpportunities = () => {
                   <Briefcase className="h-8 w-8 text-blue-400" />
                 ) : null}
                 <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-8 w-auto" />
+                  {isInternshipMode ? (
+                    <img src="/Experiential 4.png" alt="Experiential Logo" className="h-8 w-auto" />
+                  ) : (
+                    <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-8 w-auto" />
+                  )}
                 </span>
               </Link>
               <div className="flex items-center space-x-6">
