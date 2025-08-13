@@ -207,6 +207,7 @@ All colors MUST be HSL.
     font-size: 0.3em;
     line-height: 1;
   }
+}
 
 @layer base {
   * {
