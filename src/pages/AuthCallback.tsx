@@ -268,7 +268,7 @@ const AuthCallback = () => {
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center mb-8">
                 {isInternshipMode ? (
-                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-16 w-auto" />
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto brightness-0 invert" />
                 ) : (
                   <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
                 )}

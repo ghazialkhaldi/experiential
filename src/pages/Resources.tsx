@@ -103,7 +103,7 @@ const Resources = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
                 {isInternshipMode ? (
-                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-16 w-auto" />
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto brightness-0 invert" />
                 ) : (
                   <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
                 )}
@@ -317,7 +317,7 @@ const Resources = () => {
             <div>
               <div className="flex items-center mb-4">
                 {isInternshipMode ? (
-                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-6 w-auto" />
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-6 w-auto brightness-0 invert" />
                 ) : (
                   <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-6 w-auto" />
                 )}
