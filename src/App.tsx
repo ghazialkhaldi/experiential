@@ -5,7 +5,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ModeProvider } from "./contexts/ModeContext";
-import Index from "./pages/Index";
+import SplashScreen from "./pages/SplashScreen";
+import Dashboard from "./pages/Dashboard";
+import Explore from "./pages/Explore";
+import Portfolio from "./pages/Portfolio";
+import Settings from "./pages/Settings";
 import Resources from "./pages/Resources";
 import CareerResources from "./pages/CareerResources";
 import UniversityChecklist from "./pages/UniversityChecklist";
@@ -36,7 +40,11 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<SplashScreen />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/explore" element={<Explore />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/resources" element={<Resources />} />
