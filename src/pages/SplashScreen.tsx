@@ -15,7 +15,7 @@ const SplashScreen = () => {
       // Wait for fade out animation, then navigate
       setTimeout(() => {
         if (isAuthenticated) {
-          navigate('/dashboard');
+          navigate('/app/dashboard');
         } else {
           navigate('/auth');
         }

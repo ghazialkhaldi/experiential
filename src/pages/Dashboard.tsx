@@ -35,7 +35,7 @@ const Dashboard = () => {
         <Button 
           variant="ghost" 
           size="icon"
-          onClick={() => navigate('/settings')}
+          onClick={() => navigate('/app/settings')}
           className="text-gray-600 hover:text-gray-900"
         >
           <Settings className="h-6 w-6" />
@@ -91,14 +91,14 @@ const Dashboard = () => {
         {/* Action Buttons */}
         <div className="w-full max-w-sm space-y-4">
           <Button
-            onClick={() => navigate('/explore')}
+            onClick={() => navigate('/app/explore')}
             className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
           >
             Explore {isInternshipMode ? 'Opportunities' : 'Opportunities'}
           </Button>
           
           <Button
-            onClick={() => navigate('/portfolio')}
+            onClick={() => navigate('/app/portfolio')}
             variant="outline"
             className="w-full h-14 text-lg border-2 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
           >

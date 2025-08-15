@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ModeProvider } from "./contexts/ModeContext";
+import Index from "./pages/Index";
 import SplashScreen from "./pages/SplashScreen";
 import Dashboard from "./pages/Dashboard";
 import Explore from "./pages/Explore";
@@ -40,11 +41,14 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<SplashScreen />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/explore" element={<Explore />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/" element={<Index />} />
+            {/* Mobile App Routes */}
+            <Route path="/app" element={<SplashScreen />} />
+            <Route path="/app/dashboard" element={<Dashboard />} />
+            <Route path="/app/explore" element={<Explore />} />
+            <Route path="/app/portfolio" element={<Portfolio />} />
+            <Route path="/app/settings" element={<Settings />} />
+            {/* Original Website Routes */}
             <Route path="/search" element={<SearchResults />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/resources" element={<Resources />} />

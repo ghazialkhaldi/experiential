@@ -54,7 +54,7 @@ const Portfolio = () => {
           <Button 
             variant="ghost" 
             size="icon"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/app/dashboard')}
             className="text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="h-6 w-6" />
