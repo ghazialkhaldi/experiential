@@ -3,13 +3,30 @@ import { ArrowLeft, BookOpen, GraduationCap, FileText, Award, Users, Calendar, T
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
-import AuthButton from "@/components/AuthButton";
+import { Link, useNavigate } from "react-router-dom";
 import { useMode } from '@/contexts/ModeContext';
 import { FeedbackDialog } from "@/components/FeedbackDialog";
+import { toast } from '@/hooks/use-toast';
 
 const Resources = () => {
   const { isInternshipMode } = useMode();
+  const navigate = useNavigate();
+
+  const triggerHaptic = () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50);
+    }
+  };
+
+  const handleBackNavigation = () => {
+    triggerHaptic();
+    toast({
+      title: "Returning to Portfolio",
+      description: "Going back to portfolio...",
+      duration: 1500,
+    });
+    navigate('/dashboard');
+  };
   const collegeGuides = [
     {
       title: "How Community Service Impacts College Admissions",
@@ -97,45 +114,21 @@ const Resources = () => {
       <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/15 rounded-full blur-2xl animate-pulse"></div>
       <div className="absolute top-20 right-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
       <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-purple-400/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
-      {/* Navigation */}
-      <nav className="bg-transparent backdrop-blur-md shadow-sm border-b border-blue-200/30 relative z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-                {isInternshipMode ? (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto brightness-0 invert" />
-                ) : (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
-                )}
-            </Link>
-            <div className="flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
-                Opportunities
-              </Link>
-              <Link to="/resources" className="text-blue-600 font-medium">
-                University Resources
-              </Link>
-              <AuthButton />
-              <Button className="btn-rainbow">
-                Post Opportunity
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
 
-      {/* Back Button */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-10">
-        <Link to="/">
-          <Button variant="ghost" className="mb-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Opportunities
-          </Button>
-        </Link>
+      {/* Back Button - Updated for iPhone notch */}
+      <div className="absolute top-16 left-4 z-20">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={handleBackNavigation}
+          className="text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
       </div>
 
-      {/* Header */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Content - Added top padding for notch */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">{/* Updated padding */}
         <div className="max-w-4xl mx-auto text-center">
           <div className="fade-in">
             <GraduationCap className="h-16 w-16 mx-auto mb-6 text-blue-600" />

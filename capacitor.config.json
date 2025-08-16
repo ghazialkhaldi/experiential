@@ -1,6 +1,6 @@
 {
-  "appId": "com.experiential.app",
-  "appName": "Experiential",
+  "appId": "com.experiential.newapp",
+  "appName": "ExperientialNew",
   "webDir": "dist",
   "plugins": {
     "SplashScreen": {

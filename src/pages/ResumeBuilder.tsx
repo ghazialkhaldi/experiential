@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
-import AuthButton from "@/components/AuthButton";
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -521,30 +520,18 @@ const ResumeBuilder = () => {
   if (previewMode) {
     return (
       <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-white'}`}>
-        {/* Navigation */}
-        <nav className={`${isInternshipMode ? 'bg-gray-800/80' : 'bg-blue-50/80'} backdrop-blur-md shadow-sm border-b ${isInternshipMode ? 'border-gray-700' : 'border-blue-200'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-                <Briefcase className={`h-8 w-8 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
-                <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span>
-                </span>
-              </Link>
-              <div className="flex items-center space-x-4">
-                <Button onClick={() => setPreviewMode(false)} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Editor
-                </Button>
-                <Button onClick={downloadResume} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-                  <Download className="h-4 w-4 mr-2" />
-                  Download PDF
-                </Button>
-              </div>
-            </div>
-          </div>
-        </nav>
-
+        {/* Back Button */}
+        <div className="absolute top-4 left-4 z-10">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => setPreviewMode(false)}
+            className={`${isInternshipMode ? 'text-gray-300 hover:text-white bg-gray-800/90 hover:bg-gray-800 shadow-lg shadow-purple-500/40' : 'text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white shadow-lg'} backdrop-blur-sm`}
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        </div>
+        
         {/* Resume Preview */}
         <div className="py-8 px-4">
           <div className={`max-w-4xl mx-auto ${isInternshipMode ? 'bg-white' : 'bg-white'} rounded-lg shadow-2xl p-8 text-gray-900`}>
@@ -646,40 +633,19 @@ const ResumeBuilder = () => {
 
   return (
     <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-white'}`}>
-      {/* Navigation */}
-        <nav className={`${isInternshipMode ? 'bg-gray-800/80' : 'bg-blue-50/80'} backdrop-blur-md shadow-sm border-b ${isInternshipMode ? 'border-gray-700' : 'border-blue-200'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-                <Briefcase className={`h-8 w-8 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
-                <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span>
-                </span>
-              </Link>
-              <div className="flex items-center space-x-6">
-                <Link to="/" className={`${isInternshipMode ? 'text-gray-300 hover:text-purple-400' : 'text-gray-600 hover:text-blue-600'} font-medium`}>
-                  {isInternshipMode ? 'Internships' : 'Volunteer'}
-                </Link>
-                <AuthButton />
-                <Button className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-                  {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
-                </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Back Button */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <Link to="/">
-          <Button variant="ghost" className={`mb-4 ${isInternshipMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-gray-900 hover:bg-blue-50'}`}>
-            <ArrowLeft className={`h-4 w-4 mr-2 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
-            {isInternshipMode ? 'Back to Internships' : 'Back to Volunteer'}
-          </Button>
-        </Link>
+      <div className="absolute top-4 left-4 z-10">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={() => window.history.back()}
+          className={`${isInternshipMode ? 'text-gray-300 hover:text-white bg-gray-800/90 hover:bg-gray-800 shadow-lg shadow-purple-500/40' : 'text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white shadow-lg'} backdrop-blur-sm`}
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
       </div>
-
-      {/* Header */}
+      
+      {/* Content */}
       <section className="py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className={`absolute inset-0 ${isInternshipMode ? 'bg-gradient-to-b from-purple-500/20 via-purple-600/10 to-gray-900' : 'bg-gradient-to-b from-blue-500/20 via-blue-600/10 to-white'}`}></div>
         
