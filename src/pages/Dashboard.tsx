@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useMode } from '@/contexts/ModeContext';
 import { Settings, User, LogOut } from 'lucide-react';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Capacitor } from '@capacitor/core';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +30,18 @@ const Dashboard = () => {
     navigate('/');
   };
 
+  const handleModeChange = async (newMode: 'volunteer' | 'internship') => {
+    // Add haptic feedback for mobile
+    if (Capacitor.isNativePlatform()) {
+      try {
+        await Haptics.impact({ style: ImpactStyle.Light });
+      } catch (error) {
+        console.log('Haptics not available:', error);
+      }
+    }
+    setMode(newMode);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex flex-col">
       {/* Header */}
@@ -46,7 +60,7 @@ const Dashboard = () => {
           <Button
             variant={!isInternshipMode ? "default" : "ghost"}
             size="sm"
-            onClick={() => setMode('volunteer')}
+            onClick={() => handleModeChange('volunteer')}
             className={`rounded-full ${!isInternshipMode ? 'bg-blue-600 text-white' : 'text-gray-600'}`}
           >
             Volunteer
@@ -54,7 +68,7 @@ const Dashboard = () => {
           <Button
             variant={isInternshipMode ? "default" : "ghost"}
             size="sm"
-            onClick={() => setMode('internship')}
+            onClick={() => handleModeChange('internship')}
             className={`rounded-full ${isInternshipMode ? 'bg-purple-600 text-white' : 'text-gray-600'}`}
           >
             Internships
@@ -100,7 +114,7 @@ const Dashboard = () => {
           <Button
             onClick={() => navigate('/app/portfolio')}
             variant="outline"
-            className="w-full h-14 text-lg border-2 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+            className="w-full h-14 text-lg border-2 border-blue-600 text-blue-600 bg-white hover:bg-blue-50 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
           >
             Your Portfolio
           </Button>

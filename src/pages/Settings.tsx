@@ -3,12 +3,46 @@ import { ArrowLeft, Bell, User, Shield, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ChangePasswordDialog } from '@/components/ChangePasswordDialog';
+import { useNotifications } from '@/hooks/useNotifications';
+import { useToast } from '@/hooks/use-toast';
 
 const Settings = () => {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState(true);
   const [emailUpdates, setEmailUpdates] = useState(false);
+  const { scheduleDailyNotification, cancelNotifications, hasPermission } = useNotifications();
+  const { toast } = useToast();
+
+  const handleNotificationToggle = async (enabled: boolean) => {
+    setNotifications(enabled);
+    
+    if (enabled) {
+      const success = await scheduleDailyNotification();
+      if (success) {
+        toast({
+          title: "Notifications Enabled",
+          description: "You'll receive daily notifications at 9 AM"
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to enable notifications",
+          variant: "destructive"
+        });
+        setNotifications(false);
+      }
+    } else {
+      const success = await cancelNotifications();
+      if (success) {
+        toast({
+          title: "Notifications Disabled",
+          description: "Daily notifications have been turned off"
+        });
+      }
+    }
+  };
 
   const settingsSections = [
     {
@@ -22,7 +56,7 @@ const Settings = () => {
               <p className="font-medium">Push Notifications</p>
               <p className="text-sm text-gray-600">Receive notifications for new opportunities</p>
             </div>
-            <Switch checked={notifications} onCheckedChange={setNotifications} />
+            <Switch checked={notifications} onCheckedChange={handleNotificationToggle} />
           </div>
           <div className="flex items-center justify-between">
             <div>
@@ -43,9 +77,11 @@ const Settings = () => {
           <Button variant="outline" className="w-full justify-start">
             Edit Profile
           </Button>
-          <Button variant="outline" className="w-full justify-start">
-            Change Password
-          </Button>
+          <ChangePasswordDialog>
+            <Button variant="outline" className="w-full justify-start">
+              Change Password
+            </Button>
+          </ChangePasswordDialog>
         </div>
       )
     },
