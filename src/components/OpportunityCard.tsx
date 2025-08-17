@@ -135,7 +135,7 @@ const OpportunityCard = ({
               onClick();
             }}
           >
-            Apply Now
+            View Details
           </Button>
         </div>
       </CardContent>
