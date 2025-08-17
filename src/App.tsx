@@ -12,16 +12,19 @@ import Portfolio from "./pages/Portfolio";
 import Settings from "./pages/Settings";
 import Resources from "./pages/Resources";
 import ResumeBuilder from "./pages/ResumeBuilder";
-import AuthApp from "./pages/AuthApp";
+import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import CompleteProfile from "./pages/CompleteProfile";
 import TrackHours from "./pages/TrackHours";
 import TrackExperience from "./pages/TrackExperience";
 import TermsAndConditions from "./pages/TermsAndConditions";
+import LogoDemo from "./pages/LogoDemo";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import LegalDocuments from "./pages/LegalDocuments";
 import EditProfile from "./pages/EditProfile";
 import ChangePassword from "./pages/ChangePassword";
+import OpportunityDetail from "./pages/OpportunityDetail";
+import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
@@ -34,8 +37,10 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             {/* YOUR NEW APP - ALL ROUTES NOW GO TO THE NEW APP */}
-            <Route path="/" element={<SplashScreen />} />
-            <Route path="/auth" element={<AuthApp />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/opportunities" element={<Index />} />
+            <Route path="/splash" element={<SplashScreen />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="/portfolio" element={<Portfolio />} />
@@ -52,6 +57,8 @@ const App = () => (
             <Route path="/legal" element={<LegalDocuments />} />
             <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/opportunity/:id" element={<OpportunityDetail />} />
+            <Route path="/logo-demo" element={<LogoDemo />} />
             {/* ALL OTHER ROUTES REDIRECT TO YOUR NEW APP */}
             <Route path="*" element={<SplashScreen />} />
           </Routes>

@@ -108,12 +108,28 @@ const Resources = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/30 to-blue-100/50 relative overflow-hidden">
+    <div className={`min-h-screen relative overflow-hidden ${
+      isInternshipMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900' 
+        : 'bg-gradient-to-b from-white via-blue-50/30 to-blue-100/50'
+    }`}>
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/20 to-blue-100/30"></div>
-      <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/15 rounded-full blur-2xl animate-pulse"></div>
-      <div className="absolute top-20 right-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
-      <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-purple-400/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+      {!isInternshipMode && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/20 to-blue-100/30"></div>
+          <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/15 rounded-full blur-2xl animate-pulse"></div>
+          <div className="absolute top-20 right-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+          <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-purple-400/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        </>
+      )}
+      {isInternshipMode && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 via-gray-800/30 to-purple-900/50"></div>
+          <div className="absolute top-10 left-10 w-48 h-48 bg-purple-500/15 rounded-full blur-2xl animate-pulse"></div>
+          <div className="absolute top-20 right-20 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+          <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-violet-400/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        </>
+      )}
 
       {/* Back Button - Updated for iPhone notch */}
       <div className="absolute top-16 left-4 z-20">
@@ -121,7 +137,11 @@ const Resources = () => {
           variant="ghost" 
           size="icon"
           onClick={handleBackNavigation}
-          className="text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm"
+          className={`shadow-lg backdrop-blur-sm ${
+            isInternshipMode 
+              ? 'text-gray-300 hover:text-white bg-gray-800/90 hover:bg-gray-700/90' 
+              : 'text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white'
+          }`}
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>

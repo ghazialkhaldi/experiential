@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerHours } from "@/hooks/useVolunteerHours";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
+import { useMode } from "@/contexts/ModeContext";
 
 interface LogHoursForm {
   title: string;
@@ -24,6 +25,7 @@ interface LogHoursForm {
 
 const TrackHours = () => {
   const { isAuthenticated, loading } = useAuth();
+  const { isInternshipMode } = useMode();
   const navigate = useNavigate();
   const { hours: volunteerHours, loading: hoursLoading, addHours, totalHours, totalOpportunities } = useVolunteerHours();
   const [hourGoal, setHourGoal] = useState(() => {
@@ -99,14 +101,22 @@ const TrackHours = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className={`min-h-screen ${
+      isInternshipMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900' 
+        : 'bg-gradient-to-br from-blue-50 to-green-50'
+    }`}>
       {/* Back Button - Updated for iPhone notch */}
       <div className="absolute top-16 left-4 z-10">
         <Button 
           variant="ghost" 
           size="icon"
           onClick={handleBackNavigation}
-          className="text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm"
+          className={`shadow-lg backdrop-blur-sm ${
+            isInternshipMode 
+              ? 'text-gray-300 hover:text-white bg-gray-800/90 hover:bg-gray-700/90' 
+              : 'text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white'
+          }`}
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>

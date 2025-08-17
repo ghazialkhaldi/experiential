@@ -20,19 +20,19 @@ const SplashScreen = () => {
         } else {
           navigate('/auth');
         }
-      }, 800);
-    }, 4000);
+      }, 500);
+    }, 3000); // Static for 3 seconds
 
     return () => clearTimeout(timer);
   }, [navigate, isAuthenticated, loading]);
 
   return (
-    <div className={`min-h-screen bg-white flex items-center justify-center transition-opacity duration-800 ${
+    <div className={`min-h-screen bg-white flex items-center justify-center transition-opacity duration-500 ${
       fadeOut ? 'opacity-0' : 'opacity-100'
     }`}>
       <div className="text-center">
         <div className="mb-4">
-          <img src="/Experiential 3.png" alt="Experiential" className="h-32 w-auto mx-auto animate-pulse" />
+          <img src="/Experiential.jpeg" alt="Experiential" className="h-32 w-auto mx-auto" />
         </div>
       </div>
     </div>

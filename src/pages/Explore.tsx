@@ -37,24 +37,29 @@ const Explore = () => {
         ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900' 
         : 'bg-gradient-to-br from-white via-blue-200 to-blue-400'
     }`}>
-      {/* Content - Added top padding for iPhone notch */}
-      <div className="p-4 pt-16">
-        {/* Back Button and Title */}
-        <div className="flex items-center mb-6">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => navigate('/dashboard')}
-            className={`mr-4 ${isInternshipMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'}`}
-          >
-            <ArrowLeft className="h-6 w-6" />
-          </Button>
-          <h1 className={`text-xl font-semibold ${
-            isInternshipMode ? 'text-white' : 'text-gray-900'
-          }`}>
-            Explore {isInternshipMode ? 'Internships' : 'Opportunities'}
-          </h1>
-        </div>
+      {/* Back Button - Fixed positioning */}
+      <div className="absolute top-16 left-4 z-10">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={() => navigate('/dashboard')}
+          className={`shadow-lg backdrop-blur-sm ${
+            isInternshipMode 
+              ? 'text-gray-100 hover:text-white bg-gray-800/90 hover:bg-gray-700/90' 
+              : 'text-gray-700 hover:text-gray-900 bg-white/90 hover:bg-white'
+          }`}
+        >
+          <ArrowLeft className="h-6 w-6" />
+        </Button>
+      </div>
+
+      {/* Content - Added top padding and title */}
+      <div className="p-4 pt-20">
+        <h1 className={`text-xl font-semibold mb-6 text-center ${
+          isInternshipMode ? 'text-white' : 'text-gray-900'
+        }`}>
+          Explore {isInternshipMode ? 'Internships' : 'Opportunities'}
+        </h1>
         
         {/* Search Section with Colored Hue */}
         <div className="relative mb-6">

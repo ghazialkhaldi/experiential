@@ -103,7 +103,11 @@ const TrackExperience = () => {
   };
 
   return (
-    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-background'}`}>
+    <div className={`min-h-screen ${
+      isInternshipMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900' 
+        : 'bg-background'
+    }`}>
       {/* Back Button - Updated for iPhone notch */}
       <div className="absolute top-16 left-4 z-10">
         <Button 

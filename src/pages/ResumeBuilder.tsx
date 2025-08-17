@@ -632,22 +632,34 @@ const ResumeBuilder = () => {
   }
 
   return (
-    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-white'}`}>
-      {/* Back Button */}
-      <div className="absolute top-4 left-4 z-10">
+    <div className={`min-h-screen ${
+      isInternshipMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900' 
+        : 'bg-white'
+    }`}>
+      {/* Back Button - Updated for iPhone notch */}
+      <div className="absolute top-16 left-4 z-10">
         <Button 
           variant="ghost" 
           size="icon"
           onClick={() => window.history.back()}
-          className={`${isInternshipMode ? 'text-gray-300 hover:text-white bg-gray-800/90 hover:bg-gray-800 shadow-lg shadow-purple-500/40' : 'text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white shadow-lg'} backdrop-blur-sm`}
+          className={`backdrop-blur-sm ${
+            isInternshipMode 
+              ? 'text-gray-300 hover:text-white bg-gray-800/90 hover:bg-gray-800 shadow-lg shadow-purple-500/40' 
+              : 'text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white shadow-lg'
+          }`}
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
       </div>
       
-      {/* Content */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className={`absolute inset-0 ${isInternshipMode ? 'bg-gradient-to-b from-purple-500/20 via-purple-600/10 to-gray-900' : 'bg-gradient-to-b from-blue-500/20 via-blue-600/10 to-white'}`}></div>
+      {/* Content - Added top padding for notch */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className={`absolute inset-0 ${
+          isInternshipMode 
+            ? 'bg-gradient-to-b from-purple-500/20 via-purple-600/10 to-gray-900' 
+            : 'bg-gradient-to-b from-blue-500/20 via-blue-600/10 to-white'
+        }`}></div>
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="fade-in">
