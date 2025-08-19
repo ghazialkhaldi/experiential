@@ -201,8 +201,6 @@ const Auth = () => {
     }
 
     try {
-      const redirectUrl = `https://www.experiential.care`;
-      
       console.log('Signup data being stored:', {
         preferences: formData.preferences,
         organizationData: formData.role === 'volunteer_searcher' ? {
@@ -216,9 +214,17 @@ const Auth = () => {
         } : null
       });
       
-      // Store additional signup data in localStorage for post-confirmation processing
+      // Store additional signup data in localStorage for post-verification processing
       const additionalData = {
+        password: formData.password, // Store password for account creation after OTP verification
         preferences: formData.preferences,
+        userData: {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          birthday: formData.birthday,
+          role: formData.role,
+          age: formData.role === 'volunteer' && formData.age ? parseInt(formData.age) : null
+        },
         organizationData: formData.role === 'volunteer_searcher' ? {
           name: formData.organizationName,
           category: formData.organizationCategory,
@@ -232,23 +238,18 @@ const Auth = () => {
       
       localStorage.setItem('pendingSignupData', JSON.stringify(additionalData));
 
-      const metadata: any = {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        birthday: formData.birthday,
-        role: formData.role,
-      };
-
-      if (formData.role === 'volunteer' && formData.age) {
-        metadata.age = parseInt(formData.age);
-      }
-
-      const { data, error } = await supabase.auth.signUp({
+      // Use OTP signup instead of regular signup to get 6-digit codes
+      const { data, error } = await supabase.auth.signInWithOtp({
         email: formData.email,
-        password: formData.password,
         options: {
-          emailRedirectTo: redirectUrl,
-          data: metadata
+          shouldCreateUser: true, // This will create user if they don't exist
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            birthday: formData.birthday,
+            role: formData.role,
+            age: formData.role === 'volunteer' && formData.age ? parseInt(formData.age) : null
+          }
         }
       });
 
@@ -266,11 +267,11 @@ const Auth = () => {
       localStorage.setItem('pendingVerificationEmail', formData.email);
       
       toast({
-        title: "Account Created!",
+        title: "Verification Code Sent!",
         description: "Please check your email for a 6-digit verification code.",
       });
 
-      // Always redirect to verification page - let it handle whether verification is needed
+      // Redirect to verification page
       navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
 
       // Reset form

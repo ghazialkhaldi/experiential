@@ -71,7 +71,7 @@ const VerifyEmail = () => {
       const { data, error } = await supabase.auth.verifyOtp({
         email: email,
         token: verificationCode,
-        type: 'email' // Changed from 'signup' to 'email' for email OTP
+        type: 'email'
       });
 
       console.log('OTP verification result:', { data, error });
@@ -81,12 +81,39 @@ const VerifyEmail = () => {
         toast({
           variant: "destructive",
           title: "Verification Failed",
-          description: error.message,
+          description: error.message === 'Token has expired or is invalid' 
+            ? "The verification code has expired or is invalid. Please request a new code."
+            : error.message,
         });
         return;
       }
 
       if (data.user) {
+        // Now create the actual user account with password
+        const pendingDataStr = localStorage.getItem('pendingSignupData');
+        if (pendingDataStr) {
+          const pendingData = JSON.parse(pendingDataStr);
+          
+          // Sign up the user with their password now that email is verified
+          const { data: signupData, error: signupError } = await supabase.auth.signUp({
+            email: email,
+            password: pendingData.password,
+            options: {
+              data: pendingData.userData,
+              emailRedirectTo: `${window.location.origin}/auth/callback`
+            }
+          });
+
+          if (signupError) {
+            toast({
+              variant: "destructive",
+              title: "Account Creation Failed",
+              description: signupError.message,
+            });
+            return;
+          }
+        }
+
         toast({
           title: "Email Verified!",
           description: "Your account has been verified successfully.",
@@ -95,25 +122,8 @@ const VerifyEmail = () => {
         // Clean up stored email
         localStorage.removeItem('pendingVerificationEmail');
 
-        // Process any pending signup data
-        const pendingDataStr = localStorage.getItem('pendingSignupData');
-        if (pendingDataStr) {
-          // Redirect to auth callback to process pending data
-          navigate('/auth/callback');
-        } else {
-          // Check if profile needs completion
-          const { data: profileData } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', data.user.id)
-            .maybeSingle();
-
-          if (!profileData?.role) {
-            navigate('/complete-profile');
-          } else {
-            navigate('/');
-          }
-        }
+        // Redirect to auth callback to process pending data
+        navigate('/auth/callback');
       }
     } catch (error) {
       console.error('Verification catch error:', error);
@@ -142,12 +152,11 @@ const VerifyEmail = () => {
     try {
       console.log('Attempting to resend OTP for email:', email);
       
-      // For email OTP, we need to use signUp again with the same credentials
-      // But since user already exists, this will trigger a resend
+      // Request a new OTP code
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          shouldCreateUser: false // Don't create a new user, just send OTP to existing unverified user
+          shouldCreateUser: false // Don't create a new user, just send OTP
         }
       });
 
@@ -162,9 +171,11 @@ const VerifyEmail = () => {
         });
       } else {
         toast({
-          title: "Code Sent!",
-          description: "A new verification code has been sent to your email.",
+          title: "New Code Sent!",
+          description: "A fresh 6-digit verification code has been sent to your email.",
         });
+        // Clear the current code input
+        setVerificationCode('');
       }
     } catch (error) {
       console.error('Resend catch error:', error);
@@ -277,8 +288,8 @@ const VerifyEmail = () => {
                   )}
                 </Button>
                 <div className={`text-xs ${isInternshipMode ? 'text-purple-400' : 'text-gray-500'}`}>
-                  <p>If you received an email link instead of a code,</p>
-                  <p>click the link in your email to verify your account.</p>
+                  <p>Each code is valid for 60 minutes and changes every time.</p>
+                  <p>Check your spam folder if you don't see the email.</p>
                 </div>
               </div>
             </div>
