@@ -48,6 +48,8 @@ const VerifyEmail = () => {
     setLoading(true);
 
     try {
+      console.log('Attempting to verify OTP for email:', email, 'with code:', verificationCode);
+      
       // Verify the OTP code
       const { data, error } = await supabase.auth.verifyOtp({
         email: email,
@@ -55,7 +57,10 @@ const VerifyEmail = () => {
         type: 'signup'
       });
 
+      console.log('OTP verification result:', { data, error });
+
       if (error) {
+        console.error('OTP verification error:', error);
         toast({
           variant: "destructive",
           title: "Verification Failed",
@@ -94,6 +99,7 @@ const VerifyEmail = () => {
         }
       }
     } catch (error) {
+      console.error('Verification catch error:', error);
       toast({
         variant: "destructive",
         title: "Verification Error",
@@ -105,17 +111,29 @@ const VerifyEmail = () => {
   };
 
   const handleResendCode = async () => {
-    if (!email) return;
+    if (!email) {
+      toast({
+        variant: "destructive",
+        title: "No Email Found",
+        description: "Please return to the signup page and try again.",
+      });
+      return;
+    }
 
     setResendLoading(true);
 
     try {
+      console.log('Attempting to resend OTP for email:', email);
+      
       const { error } = await supabase.auth.resend({
         type: 'signup',
         email: email
       });
 
+      console.log('Resend OTP result:', { error });
+
       if (error) {
+        console.error('Resend error:', error);
         toast({
           variant: "destructive",
           title: "Resend Failed",
@@ -128,6 +146,7 @@ const VerifyEmail = () => {
         });
       }
     } catch (error) {
+      console.error('Resend catch error:', error);
       toast({
         variant: "destructive",
         title: "Resend Error",
