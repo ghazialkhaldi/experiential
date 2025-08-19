@@ -109,6 +109,10 @@ const Discover = () => {
                     opportunity={opportunity}
                     onSave={handleSave}
                     isSaved={isSaved(opportunity.id)}
+<<<<<<< HEAD
+=======
+                    onClick={() => handleOpportunityClick(opportunity)}
+>>>>>>> origin/main
                     formatTimeAgo={formatTimeAgo}
                     getCategoryColor={getCategoryColor}
                   />
@@ -138,6 +142,10 @@ const Discover = () => {
                     opportunity={saved.opportunity}
                     onSave={handleSave}
                     isSaved={true}
+<<<<<<< HEAD
+=======
+                    onClick={() => handleOpportunityClick(saved.opportunity)}
+>>>>>>> origin/main
                     formatTimeAgo={formatTimeAgo}
                     getCategoryColor={getCategoryColor}
                   />

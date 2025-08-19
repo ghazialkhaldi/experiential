@@ -3,6 +3,7 @@ import { ArrowLeft, BookOpen, GraduationCap, FileText, Award, Users, Calendar, T
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
 import { useMode } from '@/contexts/ModeContext';
 import { FeedbackDialog } from "@/components/FeedbackDialog";
@@ -27,6 +28,15 @@ const Resources = () => {
     });
     navigate('/dashboard');
   };
+=======
+import { Link } from "react-router-dom";
+import AuthButton from "@/components/AuthButton";
+import { useMode } from '@/contexts/ModeContext';
+import { FeedbackDialog } from "@/components/FeedbackDialog";
+
+const Resources = () => {
+  const { isInternshipMode } = useMode();
+>>>>>>> origin/main
   const collegeGuides = [
     {
       title: "How Community Service Impacts College Admissions",
@@ -108,6 +118,7 @@ const Resources = () => {
   ];
 
   return (
+<<<<<<< HEAD
     <div className={`min-h-screen relative overflow-hidden ${
       isInternshipMode 
         ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900' 
@@ -149,6 +160,53 @@ const Resources = () => {
 
       {/* Content - Added top padding for notch */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">{/* Updated padding */}
+=======
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/30 to-blue-100/50 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/20 to-blue-100/30"></div>
+      <div className="absolute top-10 left-10 w-48 h-48 bg-blue-400/15 rounded-full blur-2xl animate-pulse"></div>
+      <div className="absolute top-20 right-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+      <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-purple-400/10 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+      {/* Navigation */}
+      <nav className="bg-transparent backdrop-blur-md shadow-sm border-b border-blue-200/30 relative z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
+                {isInternshipMode ? (
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto brightness-0 invert" />
+                ) : (
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
+                )}
+            </Link>
+            <div className="flex items-center space-x-6">
+              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
+                Opportunities
+              </Link>
+              <Link to="/resources" className="text-blue-600 font-medium">
+                University Resources
+              </Link>
+              <AuthButton />
+              <Button className="btn-rainbow">
+                Post Opportunity
+              </Button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-10">
+        <Link to="/">
+          <Button variant="ghost" className="mb-4">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Opportunities
+          </Button>
+        </Link>
+      </div>
+
+      {/* Header */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 relative z-10">
+>>>>>>> origin/main
         <div className="max-w-4xl mx-auto text-center">
           <div className="fade-in">
             <GraduationCap className="h-16 w-16 mx-auto mb-6 text-blue-600" />

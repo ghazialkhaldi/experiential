@@ -169,6 +169,7 @@ const AuthCallback = () => {
           .maybeSingle();
 
         const needsProfileCompletion = !profileData?.role;
+<<<<<<< HEAD
                 const isGoogleUser = user.app_metadata?.provider === 'google';
         
         if (needsProfileCompletion) {
@@ -206,6 +207,8 @@ const AuthCallback = () => {
           .maybeSingle();
 
         const needsProfileCompletion = !profileData?.role;
+=======
+>>>>>>> origin/main
         const isGoogleUser = user.app_metadata?.provider === 'google';
         
         if (needsProfileCompletion) {
@@ -241,11 +244,14 @@ const AuthCallback = () => {
             navigate('/');
           }, 2000);
         }
+<<<<<<< HEAD
           // Small delay to show success message
           setTimeout(() => {
             navigate('/');
           }, 2000);
         }
+=======
+>>>>>>> origin/main
 
       } catch (error) {
         console.error('Callback processing error:', error);

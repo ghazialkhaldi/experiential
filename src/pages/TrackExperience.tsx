@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+<<<<<<< HEAD
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -14,6 +15,19 @@ import { CalendarIcon, Building, Clock, MapPin, Plus, Target, TrendingUp, Briefc
 import { cn } from '@/lib/utils';
 import { useMode } from '@/contexts/ModeContext';
 import { toast } from '@/hooks/use-toast';
+=======
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Calendar } from '@/components/ui/calendar';
+import { Separator } from '@/components/ui/separator';
+import Sidebar from '@/components/Sidebar';
+import AuthButton from '@/components/AuthButton';
+import { Progress } from '@/components/ui/progress';
+import { CalendarIcon, Building, Clock, MapPin, Plus, Target, TrendingUp, Briefcase } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useMode } from '@/contexts/ModeContext';
+>>>>>>> origin/main
 
 interface LogExperienceForm {
   title: string;
@@ -23,6 +37,10 @@ interface LogExperienceForm {
   skills: string;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 const mockExperiences: any[] = [];
 
 const TrackExperience = () => {
@@ -33,6 +51,7 @@ const TrackExperience = () => {
   const [experienceGoal, setExperienceGoal] = useState(() => {
     return parseInt(localStorage.getItem('experienceGoal') || '6');
   });
+<<<<<<< HEAD
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<LogExperienceForm>();
 
@@ -52,6 +71,12 @@ const TrackExperience = () => {
     navigate('/dashboard');
   };
 
+=======
+  const [selectedDate, setSelectedDate] = useState<Date>();
+
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<LogExperienceForm>();
+
+>>>>>>> origin/main
   if (!user) {
     return (
       <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-background'}`}>
@@ -60,6 +85,10 @@ const TrackExperience = () => {
           <p className={`text-xl mb-8 ${isInternshipMode ? 'text-gray-300' : 'text-muted-foreground'}`}>
             Please sign in to track your internships and work experience.
           </p>
+<<<<<<< HEAD
+=======
+          <AuthButton />
+>>>>>>> origin/main
         </div>
       </div>
     );
@@ -103,6 +132,7 @@ const TrackExperience = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className={`min-h-screen ${
       isInternshipMode 
         ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900' 
@@ -122,6 +152,13 @@ const TrackExperience = () => {
       
       <main>
         <div className="container mx-auto px-4 py-20">{/* Added top padding for notch */}
+=======
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-background'}`}>
+      <Sidebar />
+      
+      <main className="lg:ml-64">
+        <div className="container mx-auto px-4 py-8">
+>>>>>>> origin/main
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className={`text-4xl font-bold mb-2 ${isInternshipMode ? 'text-white' : ''}`}>Track Your Experience</h1>
@@ -129,6 +166,10 @@ const TrackExperience = () => {
                 Log your internships and work experience to build your professional portfolio
               </p>
             </div>
+<<<<<<< HEAD
+=======
+            <AuthButton />
+>>>>>>> origin/main
           </div>
 
           {/* Overview Cards */}
@@ -217,13 +258,134 @@ const TrackExperience = () => {
                     <Badge variant="secondary" className={isInternshipMode ? 'bg-gray-700 text-gray-200' : ''}>{getMostCommonSkill()}</Badge>
                   </div>
                   <div className="flex justify-between">
+<<<<<<< HEAD
                     <span className={isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}>Experience Remaining:</span>
                     <span className={`font-medium ${isInternshipMode ? 'text-white' : ''}`}>{Math.max(0, experienceGoal - totalMonths)} months</span>
+=======
+                    <span className={isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}>Average Duration:</span>
+                    <span className={`font-medium ${isInternshipMode ? 'text-white' : ''}`}>
+                      {mockExperiences.length > 0 ? Math.round(totalMonths / mockExperiences.length) : 0} months
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Log Experience Button */}
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white border-0">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Log Experience
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className={`sm:max-w-md ${isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}`}>
+                  <DialogHeader>
+                    <DialogTitle className={isInternshipMode ? 'text-white' : ''}>Log Work Experience</DialogTitle>
+                    <DialogDescription className={isInternshipMode ? 'text-gray-400' : ''}>
+                      Add your internship or work experience to track your professional growth.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <div>
+                      <Input
+                        placeholder="Position Title"
+                        {...register('title', { required: 'Title is required' })}
+                      />
+                      {errors.title && (
+                        <p className="text-sm text-destructive mt-1">{errors.title.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Input
+                        placeholder="Company Name"
+                        {...register('company', { required: 'Company is required' })}
+                      />
+                      {errors.company && (
+                        <p className="text-sm text-destructive mt-1">{errors.company.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Input
+                        placeholder="Duration (e.g., 3 months)"
+                        {...register('duration', { required: 'Duration is required' })}
+                      />
+                      {errors.duration && (
+                        <p className="text-sm text-destructive mt-1">{errors.duration.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Textarea
+                        placeholder="Description of your role and responsibilities"
+                        {...register('description')}
+                        rows={3}
+                      />
+                    </div>
+
+                    <div>
+                      <Input
+                        placeholder="Skills gained (e.g., React, Communication, Leadership)"
+                        {...register('skills')}
+                      />
+                    </div>
+
+                    <div className="flex gap-3 pt-4">
+                      <Button type="submit" className="flex-1 bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white border-0">Log Experience</Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => setIsDialogOpen(false)}
+                        className={`flex-1 ${isInternshipMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : ''}`}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+
+              {/* Recent Experience */}
+              <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className={isInternshipMode ? 'text-white' : ''}>Recent Experience</CardTitle>
+                  <CardDescription className={isInternshipMode ? 'text-gray-400' : ''}>Your latest internships and work experience</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {mockExperiences.length === 0 ? (
+                      <div className={`text-center py-8 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
+                        <Briefcase className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                        <p className={`text-lg font-medium mb-2 ${isInternshipMode ? 'text-gray-300' : ''}`}>No experience logged yet</p>
+                        <p className="text-sm">Click "Log Experience" to add your first internship or work experience.</p>
+                      </div>
+                    ) : (
+                      mockExperiences.map((experience) => (
+                        <div key={experience.id} className="border-l-2 border-primary pl-4">
+                          <h3 className={`font-semibold ${isInternshipMode ? 'text-white' : ''}`}>{experience.title}</h3>
+                          <p className={`text-sm flex items-center gap-1 ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
+                            <Building className="h-3 w-3" />
+                            {experience.company} • {experience.duration}
+                          </p>
+                          <p className={`text-sm mt-1 ${isInternshipMode ? 'text-gray-300' : ''}`}>{experience.description}</p>
+                          <div className="flex gap-1 mt-2">
+                            {experience.skills.split(', ').map((skill) => (
+                              <Badge key={skill} variant="outline" className={`text-xs ${isInternshipMode ? 'border-gray-600 text-gray-300' : ''}`}>
+                                {skill}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    )}
+>>>>>>> origin/main
                   </div>
                 </CardContent>
               </Card>
             </div>
 
+<<<<<<< HEAD
             {/* Experience Entries */}
             <div>
               <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
@@ -333,6 +495,30 @@ const TrackExperience = () => {
                   )}
                 </CardContent>
               </Card>
+=======
+            {/* Calendar and Upcoming Internships */}
+            <div className="space-y-6">
+              <Card className={isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className={`flex items-center gap-2 ${isInternshipMode ? 'text-white' : ''}`}>
+                    <CalendarIcon className="h-5 w-5" />
+                    Internship Calendar
+                  </CardTitle>
+                  <CardDescription className={isInternshipMode ? 'text-gray-400' : ''}>
+                    Plan ahead for upcoming internship opportunities
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    className={cn("w-full justify-center pointer-events-auto", isInternshipMode ? 'text-white [&_.rdp-day]:text-gray-300 [&_.rdp-day_button:hover]:bg-gray-700' : '')}
+                  />
+                </CardContent>
+              </Card>
+
+>>>>>>> origin/main
             </div>
           </div>
         </div>
