@@ -20,19 +20,36 @@ const VerifyEmail = () => {
   const { isInternshipMode } = useMode();
 
   useEffect(() => {
-    // Get email from URL params or localStorage
-    const emailParam = searchParams.get('email');
-    const storedEmail = localStorage.getItem('pendingVerificationEmail');
-    
-    if (emailParam) {
-      setEmail(emailParam);
-      localStorage.setItem('pendingVerificationEmail', emailParam);
-    } else if (storedEmail) {
-      setEmail(storedEmail);
-    } else {
-      // No email found, redirect to auth
-      navigate('/auth');
-    }
+    const checkUserStatus = async () => {
+      // Get email from URL params or localStorage
+      const emailParam = searchParams.get('email');
+      const storedEmail = localStorage.getItem('pendingVerificationEmail');
+      
+      if (emailParam) {
+        setEmail(emailParam);
+        localStorage.setItem('pendingVerificationEmail', emailParam);
+      } else if (storedEmail) {
+        setEmail(storedEmail);
+      } else {
+        // No email found, redirect to auth
+        navigate('/auth');
+        return;
+      }
+
+      // Check if user is already verified and logged in
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        // User is already verified, redirect to appropriate page
+        const pendingDataStr = localStorage.getItem('pendingSignupData');
+        if (pendingDataStr) {
+          navigate('/auth/callback');
+        } else {
+          navigate('/');
+        }
+      }
+    };
+
+    checkUserStatus();
   }, [searchParams, navigate]);
 
   const handleVerification = async () => {
@@ -54,7 +71,7 @@ const VerifyEmail = () => {
       const { data, error } = await supabase.auth.verifyOtp({
         email: email,
         token: verificationCode,
-        type: 'signup'
+        type: 'email' // Changed from 'signup' to 'email' for email OTP
       });
 
       console.log('OTP verification result:', { data, error });
@@ -125,9 +142,13 @@ const VerifyEmail = () => {
     try {
       console.log('Attempting to resend OTP for email:', email);
       
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email
+      // For email OTP, we need to use signUp again with the same credentials
+      // But since user already exists, this will trigger a resend
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: false // Don't create a new user, just send OTP to existing unverified user
+        }
       });
 
       console.log('Resend OTP result:', { error });
@@ -231,29 +252,35 @@ const VerifyEmail = () => {
               </Button>
             </div>
 
-            <div className="text-center space-y-2">
+            <div className="text-center space-y-4">
               <p className={`text-sm ${isInternshipMode ? 'text-purple-300' : 'text-gray-600'}`}>
                 Didn't receive the code?
               </p>
-              <Button
-                variant="ghost"
-                onClick={handleResendCode}
-                disabled={resendLoading}
-                className={`text-sm ${
-                  isInternshipMode 
-                    ? 'text-purple-300 hover:text-purple-200 hover:bg-purple-500/20' 
-                    : 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
-                }`}
-              >
-                {resendLoading ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  "Resend code"
-                )}
-              </Button>
+              <div className="space-y-2">
+                <Button
+                  variant="ghost"
+                  onClick={handleResendCode}
+                  disabled={resendLoading}
+                  className={`text-sm ${
+                    isInternshipMode 
+                      ? 'text-purple-300 hover:text-purple-200 hover:bg-purple-500/20' 
+                      : 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+                  }`}
+                >
+                  {resendLoading ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    "Resend code"
+                  )}
+                </Button>
+                <div className={`text-xs ${isInternshipMode ? 'text-purple-400' : 'text-gray-500'}`}>
+                  <p>If you received an email link instead of a code,</p>
+                  <p>click the link in your email to verify your account.</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

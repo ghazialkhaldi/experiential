@@ -262,28 +262,16 @@ const Auth = () => {
         return;
       }
 
-      // Check if email is already verified (auto-confirm is enabled)
-      if (data.user?.email_confirmed_at) {
-        toast({
-          title: "Account Created!",
-          description: "Your account has been created and verified successfully.",
-        });
+      // Store email for verification page
+      localStorage.setItem('pendingVerificationEmail', formData.email);
+      
+      toast({
+        title: "Account Created!",
+        description: "Please check your email for a 6-digit verification code.",
+      });
 
-        // Process any pending signup data immediately since email is verified
-        // Redirect to auth callback to handle profile setup
-        navigate('/auth/callback');
-      } else {
-        // Email needs verification - show verification page
-        localStorage.setItem('pendingVerificationEmail', formData.email);
-        
-        toast({
-          title: "Account Created!",
-          description: "Please check your email for a verification code.",
-        });
-
-        // Redirect to verification page
-        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
-      }
+      // Always redirect to verification page - let it handle whether verification is needed
+      navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
 
       // Reset form
       setFormData({
