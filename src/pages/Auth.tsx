@@ -238,26 +238,22 @@ const Auth = () => {
       
       localStorage.setItem('pendingSignupData', JSON.stringify(additionalData));
 
-      // Use OTP signup instead of regular signup to get 6-digit codes
+      // Use OTP for verification instead of signup with password
+      // This ensures we get a 6-digit code, not a link
       const { data, error } = await supabase.auth.signInWithOtp({
         email: formData.email,
         options: {
-          shouldCreateUser: true, // This will create user if they don't exist
-          data: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            birthday: formData.birthday,
-            role: formData.role,
-            age: formData.role === 'volunteer' && formData.age ? parseInt(formData.age) : null
-          }
+          shouldCreateUser: false, // Don't create user yet, just send verification
         }
       });
+
+      console.log('OTP signup result:', { data, error });
 
       if (error) {
         localStorage.removeItem('pendingSignupData');
         toast({
           variant: "destructive",
-          title: "Sign Up Failed",
+          title: "Sign Up Failed", 
           description: error.message,
         });
         return;
