@@ -262,10 +262,16 @@ const Auth = () => {
         return;
       }
 
+      // Store email for verification page
+      localStorage.setItem('pendingVerificationEmail', formData.email);
+
       toast({
         title: "Account Created!",
-        description: "Please check your email to verify your account. After verification, you'll be redirected to complete your profile setup.",
+        description: "Please check your email for a verification code.",
       });
+
+      // Redirect to verification page
+      navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
 
       // Reset form
       setFormData({

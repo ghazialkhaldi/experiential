@@ -17,6 +17,7 @@ import UniversityChecklist from "./pages/UniversityChecklist";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
+import VerifyEmail from "./pages/VerifyEmail";
 import CompleteProfile from "./pages/CompleteProfile";
 import PostOpportunity from "./pages/PostOpportunity";
 import ManageOpportunities from "./pages/ManageOpportunities";
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/university-checklist" element={<UniversityChecklist />} />
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/auth-callback" element={<AuthCallback />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/post-opportunity" element={<PostOpportunity />} />
