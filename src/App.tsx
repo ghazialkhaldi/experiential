@@ -25,6 +25,7 @@ import SearchResults from "./pages/SearchResults";
 import Discover from "./pages/Discover";
 import TrackHours from "./pages/TrackHours";
 import TrackExperience from "./pages/TrackExperience";
+import OrganizationDashboard from "./pages/OrganizationDashboard";
 import ProFeatures from "./pages/ProFeatures";
 import Billing from "./pages/Billing";
 import TermsAndConditions from "./pages/TermsAndConditions";
@@ -58,12 +59,13 @@ const App = () => (
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/auth-callback" element={<AuthCallback />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/post-opportunity" element={<PostOpportunity />} />
             <Route path="/manage-opportunities" element={<ManageOpportunities />} />
             <Route path="/track-hours" element={<TrackHours />} />
             <Route path="/track-experience" element={<TrackExperience />} />
+            <Route path="/organization-dashboard" element={<OrganizationDashboard />} />
             <Route path="/pro" element={<ProFeatures />} />
             <Route path="/billing" element={<Billing />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />

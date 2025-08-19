@@ -122,8 +122,8 @@ const VerifyEmail = () => {
         // Clean up stored email
         localStorage.removeItem('pendingVerificationEmail');
 
-        // Redirect to auth callback to process pending data
-        navigate('/auth/callback');
+        // Redirect to home screen instead of auth callback to avoid 404
+        navigate('/');
       }
     } catch (error) {
       console.error('Verification catch error:', error);
