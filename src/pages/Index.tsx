@@ -10,19 +10,17 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
-import { DatabaseDebugger } from '@/components/DatabaseDebugger';
-import { OpportunityTester } from '@/components/OpportunityTester';
-import { WorkingOpportunities } from '@/components/WorkingOpportunities';
-import ExperientialLogo from "@/components/ExperientialLogo";
-import DebugOpportunities from "@/components/DebugOpportunities";
+
+import OpportunityDetailDialog from "@/components/OpportunityDetailDialog";
 import { useOpportunities } from "@/hooks/useOpportunities";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "@/hooks/useLocation";
 import { useMode } from "@/contexts/ModeContext";
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import LocationSelector from "@/components/LocationSelector";
 import GoogleUserNotification from "@/components/GoogleUserNotification";
@@ -35,6 +33,8 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [showGoogleNotification, setShowGoogleNotification] = useState(true);
   const isMobile = useIsMobile();
   
@@ -53,16 +53,6 @@ const Index = () => {
   const { opportunities, loading, error } = useOpportunities('', 'all', userLocation);
   const { profile, organization, loading: profileLoading } = useProfile();
   const { user } = useAuth();
-
-  // Debug logging for opportunities
-  console.log('🎯 Index page state:', {
-    opportunitiesCount: opportunities?.length || 0,
-    loading,
-    error,
-    userLocation: userLocation ? { lat: userLocation.latitude, lng: userLocation.longitude } : null,
-    selectedOpportunity: selectedOpportunity ? selectedOpportunity.id : null,
-    dialogOpen
-  });
 
   // Hero text rotation - moved before conditional return
   const heroTexts = useMemo(() => {
@@ -123,14 +113,6 @@ const Index = () => {
     }
   });
 
-  // Debug filtered opportunities
-    console.log('🔍 Index.tsx state debug:', {
-    opportunities: opportunities.length,
-    loading,
-    error,
-    userLocation: userLocation ? { lat: userLocation.latitude, lng: userLocation.longitude } : null
-  });
-
   const handleCreateProfile = () => {
     if (user) {
       alert("You are already signed in!");
@@ -141,35 +123,6 @@ const Index = () => {
 
   return (
     <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
-      {/* MASSIVE DEBUG BOX - TOP OF PAGE */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white p-6 shadow-lg">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold mb-4">🚨 DEBUG STATUS</h1>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-lg">
-            <div>
-              <strong>Loading:</strong> {loading ? 'YES' : 'NO'}
-            </div>
-            <div>
-              <strong>Error:</strong> {error || 'None'}
-            </div>
-            <div>
-              <strong>Opportunities:</strong> {opportunities.length}
-            </div>
-            <div>
-              <strong>Sorted:</strong> {sortedOpportunities.length}
-            </div>
-          </div>
-          {opportunities.length > 0 && (
-            <div className="mt-4">
-              <strong>Found:</strong> {opportunities.map(o => o.title).join(', ')}
-            </div>
-          )}
-        </div>
-      </div>
-      
-      {/* Add top margin to account for debug box */}
-      <div className="pt-32">
-      
       {/* Sidebar */}
       <Sidebar />
       
@@ -185,9 +138,15 @@ const Index = () => {
             <div className={`flex items-center space-x-2 fade-in ${
               isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : ''
             }`}>
-              <Link to="/" className="flex items-center">
-                <ExperientialLogo className="h-16 w-auto" />
-              </Link>
+              <span className={`text-2xl font-bold ${
+                isInternshipMode ? 'text-white' : 'text-gray-900'
+              }`}>
+                {isInternshipMode ? (
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-20 w-auto brightness-0 invert" />
+                ) : (
+                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
+                )}
+              </span>
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">
               {/* Desktop navigation - hide some items on mobile */}
@@ -512,20 +471,8 @@ const Index = () => {
               </p>
             </div>
           ) : (
-            <>
-              {/* WORKING OPPORTUNITIES - DIRECT FIX */}
-              <div className="mb-8">
-                <WorkingOpportunities />
-              </div>
-
-              {/* DEBUG: Current broken opportunities section */}
-              <div className="bg-yellow-100 p-4 rounded-lg mb-4">
-                <h3 className="font-bold text-red-600">🔧 Original Opportunities (Currently Broken)</h3>
-                <p className="text-sm text-gray-600">Count: {sortedOpportunities.length}</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sortedOpportunities.map((opportunity, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sortedOpportunities.map((opportunity, index) => (
                 <Card key={opportunity.id} className={`card-hover border-0 backdrop-blur-sm relative ${
                   index % 3 === 0 ? 'fade-in' : index % 3 === 1 ? 'fade-in-delayed' : 'fade-in-delayed-2'
                 } ${
@@ -624,11 +571,8 @@ const Index = () => {
                       <Button 
                         className="w-full mt-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl text-white font-semibold"
                         onClick={() => {
-                          console.log('🔥 Original View Details button clicked for opportunity:', opportunity.id, opportunity.title);
-                          console.log('🔥 Navigating to URL:', `/opportunity/${opportunity.id}`);
-                          console.log('� Full opportunity object:', opportunity);
-                          navigate(`/opportunity/${opportunity.id}`);
-                          console.log('📱 Navigation command sent from Index page!');
+                          setSelectedOpportunity(opportunity);
+                          setDialogOpen(true);
                         }}
                       >
                         View Details & Apply
@@ -637,11 +581,17 @@ const Index = () => {
                   </CardContent>
                 </Card>
               ))}
-              </div>
-            </>
+            </div>
           )}
         </div>
       </section>
+
+      {/* Opportunity Detail Dialog */}
+      <OpportunityDetailDialog
+        opportunity={selectedOpportunity}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
 
       {/* CTA Section */}
       <section className={`py-16 text-white ${
@@ -735,42 +685,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-      {/* Debug components for testing - Remove in production */}
-      <div className="p-4 space-y-4">
-        {/* LARGE DEBUG DISPLAY */}
-        <div className="bg-red-100 border-4 border-red-500 p-6 rounded-lg">
-          <h2 className="text-2xl font-bold text-red-800 mb-4">🚨 DEBUG INFO</h2>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <strong>Loading:</strong> {loading ? 'YES' : 'NO'}<br/>
-              <strong>Error:</strong> {error || 'None'}<br/>
-              <strong>Opportunities Count:</strong> {opportunities.length}<br/>
-              <strong>Sorted Count:</strong> {sortedOpportunities.length}<br/>
-            </div>
-            <div>
-              <strong>Mode:</strong> {isInternshipMode ? 'Internship' : 'Volunteer'}<br/>
-              <strong>User Location:</strong> {userLocation ? 'Yes' : 'No'}<br/>
-              <strong>Navigation:</strong> Now using page routing instead of dialogs<br/>
-            </div>
-          </div>
-          {opportunities.length > 0 && (
-            <div className="mt-4">
-              <strong>Sample Opportunities:</strong>
-              <ul className="list-disc ml-4">
-                {opportunities.slice(0, 3).map(opp => (
-                  <li key={opp.id}>{opp.title} - {opp.organization?.name}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-        
-        <OpportunityTester />
-        <DatabaseDebugger />
-        <DebugOpportunities />
-      </div>
-      
-      </div> {/* End pt-32 wrapper */}
     </div>
   );
 };

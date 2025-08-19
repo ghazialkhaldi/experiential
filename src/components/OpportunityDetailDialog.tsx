@@ -52,17 +52,7 @@ const OpportunityDetailDialog = ({ opportunity, open, onOpenChange }: Opportunit
   const { applyToOpportunity, hasApplied } = useApplications();
   const { toast } = useToast();
 
-  // Debug logging
-  console.log('🔍 OpportunityDetailDialog rendered:', {
-    opportunity: opportunity ? { id: opportunity.id, title: opportunity.title } : null,
-    open,
-    user: user ? { id: user.id } : null
-  });
-
-  if (!opportunity) {
-    console.log('❌ No opportunity provided to dialog');
-    return null;
-  }
+  if (!opportunity) return null;
 
   const handleApply = async () => {
     if (!user) {
