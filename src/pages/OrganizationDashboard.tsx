@@ -146,29 +146,29 @@ const OrganizationDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b p-4">
+      <header className="bg-card shadow-sm border-b p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Button 
               variant="ghost" 
               size="icon"
               onClick={() => navigate('/app/portfolio')}
-              className="text-gray-600 hover:text-gray-900"
+              className="text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="h-6 w-6" />
             </Button>
             <div>
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-xl font-semibold text-foreground">
                 Organization Dashboard
               </h1>
-              <p className="text-sm text-gray-600">{organization?.name}</p>
+              <p className="text-sm text-muted-foreground">{organization?.name}</p>
             </div>
           </div>
           <Button 
             onClick={() => navigate('/post-opportunity')}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
           >
             <Plus className="h-4 w-4 mr-2" />
             Post Opportunity
@@ -191,11 +191,11 @@ const OrganizationDashboard = () => {
           {/* Applications Tab */}
           <TabsContent value="applications" className="space-y-4">
             {applications.length === 0 ? (
-              <Card>
+              <Card className="bg-card border-border">
                 <CardContent className="text-center py-12">
-                  <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Applications Yet</h3>
-                  <p className="text-gray-600 mb-4">
+                  <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-card-foreground mb-2">No Applications Yet</h3>
+                  <p className="text-muted-foreground mb-4">
                     Applications for your opportunities will appear here.
                   </p>
                   <Button onClick={() => navigate('/post-opportunity')}>
@@ -205,12 +205,12 @@ const OrganizationDashboard = () => {
               </Card>
             ) : (
               applications.map((application) => (
-                <Card key={application.id}>
+                <Card key={application.id} className="bg-card border-border">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="text-lg">{application.applicant_name}</CardTitle>
-                        <CardDescription>{application.applicant_email}</CardDescription>
+                        <CardTitle className="text-lg text-card-foreground">{application.applicant_name}</CardTitle>
+                        <CardDescription className="text-muted-foreground">{application.applicant_email}</CardDescription>
                       </div>
                       <Badge className={getStatusColor(application.status)}>
                         {application.status}
@@ -220,25 +220,25 @@ const OrganizationDashboard = () => {
                   <CardContent>
                     <div className="space-y-3">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">Applied for:</p>
-                        <p className="text-sm text-gray-600">{application.opportunity?.title}</p>
+                        <p className="text-sm font-medium text-card-foreground">Applied for:</p>
+                        <p className="text-sm text-muted-foreground">{application.opportunity?.title}</p>
                       </div>
                       
                       {application.message && (
                         <div>
-                          <p className="text-sm font-medium text-gray-900">Message:</p>
-                          <p className="text-sm text-gray-600">{application.message}</p>
+                          <p className="text-sm font-medium text-card-foreground">Message:</p>
+                          <p className="text-sm text-muted-foreground">{application.message}</p>
                         </div>
                       )}
                       
                       {application.resume_url && (
                         <div>
-                          <p className="text-sm font-medium text-gray-900">Resume:</p>
+                          <p className="text-sm font-medium text-card-foreground">Resume:</p>
                           <a 
                             href={application.resume_url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 text-sm"
+                            className="text-primary hover:text-primary/80 text-sm"
                           >
                             View Resume
                           </a>
@@ -246,7 +246,7 @@ const OrganizationDashboard = () => {
                       )}
                       
                       <div className="flex items-center justify-between">
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted-foreground">
                           Applied {formatTimeAgo(application.applied_at)}
                         </p>
                         
@@ -283,11 +283,11 @@ const OrganizationDashboard = () => {
           {/* Opportunities Tab */}
           <TabsContent value="opportunities" className="space-y-4">
             {opportunities.length === 0 ? (
-              <Card>
+              <Card className="bg-card border-border">
                 <CardContent className="text-center py-12">
-                  <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Opportunities Posted</h3>
-                  <p className="text-gray-600 mb-4">
+                  <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-card-foreground mb-2">No Opportunities Posted</h3>
+                  <p className="text-muted-foreground mb-4">
                     Start by posting your first opportunity to attract volunteers or interns.
                   </p>
                   <Button onClick={() => navigate('/post-opportunity')}>
@@ -297,12 +297,12 @@ const OrganizationDashboard = () => {
               </Card>
             ) : (
               opportunities.map((opportunity) => (
-                <Card key={opportunity.id} className="cursor-pointer hover:shadow-md transition-shadow">
+                <Card key={opportunity.id} className="cursor-pointer hover:shadow-md transition-shadow bg-card border-border">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="text-lg">{opportunity.title}</CardTitle>
-                        <CardDescription>
+                        <CardTitle className="text-lg text-card-foreground">{opportunity.title}</CardTitle>
+                        <CardDescription className="text-muted-foreground">
                           {opportunity.category} • {opportunity.location}
                         </CardDescription>
                       </div>
@@ -318,11 +318,11 @@ const OrganizationDashboard = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      <p className="text-sm text-gray-600 line-clamp-2">
+                      <p className="text-sm text-muted-foreground line-clamp-2">
                         {opportunity.description}
                       </p>
                       <div className="flex items-center justify-between">
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted-foreground">
                           Posted {formatTimeAgo(opportunity.posted_at)}
                         </p>
                         <Button
