@@ -198,7 +198,6 @@ const OpportunityDetail: React.FC = () => {
     <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-gradient-to-br from-blue-50 to-green-50'}`}>
       <div className="flex h-screen">
         <Sidebar />
-        
         <main className="flex-1 overflow-y-auto">
           {/* Header Navigation */}
           <nav className={`${isInternshipMode ? 'bg-gray-800/80 backdrop-blur-md border-gray-700' : 'bg-white/80 backdrop-blur-md'} border-b sticky top-0 z-40`}>
