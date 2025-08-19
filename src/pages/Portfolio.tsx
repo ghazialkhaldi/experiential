@@ -73,19 +73,19 @@ const Portfolio = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b p-4">
+      <header className="bg-card shadow-sm border-b p-4">
         <div className="flex items-center space-x-4">
           <Button 
             variant="ghost" 
             size="icon"
             onClick={() => navigate('/app/dashboard')}
-            className="text-gray-600 hover:text-gray-900"
+            className="text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-6 w-6" />
           </Button>
-          <h1 className="text-xl font-semibold text-gray-900">
+          <h1 className="text-xl font-semibold text-foreground">
             Your Portfolio
           </h1>
         </div>
@@ -95,24 +95,24 @@ const Portfolio = () => {
       <div className="p-4">
         {isOrganization ? (
           <>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Organization Dashboard</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">Organization Dashboard</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               {organizationOptions.map((option) => {
                 const IconComponent = option.icon;
                 return (
                   <Card 
                     key={option.path}
-                    className="cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                    className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 bg-card border-border"
                     onClick={() => navigate(option.path)}
                   >
                     <CardHeader>
                       <div className="flex items-center space-x-3">
-                        <div className={`p-2 rounded-lg ${option.color} text-white`}>
+                        <div className="p-3 rounded-lg bg-primary text-primary-foreground">
                           <IconComponent className="h-6 w-6" />
                         </div>
                         <div>
-                          <CardTitle className="text-lg">{option.title}</CardTitle>
-                          <CardDescription>{option.description}</CardDescription>
+                          <CardTitle className="text-lg text-card-foreground">{option.title}</CardTitle>
+                          <CardDescription className="text-muted-foreground">{option.description}</CardDescription>
                         </div>
                       </div>
                     </CardHeader>
@@ -120,10 +120,10 @@ const Portfolio = () => {
                 );
               })}
             </div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Tools</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">Personal Tools</h2>
           </>
         ) : (
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Your Tools</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">Your Tools</h2>
         )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -132,17 +132,17 @@ const Portfolio = () => {
             return (
               <Card 
                 key={option.path}
-                className="cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 bg-card border-border"
                 onClick={() => navigate(option.path)}
               >
                 <CardHeader>
                   <div className="flex items-center space-x-3">
-                    <div className={`p-2 rounded-lg ${option.color} text-white`}>
+                    <div className="p-3 rounded-lg bg-secondary text-secondary-foreground">
                       <IconComponent className="h-6 w-6" />
                     </div>
                     <div>
-                      <CardTitle className="text-lg">{option.title}</CardTitle>
-                      <CardDescription>{option.description}</CardDescription>
+                      <CardTitle className="text-lg text-card-foreground">{option.title}</CardTitle>
+                      <CardDescription className="text-muted-foreground">{option.description}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
