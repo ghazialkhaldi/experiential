@@ -10,6 +10,7 @@ import SplashScreen from "./pages/SplashScreen";
 import Dashboard from "./pages/Dashboard";
 import Explore from "./pages/Explore";
 import Portfolio from "./pages/Portfolio";
+import OpportunityDetail from "./pages/OpportunityDetail";
 import Settings from "./pages/Settings";
 import Resources from "./pages/Resources";
 import CareerResources from "./pages/CareerResources";
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="/app/explore" element={<Explore />} />
             <Route path="/app/portfolio" element={<Portfolio />} />
             <Route path="/app/settings" element={<Settings />} />
+            <Route path="/opportunity/:id" element={<OpportunityDetail />} />
             {/* Original Website Routes */}
             <Route path="/search" element={<SearchResults />} />
             <Route path="/discover" element={<Discover />} />

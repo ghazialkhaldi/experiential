@@ -94,7 +94,7 @@ const Explore = () => {
               <Card 
                 key={opportunity.id}
                 className="cursor-pointer hover:shadow-lg transition-shadow duration-200"
-                onClick={() => setSelectedOpportunity(opportunity)}
+                onClick={() => navigate(`/opportunity/${opportunity.id}`)}
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
