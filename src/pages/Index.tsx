@@ -1,3 +1,22 @@
+<<<<<<< HEAD
+
+
+
+// ...existing code...
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+
+const Index = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('/login', { replace: true });
+  }, [navigate]);
+
+  return null;
+};
+=======
 import { Search, MapPin, Clock, Users, BookOpen, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -677,4 +696,5 @@ const Index = () => {
   );
 };
 
+>>>>>>> origin/main
 export default Index;

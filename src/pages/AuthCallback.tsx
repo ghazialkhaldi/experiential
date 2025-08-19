@@ -169,6 +169,46 @@ const AuthCallback = () => {
           .maybeSingle();
 
         const needsProfileCompletion = !profileData?.role;
+<<<<<<< HEAD
+                const isGoogleUser = user.app_metadata?.provider === 'google';
+        
+        if (needsProfileCompletion) {
+          if (isGoogleUser) {
+            // For Google users, redirect to home page where they can use the sidebar notification
+            toast({
+              title: "Welcome to Experiential!",
+              description: "Please complete your profile using the sidebar to get started.",
+            });
+
+            setTimeout(() => {
+              navigate('/');
+            }, 1500);
+          } else {
+            // For non-Google users, use the existing flow
+            toast({
+              title: "Welcome to Experiential!",
+              description: "Please complete your profile to get started.",
+            });
+
+            setTimeout(() => {
+              navigate('/complete-profile');
+            }, 1500);
+          }
+        } else {
+          toast({
+            title: "Welcome back to Experiential!",
+            description: "Your account has been verified and set up successfully.",
+          });
+        // Check if user needs to complete profile (especially for Google users)
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        const needsProfileCompletion = !profileData?.role;
+=======
+>>>>>>> origin/main
         const isGoogleUser = user.app_metadata?.provider === 'google';
         
         if (needsProfileCompletion) {
@@ -204,6 +244,14 @@ const AuthCallback = () => {
             navigate('/');
           }, 2000);
         }
+<<<<<<< HEAD
+          // Small delay to show success message
+          setTimeout(() => {
+            navigate('/');
+          }, 2000);
+        }
+=======
+>>>>>>> origin/main
 
       } catch (error) {
         console.error('Callback processing error:', error);

@@ -1,4 +1,8 @@
 import { useState } from "react";
+<<<<<<< HEAD
+import ExperientialLogo from "./ExperientialLogo";
+=======
+>>>>>>> origin/main
 import { 
   Users, 
   Menu, 
@@ -92,6 +96,9 @@ const Sidebar = () => {
                 setIsOpen(false);
               }}
             >
+<<<<<<< HEAD
+              <ExperientialLogo className="h-12 w-auto" />
+=======
               <span className={`text-xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
                 {isInternshipMode ? (
                   <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto brightness-0 invert" />
@@ -99,6 +106,7 @@ const Sidebar = () => {
                   <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
                 )}
               </span>
+>>>>>>> origin/main
             </Link>
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>
               <X className={`h-6 w-6 ${isInternshipMode ? 'text-gray-300' : ''}`} />

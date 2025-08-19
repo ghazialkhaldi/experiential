@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+<<<<<<< HEAD
+=======
 import ExperientialLogo from '@/components/ExperientialLogo';
+>>>>>>> origin/main
 
 const SplashScreen = () => {
   const [fadeOut, setFadeOut] = useState(false);
@@ -14,12 +17,25 @@ const SplashScreen = () => {
       
       // Wait for fade out animation, then navigate
       setTimeout(() => {
+<<<<<<< HEAD
+        if (loading) return;
+        
+        if (isAuthenticated) {
+          navigate('/dashboard');
+=======
         if (isAuthenticated) {
           navigate('/app/dashboard');
+>>>>>>> origin/main
         } else {
           navigate('/auth');
         }
       }, 500);
+<<<<<<< HEAD
+    }, 3000); // Static for 3 seconds
+
+    return () => clearTimeout(timer);
+  }, [navigate, isAuthenticated, loading]);
+=======
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -32,16 +48,23 @@ const SplashScreen = () => {
       </div>
     );
   }
+>>>>>>> origin/main
 
   return (
     <div className={`min-h-screen bg-white flex items-center justify-center transition-opacity duration-500 ${
       fadeOut ? 'opacity-0' : 'opacity-100'
     }`}>
       <div className="text-center">
+<<<<<<< HEAD
+        <div className="mb-4">
+          <img src="/Experiential.jpeg" alt="Experiential" className="h-32 w-auto mx-auto" />
+        </div>
+=======
         <div className="animate-pulse">
           <img src="/E.png" alt="Experiential Logo" className="h-32 w-32 mx-auto mb-8" />
         </div>
         <ExperientialLogo className="h-16 w-auto mx-auto" />
+>>>>>>> origin/main
       </div>
     </div>
   );

@@ -13,10 +13,25 @@ const ModeContext = createContext<ModeContextType | undefined>(undefined);
 export const ModeProvider = ({ children }: { children: ReactNode }) => {
   const [mode, setMode] = useState<AppMode>('volunteer');
 
+<<<<<<< HEAD
+  const setModeWithHaptic = (newMode: AppMode) => {
+    // Trigger strong haptic feedback when switching modes
+    if ('vibrate' in navigator) {
+      navigator.vibrate([100, 50, 100]); // Strong vibration pattern
+    }
+    setMode(newMode);
+  };
+
+  return (
+    <ModeContext.Provider value={{
+      mode,
+      setMode: setModeWithHaptic,
+=======
   return (
     <ModeContext.Provider value={{
       mode,
       setMode,
+>>>>>>> origin/main
       isInternshipMode: mode === 'internship'
     }}>
       {children}

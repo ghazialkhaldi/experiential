@@ -4,12 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useLikes } from "@/hooks/useLikes";
+<<<<<<< HEAD
+import { useNavigate } from "react-router-dom";
+=======
+>>>>>>> origin/main
 
 interface OpportunityCardProps {
   opportunity: any;
   onSave: (opportunityId: string, e: React.MouseEvent) => void;
   isSaved: boolean;
+<<<<<<< HEAD
+  onClick?: () => void; // Make onClick optional since we'll handle navigation internally
+=======
   onClick: () => void;
+>>>>>>> origin/main
   formatTimeAgo: (dateString: string) => string;
   getCategoryColor: (category: string) => string;
 }
@@ -23,6 +31,10 @@ const OpportunityCard = ({
   getCategoryColor 
 }: OpportunityCardProps) => {
   const { isLiked, likeCount, toggleLike, canLike } = useLikes(opportunity.id);
+<<<<<<< HEAD
+  const navigate = useNavigate();
+=======
+>>>>>>> origin/main
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -34,10 +46,23 @@ const OpportunityCard = ({
     onSave(opportunity.id, e);
   };
 
+<<<<<<< HEAD
+  const handleCardClick = () => {
+    console.log('🔥 OpportunityCard clicked for:', opportunity.title, 'ID:', opportunity.id);
+    console.log('🔥 Navigating to:', `/opportunity/${opportunity.id}`);
+    navigate(`/opportunity/${opportunity.id}`);
+  };
+
+  return (
+    <Card 
+      className="cursor-pointer hover:shadow-lg transition-all duration-200 border-border"
+      onClick={handleCardClick}
+=======
   return (
     <Card 
       className="cursor-pointer hover:shadow-lg transition-all duration-200 border-border"
       onClick={onClick}
+>>>>>>> origin/main
     >
       <CardContent className="p-6">
         {/* Header with organization info */}
@@ -132,7 +157,13 @@ const OpportunityCard = ({
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
+<<<<<<< HEAD
+              console.log('🔥 View Details button clicked for:', opportunity.title, 'ID:', opportunity.id);
+              console.log('🔥 Navigating to:', `/opportunity/${opportunity.id}`);
+              navigate(`/opportunity/${opportunity.id}`);
+=======
               onClick();
+>>>>>>> origin/main
             }}
           >
             View Details

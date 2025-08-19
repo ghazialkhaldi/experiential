@@ -221,7 +221,12 @@ const ManageOpportunities = () => {
   const acceptedApplications = applications.filter(app => app.status === 'accepted');
   const rejectedApplications = applications.filter(app => app.status === 'rejected');
 
+<<<<<<< HEAD
+  // Only allow organization accounts
+  if (!user || user.role !== 'volunteer_searcher') {
+=======
   if (!user) {
+>>>>>>> origin/main
     return (
       <div className={`min-h-screen ${isInternshipMode ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-gradient-to-br from-blue-50 to-green-50'}`}>
         <nav className={`shadow-sm border-b ${isInternshipMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}>

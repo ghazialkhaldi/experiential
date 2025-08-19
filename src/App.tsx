@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+import ManageOpportunities from "./pages/ManageOpportunities";
+=======
+>>>>>>> origin/main
 
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -5,7 +9,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ModeProvider } from "./contexts/ModeContext";
+<<<<<<< HEAD
+=======
 import Index from "./pages/Index";
+>>>>>>> origin/main
 import SplashScreen from "./pages/SplashScreen";
 import Dashboard from "./pages/Dashboard";
 import Explore from "./pages/Explore";
@@ -13,6 +20,22 @@ import Portfolio from "./pages/Portfolio";
 import OpportunityDetail from "./pages/OpportunityDetail";
 import Settings from "./pages/Settings";
 import Resources from "./pages/Resources";
+<<<<<<< HEAD
+import ResumeBuilder from "./pages/ResumeBuilder";
+import Auth from "./pages/Auth";
+import AuthCallback from "./pages/AuthCallback";
+import CompleteProfile from "./pages/CompleteProfile";
+import TrackHours from "./pages/TrackHours";
+import TrackExperience from "./pages/TrackExperience";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import LogoDemo from "./pages/LogoDemo";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import LegalDocuments from "./pages/LegalDocuments";
+import EditProfile from "./pages/EditProfile";
+import ChangePassword from "./pages/ChangePassword";
+import OpportunityDetail from "./pages/OpportunityDetail";
+import Index from "./pages/Index";
+=======
 import CareerResources from "./pages/CareerResources";
 import UniversityChecklist from "./pages/UniversityChecklist";
 import ResumeBuilder from "./pages/ResumeBuilder";
@@ -33,6 +56,7 @@ import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import LegalDocuments from "./pages/LegalDocuments";
 import NotFound from "./pages/NotFound";
+>>>>>>> origin/main
 
 const queryClient = new QueryClient();
 
@@ -44,6 +68,34 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+<<<<<<< HEAD
+            {/* YOUR NEW APP - ALL ROUTES NOW GO TO THE NEW APP */}
+            <Route path="/" element={<Index />} />
+            <Route path="/opportunities" element={<Index />} />
+            <Route path="/splash" element={<SplashScreen />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/explore" element={<Explore />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/track-hours" element={<TrackHours />} />
+            <Route path="/track-experience" element={<TrackExperience />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/resume-builder" element={<ResumeBuilder />} />
+            <Route path="/achievements" element={<Dashboard />} />
+            <Route path="/manage-opportunities" element={<ManageOpportunities />} />
+            <Route path="/auth-callback" element={<AuthCallback />} />
+            <Route path="/complete-profile" element={<CompleteProfile />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/legal" element={<LegalDocuments />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
+            <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/opportunity/:id" element={<OpportunityDetail />} />
+            <Route path="/logo-demo" element={<LogoDemo />} />
+            {/* ALL OTHER ROUTES REDIRECT TO YOUR NEW APP */}
+            <Route path="*" element={<SplashScreen />} />
+=======
             <Route path="/" element={<Index />} />
             {/* Mobile App Routes */}
             <Route path="/app" element={<SplashScreen />} />
@@ -75,6 +127,7 @@ const App = () => (
             <Route path="/legal" element={<LegalDocuments />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
+>>>>>>> origin/main
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

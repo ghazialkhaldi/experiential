@@ -16,6 +16,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from "@/hooks/use-toast";
 import { useMode } from '@/contexts/ModeContext';
 import AuthButton from "@/components/AuthButton";
+<<<<<<< HEAD
+import ExperientialLogo from "@/components/ExperientialLogo";
+=======
+>>>>>>> origin/main
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -174,6 +178,11 @@ const PostOpportunity = () => {
               {isInternshipMode ? (
                 <Briefcase className="h-8 w-8 text-blue-400" />
               ) : null}
+<<<<<<< HEAD
+              <Link to="/" className="flex items-center">
+                <ExperientialLogo className="h-12 w-auto" />
+              </Link>
+=======
               <span className={`text-2xl font-bold ${
                 isInternshipMode ? 'text-white' : 'text-gray-900'
               }`}>
@@ -183,6 +192,7 @@ const PostOpportunity = () => {
                   <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
                 )}
               </span>
+>>>>>>> origin/main
             </div>
             <div className="flex items-center space-x-6">
               <Link to="/" className={`font-medium ${

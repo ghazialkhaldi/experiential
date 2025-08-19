@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
+import { Clock, Target, CheckCircle, Plus, Calendar, BarChart3, LogIn, ArrowLeft } from "lucide-react";
+=======
 import { Clock, Target, CheckCircle, Plus, Calendar, BarChart3, LogIn } from "lucide-react";
+>>>>>>> origin/main
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +12,19 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Link, useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+=======
 import AuthButton from "@/components/AuthButton";
+>>>>>>> origin/main
 import { Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerHours } from "@/hooks/useVolunteerHours";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
+<<<<<<< HEAD
+import { useMode } from "@/contexts/ModeContext";
+=======
+>>>>>>> origin/main
 
 interface LogHoursForm {
   title: string;
@@ -25,6 +36,10 @@ interface LogHoursForm {
 
 const TrackHours = () => {
   const { isAuthenticated, loading } = useAuth();
+<<<<<<< HEAD
+  const { isInternshipMode } = useMode();
+=======
+>>>>>>> origin/main
   const navigate = useNavigate();
   const { hours: volunteerHours, loading: hoursLoading, addHours, totalHours, totalOpportunities } = useVolunteerHours();
   const [hourGoal, setHourGoal] = useState(() => {
@@ -37,16 +52,48 @@ const TrackHours = () => {
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<LogHoursForm>();
 
+<<<<<<< HEAD
+  const triggerHaptic = () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50); // Short vibration
+    }
+  };
+
+  const handleBackNavigation = () => {
+    triggerHaptic();
+    toast({
+      title: "Returning to Portfolio",
+      description: "Going back to portfolio...",
+      duration: 1500,
+    });
+    navigate('/dashboard');
+  };
+
+=======
+>>>>>>> origin/main
   const handleSetGoal = () => {
     if (newGoal && !isNaN(Number(newGoal))) {
       const goalValue = Number(newGoal);
       setHourGoal(goalValue);
       localStorage.setItem('volunteerHourGoal', goalValue.toString());
       setNewGoal("");
+<<<<<<< HEAD
+      triggerHaptic();
+      toast({
+        title: "Goal Updated",
+        description: `Your new goal is ${goalValue} hours!`,
+        duration: 3000,
+      });
+=======
+>>>>>>> origin/main
     }
   };
 
   const onSubmit = async (data: LogHoursForm) => {
+<<<<<<< HEAD
+    triggerHaptic();
+=======
+>>>>>>> origin/main
     const success = await addHours({
       title: data.title,
       organization: data.organization,
@@ -77,6 +124,30 @@ const TrackHours = () => {
   };
 
   return (
+<<<<<<< HEAD
+    <div className={`min-h-screen ${
+      isInternshipMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-purple-900' 
+        : 'bg-gradient-to-br from-blue-50 to-green-50'
+    }`}>
+      {/* Back Button - Updated for iPhone notch */}
+      <div className="absolute top-16 left-4 z-10">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={handleBackNavigation}
+          className={`shadow-lg backdrop-blur-sm ${
+            isInternshipMode 
+              ? 'text-gray-300 hover:text-white bg-gray-800/90 hover:bg-gray-700/90' 
+              : 'text-gray-600 hover:text-gray-900 bg-white/90 hover:bg-white'
+          }`}
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+      </div>
+      
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">{/* Added top padding for notch */}
+=======
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
       {/* Navigation */}
       <nav className="bg-white shadow-sm border-b">
@@ -103,6 +174,7 @@ const TrackHours = () => {
             Monitor your volunteer progress and achieve your service goals.
           </p>
         </div>
+>>>>>>> origin/main
 
         {loading ? (
           <div className="text-center py-12">
