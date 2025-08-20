@@ -168,19 +168,9 @@ const Index = () => {
                   }`}></span>
                 </Link>
               )}
-              
-              {!isMobile && (
-                <>
-                  <Link to={isInternshipMode ? "/career-resources" : "/resources"} className={`font-medium text-sm transition-colors duration-200 relative group ${
-                    isInternshipMode 
-                      ? 'text-gray-300 hover:text-blue-400' 
-                      : 'text-gray-700 hover:text-blue-600'
-                  }`}>
-                    {isInternshipMode ? 'Career Resources' : 'University Resources'}
-                    <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
-                      isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
-                    }`}></span>
-                   </Link>
+               
+               {!isMobile && (
+                 <>
                    {user && <NotificationBell />}
                    <AuthButton />
                    {isOrganization && (
