@@ -156,32 +156,50 @@ const ApplicationDetailDialog = ({ application, open, onOpenChange }: Applicatio
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium">Resume Document</p>
-                      <p className="text-sm text-muted-foreground">Click to view in new tab</p>
+                      <p className="text-sm text-muted-foreground">Available for download and viewing</p>
                     </div>
                     <Button
                       variant="outline"
                       onClick={() => window.open(application.resume_url!, '_blank')}
                     >
                       <FileText className="h-4 w-4 mr-2" />
-                      View Resume
+                      Open Resume
                     </Button>
                   </div>
                   
                   {/* Resume Preview Frame */}
                   <div className="mt-4">
                     <div className="border rounded-lg overflow-hidden bg-white">
-                      <iframe
-                        src={`${application.resume_url}#toolbar=0&navpanes=0&scrollbar=0`}
-                        className="w-full h-96"
-                        title="Resume Preview"
-                        onLoad={() => console.log('Resume loaded successfully')}
-                        onError={() => {
-                          console.error('Resume preview failed to load');
-                        }}
-                      />
-                    </div>
-                    <div className="mt-2 text-xs text-muted-foreground text-center">
-                      If the preview doesn't load, you can open the resume in a new tab using the "View Resume" button above.
+                      <div className="p-4 text-center">
+                        <FileText className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Resume preview may be blocked by your browser's security settings.
+                        </p>
+                        <div className="space-y-2">
+                          <Button
+                            variant="default"
+                            onClick={() => window.open(application.resume_url!, '_blank')}
+                            className="w-full"
+                          >
+                            <FileText className="h-4 w-4 mr-2" />
+                            Open Resume in New Tab
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              const link = document.createElement('a');
+                              link.href = application.resume_url!;
+                              link.download = `${application.applicant_name}_Resume.pdf`;
+                              document.body.appendChild(link);
+                              link.click();
+                              document.body.removeChild(link);
+                            }}
+                            className="w-full"
+                          >
+                            Download Resume
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
