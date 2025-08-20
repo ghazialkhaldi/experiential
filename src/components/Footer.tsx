@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import ExperientialLogo from './ExperientialLogo';
 import { FeedbackDialog } from './FeedbackDialog';
 import { useMode } from '@/contexts/ModeContext';
+import ExperientialLogo from './ExperientialLogo';
 
 const Footer = () => {
   const { isInternshipMode } = useMode();
