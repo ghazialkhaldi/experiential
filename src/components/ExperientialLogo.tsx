@@ -6,7 +6,7 @@ interface ExperientialLogoProps {
 }
 
 const ExperientialLogo: React.FC<ExperientialLogoProps> = ({ 
-  className = "h-12 w-auto" 
+  className = "h-16 w-auto" 
 }) => {
   const { isInternshipMode } = useMode();
   
