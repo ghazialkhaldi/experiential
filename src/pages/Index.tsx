@@ -157,23 +157,10 @@ const Index = () => {
             <div className="flex items-center space-x-6 fade-in-delayed">
               {/* Desktop navigation - hide some items on mobile */}
               {!isMobile && (
-                <Link to="/" className={`font-medium transition-colors duration-200 relative group ${
-                  isInternshipMode 
-                    ? 'text-gray-300 hover:text-blue-400' 
-                    : 'text-gray-700 hover:text-blue-600'
-                }`}>
-                  {isInternshipMode ? 'Internships' : 'Opportunities'}
-                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
-                    isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
-                  }`}></span>
-                </Link>
-              )}
-               
-               {!isMobile && (
-                 <>
-                   {user && <NotificationBell />}
-                   <AuthButton />
-                   {isOrganization && (
+                <>
+                  {user && <NotificationBell />}
+                  <AuthButton />
+                  {isOrganization && (
                     <Link to="/post-opportunity">
                       <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
                         isInternshipMode 
