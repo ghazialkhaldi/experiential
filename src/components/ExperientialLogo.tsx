@@ -15,8 +15,8 @@ const ExperientialLogo: React.FC<ExperientialLogoProps> = ({
   
   return (
     <img 
-      src="/E.png" 
-      alt="Experiential Logo"
+      src={isInternshipMode ? "/Experiential 4.png" : "/Experiential.jpeg"}
+      alt="Experiential Logo" 
       className={className}
       style={isInternshipMode ? { 
         filter: 'brightness(0) invert(1)',
