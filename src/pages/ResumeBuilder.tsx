@@ -216,7 +216,7 @@ const ResumeBuilder = () => {
     ));
   };
 
-  const saveResume = () => {
+  const saveResume = async () => {
     const newResume: SavedResume = {
       id: currentResumeId || Date.now().toString(),
       name: resumeName,
@@ -231,6 +231,16 @@ const ResumeBuilder = () => {
     setSavedResumes(updatedResumes);
     setCurrentResumeId(newResume.id);
     localStorage.setItem('savedResumes', JSON.stringify(updatedResumes));
+    
+    // Also generate and save PDF to Supabase storage
+    try {
+      if (user) {
+        await saveResumeToStorage();
+      }
+    } catch (error) {
+      console.error('Error saving resume to storage:', error);
+    }
+    
     alert("Resume saved successfully!");
   };
 
@@ -296,6 +306,238 @@ const ResumeBuilder = () => {
 
   const deleteSection = (sectionId: string) => {
     setResumeSections(prev => prev.filter(section => section.id !== sectionId));
+  };
+
+  const saveResumeToStorage = async () => {
+    const pdf = new jsPDF();
+    
+    // Set up fonts and colors
+    pdf.setFont("helvetica");
+    
+    let yPosition = 20;
+    const lineHeight = 7;
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const margin = 20;
+    const contentWidth = pageWidth - (margin * 2);
+    
+    // Helper function to add text with word wrapping
+    const addWrappedText = (text: string, x: number, y: number, maxWidth: number, fontSize: number = 10) => {
+      pdf.setFontSize(fontSize);
+      const lines = pdf.splitTextToSize(text, maxWidth);
+      pdf.text(lines, x, y);
+      return y + (lines.length * lineHeight);
+    };
+    
+    // Helper function to check if we need a new page
+    const checkPageBreak = (requiredSpace: number) => {
+      if (yPosition + requiredSpace > pdf.internal.pageSize.getHeight() - 30) {
+        pdf.addPage();
+        yPosition = 20;
+      }
+    };
+    
+    // Header - Personal Information
+    const personalInfo = resumeSections.find(s => s.type === 'personal')?.data || {};
+    if (personalInfo.fullName) {
+      pdf.setFontSize(20);
+      pdf.setFont("helvetica", "bold");
+      pdf.text(personalInfo.fullName, margin, yPosition);
+      yPosition += 10;
+      
+      pdf.setFontSize(11);
+      pdf.setFont("helvetica", "normal");
+      if (personalInfo.email) {
+        pdf.text(personalInfo.email, margin, yPosition);
+        yPosition += lineHeight;
+      }
+      if (personalInfo.phone) {
+        pdf.text(personalInfo.phone, margin, yPosition);
+        yPosition += lineHeight;
+      }
+      if (personalInfo.address) {
+        pdf.text(personalInfo.address, margin, yPosition);
+        yPosition += lineHeight;
+      }
+      
+      yPosition += 5;
+      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+      yPosition += 10;
+    }
+    
+    // Personal Statement
+    const personalStatement = resumeSections.find(s => s.type === 'statement')?.data || {};
+    if (personalStatement.statement) {
+      checkPageBreak(20);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("PERSONAL STATEMENT", margin, yPosition);
+      yPosition += 8;
+      
+      yPosition = addWrappedText(personalStatement.statement, margin, yPosition, contentWidth, 10);
+      yPosition += 10;
+    }
+    
+    // Education
+    const education = resumeSections.find(s => s.type === 'education')?.data || [];
+    if (education.length > 0) {
+      checkPageBreak(20);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("EDUCATION", margin, yPosition);
+      yPosition += 8;
+      
+      education.forEach((edu: any) => {
+        checkPageBreak(25);
+        pdf.setFontSize(11);
+        pdf.setFont("helvetica", "bold");
+        
+        let educationLine = "";
+        if (edu.degree && edu.field) {
+          educationLine = `${edu.degree} in ${edu.field}`;
+        } else if (edu.degree) {
+          educationLine = edu.degree;
+        }
+        
+        if (educationLine) {
+          pdf.text(educationLine, margin, yPosition);
+          yPosition += lineHeight;
+        }
+        
+        if (edu.institution) {
+          pdf.setFont("helvetica", "normal");
+          pdf.text(edu.institution, margin, yPosition);
+          yPosition += lineHeight;
+        }
+        
+        if (edu.graduationYear || edu.gpa) {
+          let gradLine = "";
+          if (edu.graduationYear) gradLine += `Class of ${edu.graduationYear}`;
+          if (edu.gpa) gradLine += (gradLine ? ` • GPA: ${edu.gpa}` : `GPA: ${edu.gpa}`);
+          pdf.text(gradLine, margin, yPosition);
+          yPosition += lineHeight;
+        }
+        
+        yPosition += 5;
+      });
+      yPosition += 5;
+    }
+    
+    // Work Experience
+    const experience = resumeSections.find(s => s.type === 'experience')?.data || [];
+    if (experience.length > 0) {
+      checkPageBreak(20);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("WORK EXPERIENCE", margin, yPosition);
+      yPosition += 8;
+      
+      experience.forEach((exp: any) => {
+        checkPageBreak(30);
+        pdf.setFontSize(11);
+        pdf.setFont("helvetica", "bold");
+        
+        if (exp.position) {
+          pdf.text(exp.position, margin, yPosition);
+          yPosition += lineHeight;
+        }
+        
+        if (exp.company) {
+          pdf.setFont("helvetica", "normal");
+          pdf.text(exp.company, margin, yPosition);
+          yPosition += lineHeight;
+        }
+        
+        if (exp.startDate || exp.endDate) {
+          const dateRange = `${exp.startDate || ''} - ${exp.endDate || ''}`.trim();
+          if (dateRange !== '-') {
+            pdf.text(dateRange, margin, yPosition);
+            yPosition += lineHeight;
+          }
+        }
+        
+        if (exp.description) {
+          yPosition = addWrappedText(exp.description, margin, yPosition, contentWidth, 10);
+        }
+        
+        yPosition += 8;
+      });
+    }
+    
+    // Skills
+    const skills = resumeSections.find(s => s.type === 'skills')?.data || [];
+    if (skills.length > 0) {
+      checkPageBreak(20);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("SKILLS & STRENGTHS", margin, yPosition);
+      yPosition += 8;
+      
+      skills.forEach((skill: any) => {
+        checkPageBreak(10);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "normal");
+        if (skill.name && skill.level) {
+          pdf.text(`• ${skill.name} - ${skill.level}`, margin, yPosition);
+          yPosition += lineHeight;
+        } else if (skill.name) {
+          pdf.text(`• ${skill.name}`, margin, yPosition);
+          yPosition += lineHeight;
+        }
+      });
+      yPosition += 5;
+    }
+    
+    // Achievements
+    const achievements = resumeSections.find(s => s.type === 'achievements')?.data || [];
+    if (achievements.length > 0) {
+      checkPageBreak(20);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("ACHIEVEMENTS & AWARDS", margin, yPosition);
+      yPosition += 8;
+      
+      achievements.forEach((achievement: any) => {
+        checkPageBreak(25);
+        pdf.setFontSize(11);
+        pdf.setFont("helvetica", "bold");
+        
+        if (achievement.title) {
+          pdf.text(achievement.title, margin, yPosition);
+          yPosition += lineHeight;
+        }
+        
+        if (achievement.date) {
+          pdf.setFont("helvetica", "normal");
+          pdf.text(achievement.date, margin, yPosition);
+          yPosition += lineHeight;
+        }
+        
+        if (achievement.description) {
+          yPosition = addWrappedText(achievement.description, margin, yPosition, contentWidth, 10);
+        }
+        
+        yPosition += 8;
+      });
+    }
+    
+    // Save to Supabase storage for use in applications
+    const pdfBlob = pdf.output('blob');
+    const timestamp = Date.now();
+    const filePath = `${user.id}/resume_${timestamp}.pdf`;
+    
+    console.log('Saving resume to storage:', filePath);
+    
+    const { data, error } = await supabase.storage
+      .from('resumes')
+      .upload(filePath, pdfBlob);
+    
+    if (error) {
+      console.error('Error saving resume to storage:', error);
+      throw error;
+    }
+    
+    console.log('Resume saved successfully:', data);
+    return data;
   };
 
   const downloadResume = async () => {
@@ -510,25 +752,15 @@ const ResumeBuilder = () => {
       });
     }
     
-    // Save the PDF
+    // Save the PDF locally
     const fileName = `${personalInfo.fullName ? personalInfo.fullName.replace(/\s+/g, '_') : resumeName.replace(/\s+/g, '_')}_Resume.pdf`;
     pdf.save(fileName);
 
     // Also save to Supabase storage for use in applications
     try {
-      const pdfBlob = pdf.output('blob');
-      
       if (user) {
-        const timestamp = Date.now();
-        const filePath = `${user.id}/resume_${timestamp}.pdf`;
-        
-        const { error } = await supabase.storage
-          .from('resumes')
-          .upload(filePath, pdfBlob);
-        
-        if (error) {
-          console.error('Error saving resume to storage:', error);
-        }
+        await saveResumeToStorage();
+        console.log('Resume saved to storage successfully');
       }
     } catch (error) {
       console.error('Error saving resume to storage:', error);
