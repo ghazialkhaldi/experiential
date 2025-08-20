@@ -27,6 +27,7 @@ import LocationSelector from "@/components/LocationSelector";
 import GoogleUserNotification from "@/components/GoogleUserNotification";
 import { isNewOpportunity, formatTimeAgo } from "@/utils/dateUtils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -614,67 +615,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className={`py-12 ${isInternshipMode ? 'bg-gray-900' : 'bg-blue-50'} ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="mb-4">
-                <ExperientialLogo className="h-20 w-auto" />
-              </div>
-              <p className="text-gray-400">
-                {isInternshipMode 
-                  ? 'Connecting ambitious professionals with career-launching opportunities.'
-                  : 'Connecting high school students with meaningful volunteer opportunities.'
-                }
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">
-                {isInternshipMode ? 'For Job Seekers' : 'For Students'}
-              </h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/" className="hover:text-white">
-                  {isInternshipMode ? 'Find Internships' : 'Find Opportunities'}
-                </Link></li>
-                <li><button onClick={handleCreateProfile} className="hover:text-white">Create Profile</button></li>
-                <li><Link to="/track-hours" className="hover:text-white">
-                  {isInternshipMode ? 'Track Experience' : 'Track Hours'}
-                </Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">
-                {isInternshipMode ? 'For Companies' : 'For Organizations'}
-              </h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/post-opportunity" className="hover:text-white">
-                  {isInternshipMode ? 'Post Internships' : 'Post Opportunities'}
-                </Link></li>
-                <li><Link to="/manage-opportunities" className="hover:text-white">Manage Applications</Link></li>
-                <li><Link to="/manage-opportunities" className="hover:text-white">
-                  {isInternshipMode ? 'Company Dashboard' : 'Organization Dashboard'}
-                </Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to={isInternshipMode ? "/career-resources" : "/resources"} className="hover:text-white">
-                  {isInternshipMode ? 'Career Guide' : 'University Guide'}
-                </Link></li>
-                <li><Link to={isInternshipMode ? "/career-resources" : "/resources"} className="hover:text-white">
-                  {isInternshipMode ? 'Interview Tips' : 'Volunteer Tips'}
-                </Link></li>
-                <li><a href="#" className="hover:text-white">Contact Support</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Experiential. {isInternshipMode ? 'Empowering careers.' : 'Made for students, by students.'}</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

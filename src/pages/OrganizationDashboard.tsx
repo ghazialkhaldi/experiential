@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Eye, CheckCircle, XCircle, Building2, Plus } from 'lucide-react';
+import { ArrowLeft, Users, Eye, CheckCircle, XCircle, Building2, Plus, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,8 @@ import { useProfile } from '@/hooks/useProfile';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import OpportunityDetailDialog from '@/components/OpportunityDetailDialog';
+import ApplicationDetailDialog from '@/components/ApplicationDetailDialog';
+import Footer from '@/components/Footer';
 
 interface Opportunity {
   id: string;
@@ -36,6 +38,8 @@ const OrganizationDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<any>(null);
+  const [applicationDialogOpen, setApplicationDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!isOrganization || !organization?.id) {
@@ -118,6 +122,11 @@ const OrganizationDashboard = () => {
   const handleOpportunityClick = (opportunity: Opportunity) => {
     setSelectedOpportunity(opportunity);
     setDialogOpen(true);
+  };
+
+  const handleApplicationClick = (application: any) => {
+    setSelectedApplication(application);
+    setApplicationDialogOpen(true);
   };
 
   if (loading || applicationsLoading) {
@@ -250,28 +259,39 @@ const OrganizationDashboard = () => {
                           Applied {formatTimeAgo(application.applied_at)}
                         </p>
                         
-                        {application.status === 'pending' && (
-                          <div className="flex space-x-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleStatusUpdate(application.id, 'accepted')}
-                              className="text-green-600 border-green-600 hover:bg-green-50"
-                            >
-                              <CheckCircle className="h-4 w-4 mr-1" />
-                              Accept
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleStatusUpdate(application.id, 'rejected')}
-                              className="text-red-600 border-red-600 hover:bg-red-50"
-                            >
-                              <XCircle className="h-4 w-4 mr-1" />
-                              Reject
-                            </Button>
-                          </div>
-                        )}
+                        <div className="flex space-x-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleApplicationClick(application)}
+                          >
+                            <FileText className="h-4 w-4 mr-1" />
+                            View Details
+                          </Button>
+                          
+                          {application.status === 'pending' && (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleStatusUpdate(application.id, 'accepted')}
+                                className="text-green-600 border-green-600 hover:bg-green-50"
+                              >
+                                <CheckCircle className="h-4 w-4 mr-1" />
+                                Accept
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleStatusUpdate(application.id, 'rejected')}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                <XCircle className="h-4 w-4 mr-1" />
+                                Reject
+                              </Button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -348,6 +368,14 @@ const OrganizationDashboard = () => {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
       />
+      
+      <ApplicationDetailDialog
+        application={selectedApplication}
+        open={applicationDialogOpen}
+        onOpenChange={setApplicationDialogOpen}
+      />
+
+      <Footer />
     </div>
   );
 };
