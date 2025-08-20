@@ -1,9 +1,11 @@
-import { Clock, Mail, User, MessageSquare, FileText, Download } from 'lucide-react';
+import { Clock, Mail, User, MessageSquare, FileText, Download, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useApplications } from '@/hooks/useApplications';
+import ApplicationDetailDialog from './ApplicationDetailDialog';
+import { useState } from 'react';
 
 interface Application {
   id: string;
@@ -32,6 +34,7 @@ interface ApplicationCardProps {
 const ApplicationCard = ({ application, showOpportunityTitle = false }: ApplicationCardProps) => {
   const { updateApplicationStatus } = useApplications();
   const { toast } = useToast();
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -152,27 +155,47 @@ const ApplicationCard = ({ application, showOpportunityTitle = false }: Applicat
             </div>
           )}
           
-          {application.status === 'pending' && (
-            <div className="flex space-x-2 pt-2">
-              <Button 
-                size="sm" 
-                className="bg-green-600 hover:bg-green-700"
-                onClick={() => handleStatusUpdate('accepted')}
-              >
-                Accept
-              </Button>
-              <Button 
-                size="sm" 
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex space-x-2">
+              <Button
                 variant="outline"
-                onClick={() => handleStatusUpdate('rejected')}
-                className="border-red-200 text-red-600 hover:bg-red-50"
+                size="sm"
+                onClick={() => setDetailDialogOpen(true)}
+                className="flex items-center space-x-1"
               >
-                Reject
+                <Eye className="h-3 w-3" />
+                <span>View Details</span>
               </Button>
             </div>
-          )}
+            
+            {application.status === 'pending' && (
+              <div className="flex space-x-2">
+                <Button 
+                  size="sm" 
+                  className="bg-green-600 hover:bg-green-700"
+                  onClick={() => handleStatusUpdate('accepted')}
+                >
+                  Accept
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => handleStatusUpdate('rejected')}
+                  className="border-red-200 text-red-600 hover:bg-red-50"
+                >
+                  Reject
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </CardContent>
+      
+      <ApplicationDetailDialog
+        application={application}
+        open={detailDialogOpen}
+        onOpenChange={setDetailDialogOpen}
+      />
     </Card>
   );
 };
