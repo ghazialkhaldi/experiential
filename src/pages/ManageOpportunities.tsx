@@ -57,7 +57,7 @@ const ManageOpportunities = () => {
     if (user) {
       fetchOrganizationOpportunities();
     }
-  }, [user]);
+  }, [user, isInternshipMode]); // Add isInternshipMode to dependencies
 
   const fetchOrganizationOpportunities = async () => {
     try {
@@ -77,7 +77,8 @@ const ManageOpportunities = () => {
         return;
       }
 
-      // Then get opportunities for that organization
+      // Then get opportunities for that organization, filtered by type
+      const opportunityType = isInternshipMode ? 'internship' : 'volunteer';
       const { data, error } = await supabase
         .from('opportunities')
         .select(`
@@ -91,6 +92,7 @@ const ManageOpportunities = () => {
           )
         `)
         .eq('organization_id', orgData.id)
+        .eq('opportunity_type', opportunityType)
         .order('posted_at', { ascending: false });
 
       if (error) {
