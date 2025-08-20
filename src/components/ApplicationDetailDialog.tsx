@@ -171,14 +171,17 @@ const ApplicationDetailDialog = ({ application, open, onOpenChange }: Applicatio
                   <div className="mt-4">
                     <div className="border rounded-lg overflow-hidden bg-white">
                       <iframe
-                        src={application.resume_url}
+                        src={`${application.resume_url}#toolbar=0&navpanes=0&scrollbar=0`}
                         className="w-full h-96"
                         title="Resume Preview"
+                        onLoad={() => console.log('Resume loaded successfully')}
                         onError={() => {
-                          // Fallback if iframe fails to load
-                          console.log('Resume preview failed to load');
+                          console.error('Resume preview failed to load');
                         }}
                       />
+                    </div>
+                    <div className="mt-2 text-xs text-muted-foreground text-center">
+                      If the preview doesn't load, you can open the resume in a new tab using the "View Resume" button above.
                     </div>
                   </div>
                 </div>
