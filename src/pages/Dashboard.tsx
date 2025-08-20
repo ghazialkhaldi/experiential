@@ -7,6 +7,7 @@ import { Settings, User, LogOut } from 'lucide-react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Capacitor } from '@capacitor/core';
 import ExperientialLogo from '@/components/ExperientialLogo';
+import { NotificationBell } from '@/components/NotificationBell';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,14 +48,17 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex flex-col">
       {/* Header */}
       <header className="flex items-center justify-between p-4">
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={() => navigate('/app/settings')}
-          className="text-gray-600 hover:text-gray-900"
-        >
-          <Settings className="h-6 w-6" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => navigate('/app/settings')}
+            className="text-gray-600 hover:text-gray-900"
+          >
+            <Settings className="h-6 w-6" />
+          </Button>
+          <NotificationBell />
+        </div>
 
         {/* Mode Toggle */}
         <div className="flex items-center space-x-2 bg-white rounded-full p-1 shadow-md">
