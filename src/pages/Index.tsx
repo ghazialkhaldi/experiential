@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import LocationSelector from "@/components/LocationSelector";
 import GoogleUserNotification from "@/components/GoogleUserNotification";
+import { NotificationBell } from "@/components/NotificationBell";
 import { isNewOpportunity, formatTimeAgo } from "@/utils/dateUtils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Footer from "@/components/Footer";
@@ -179,9 +180,10 @@ const Index = () => {
                     <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-200 group-hover:w-full ${
                       isInternshipMode ? 'bg-blue-400' : 'bg-blue-600'
                     }`}></span>
-                  </Link>
-                  <AuthButton />
-                  {isOrganization && (
+                   </Link>
+                   {user && <NotificationBell />}
+                   <AuthButton />
+                   {isOrganization && (
                     <Link to="/post-opportunity">
                       <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
                         isInternshipMode 
