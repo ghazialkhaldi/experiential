@@ -39,7 +39,7 @@ const SplashScreen = () => {
     }`}>
       <div className="text-center">
         <div className="animate-pulse">
-          <img src="/E.png" alt="Experiential Logo" className="h-32 w-32 mx-auto mb-8" />
+          <ExperientialLogo className="h-32 w-32 mx-auto mb-8" />
         </div>
         <ExperientialLogo className="h-16 w-auto mx-auto" />
       </div>

@@ -6,6 +6,7 @@ import { useMode } from '@/contexts/ModeContext';
 import { Settings, User, LogOut } from 'lucide-react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Capacitor } from '@capacitor/core';
+import ExperientialLogo from '@/components/ExperientialLogo';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -94,7 +95,7 @@ const Dashboard = () => {
       <main className="flex-1 flex flex-col items-center justify-center px-4">
         {/* Logo */}
         <div className="mb-8">
-          <img src="/E.png" alt="Experiential Logo" className="h-24 w-24 mx-auto" />
+          <ExperientialLogo className="h-24 w-24 mx-auto" />
         </div>
 
         {/* Greeting */}

@@ -1,20 +1,21 @@
 import React from 'react';
+import { useMode } from '@/contexts/ModeContext';
 
 interface ExperientialLogoProps {
   className?: string;
-  textClassName?: string;
 }
 
 const ExperientialLogo: React.FC<ExperientialLogoProps> = ({ 
-  className = "h-8 w-auto", 
-  textClassName = "" 
+  className = "h-8 w-auto" 
 }) => {
+  const { isInternshipMode } = useMode();
+  
   return (
-    <div className={`flex items-center ${className}`}>
-      <span className={`font-bold text-xl ${textClassName}`}>
-        E<span className="text-blue-500">x</span>periential
-      </span>
-    </div>
+    <img 
+      src="/Experiential.jpeg" 
+      alt="Experiential Logo" 
+      className={`${className} ${isInternshipMode ? 'brightness-0 invert' : ''}`}
+    />
   );
 };
 
