@@ -15,6 +15,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import jsPDF from 'jspdf';
 import { useMode } from "@/contexts/ModeContext";
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ResumeSection {
   id: string;
@@ -32,6 +34,7 @@ interface SavedResume {
 
 const ResumeBuilder = () => {
   const { isInternshipMode } = useMode();
+  const { user } = useAuth();
   const [savedResumes, setSavedResumes] = useState<SavedResume[]>([]);
   const [currentResumeId, setCurrentResumeId] = useState<string | null>(null);
   const [resumeName, setResumeName] = useState("My Resume");
@@ -295,7 +298,7 @@ const ResumeBuilder = () => {
     setResumeSections(prev => prev.filter(section => section.id !== sectionId));
   };
 
-  const downloadResume = () => {
+  const downloadResume = async () => {
     const pdf = new jsPDF();
     
     // Set up fonts and colors
@@ -510,6 +513,26 @@ const ResumeBuilder = () => {
     // Save the PDF
     const fileName = `${personalInfo.fullName ? personalInfo.fullName.replace(/\s+/g, '_') : resumeName.replace(/\s+/g, '_')}_Resume.pdf`;
     pdf.save(fileName);
+
+    // Also save to Supabase storage for use in applications
+    try {
+      const pdfBlob = pdf.output('blob');
+      
+      if (user) {
+        const timestamp = Date.now();
+        const filePath = `${user.id}/resume_${timestamp}.pdf`;
+        
+        const { error } = await supabase.storage
+          .from('resumes')
+          .upload(filePath, pdfBlob);
+        
+        if (error) {
+          console.error('Error saving resume to storage:', error);
+        }
+      }
+    } catch (error) {
+      console.error('Error saving resume to storage:', error);
+    }
   };
 
   const personalInfo = resumeSections.find(s => s.type === 'personal')?.data || {};
@@ -527,10 +550,7 @@ const ResumeBuilder = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-                <Briefcase className={`h-8 w-8 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
-                <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span>
-                </span>
+                <ExperientialLogo className="h-16 w-auto" />
               </Link>
               <div className="flex items-center space-x-4">
                 <Button onClick={() => setPreviewMode(false)} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
@@ -860,7 +880,7 @@ const ResumeBuilder = () => {
                   placeholder="Full Name"
                   value={personalInfo.fullName}
                   onChange={(e) => updatePersonalInfo('fullName', e.target.value)}
-                  className={`${isInternshipMode ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                  className={`${isInternshipMode ? 'bg-card border-border text-card-foreground placeholder:text-muted-foreground' : 'bg-background border-border text-foreground placeholder:text-muted-foreground'}`}
                 />
                 <Input
                   placeholder="Email Address"
@@ -873,13 +893,13 @@ const ResumeBuilder = () => {
                   placeholder="Phone Number"
                   value={personalInfo.phone}
                   onChange={(e) => updatePersonalInfo('phone', e.target.value)}
-                  className={`${isInternshipMode ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                  className={`${isInternshipMode ? 'bg-card border-border text-card-foreground placeholder:text-muted-foreground' : 'bg-background border-border text-foreground placeholder:text-muted-foreground'}`}
                 />
                 <Input
                   placeholder="Address"
                   value={personalInfo.address}
                   onChange={(e) => updatePersonalInfo('address', e.target.value)}
-                  className={`${isInternshipMode ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                  className={`${isInternshipMode ? 'bg-card border-border text-card-foreground placeholder:text-muted-foreground' : 'bg-background border-border text-foreground placeholder:text-muted-foreground'}`}
                 />
               </div>
               <Textarea
@@ -1190,10 +1210,10 @@ const ResumeBuilder = () => {
                         ));
                       }}
                     >
-                      <SelectTrigger className="bg-gray-600 border-gray-500 text-white">
+                      <SelectTrigger className={`${isInternshipMode ? 'bg-card border-border text-card-foreground' : 'bg-background border-border text-foreground'}`}>
                         <SelectValue placeholder="Skill Level" />
                       </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600">
+                      <SelectContent className={`${isInternshipMode ? 'bg-card border-border' : 'bg-background border-border'}`}>
                         <SelectItem value="Beginner">Beginner</SelectItem>
                         <SelectItem value="Intermediate">Intermediate</SelectItem>
                         <SelectItem value="Advanced">Advanced</SelectItem>
