@@ -437,7 +437,7 @@ const Index = () => {
                 }`}>
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
-                <SelectContent className={isInternshipMode ? 'bg-gray-800 border-gray-600' : ''}>
+                <SelectContent className={isInternshipMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'}>
                   <SelectItem value="newest">Newest First</SelectItem>
                   <SelectItem value="closest">Closest Location</SelectItem>
                   <SelectItem value="time">Time Commitment</SelectItem>
@@ -615,7 +615,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className={`py-12 ${isInternshipMode ? 'bg-gray-900' : 'bg-gray-900'} text-white`}>
+      <footer className={`py-12 ${isInternshipMode ? 'bg-gray-900' : 'bg-blue-50'} ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>

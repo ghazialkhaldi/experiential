@@ -308,41 +308,41 @@ const Resources = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 relative z-10">
+      <footer className={`${isInternshipMode ? 'bg-gray-900 text-white' : 'bg-blue-50 text-gray-900'} py-12 relative z-10`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
                 <ExperientialLogo className="h-6 w-auto" />
               </div>
-              <p className="text-gray-300">
+              <p className={`${isInternshipMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Connecting high school students with meaningful volunteer opportunities.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4 text-white">For Students</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-white transition-colors">Find Opportunities</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Create Profile</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Track Hours</a></li>
+              <h3 className={`font-semibold mb-4 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>For Students</h3>
+              <ul className={`space-y-2 ${isInternshipMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <li><a href="#" className={`${isInternshipMode ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors`}>Find Opportunities</a></li>
+                <li><a href="#" className={`${isInternshipMode ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors`}>Create Profile</a></li>
+                <li><a href="#" className={`${isInternshipMode ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors`}>Track Hours</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4 text-white">For Organizations</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-white transition-colors">Post Opportunities</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Manage Applications</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Organization Dashboard</a></li>
+              <h3 className={`font-semibold mb-4 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>For Organizations</h3>
+              <ul className={`space-y-2 ${isInternshipMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <li><a href="#" className={`${isInternshipMode ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors`}>Post Opportunities</a></li>
+                <li><a href="#" className={`${isInternshipMode ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors`}>Manage Applications</a></li>
+                <li><a href="#" className={`${isInternshipMode ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors`}>Organization Dashboard</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4 text-white">Resources</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li><Link to="/resources" className="hover:text-white transition-colors">University Guide</Link></li>
-                <li><a href="#" className="hover:text-white transition-colors">Volunteer Tips</a></li>
+              <h3 className={`font-semibold mb-4 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>Resources</h3>
+              <ul className={`space-y-2 ${isInternshipMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <li><Link to="/resources" className={`${isInternshipMode ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors`}>University Guide</Link></li>
+                <li><a href="#" className={`${isInternshipMode ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors`}>Volunteer Tips</a></li>
                 <li>
                   <FeedbackDialog>
-                    <button className="hover:text-white transition-colors text-left">
+                    <button className={`${isInternshipMode ? 'hover:text-white' : 'hover:text-blue-600'} transition-colors text-left`}>
                       Give Feedback
                     </button>
                   </FeedbackDialog>
@@ -350,7 +350,7 @@ const Resources = () => {
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+          <div className={`border-t mt-8 pt-8 text-center ${isInternshipMode ? 'border-gray-700 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
             <p>&copy; 2025 Experiential. Made for students, by students.</p>
           </div>
         </div>
