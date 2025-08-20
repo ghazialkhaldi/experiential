@@ -17,25 +17,13 @@ import jsPDF from 'jspdf';
 import { useMode } from "@/contexts/ModeContext";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-
-interface ResumeSection {
-  id: string;
-  type: 'personal' | 'education' | 'experience' | 'skills' | 'achievements' | 'statement';
-  title: string;
-  data: any;
-}
-
-interface SavedResume {
-  id: string;
-  name: string;
-  sections: ResumeSection[];
-  lastModified: string;
-}
+import { useResumes, ResumeSection, SavedResume } from '@/hooks/useResumes';
+import { toast } from "sonner";
 
 const ResumeBuilder = () => {
   const { isInternshipMode } = useMode();
   const { user } = useAuth();
-  const [savedResumes, setSavedResumes] = useState<SavedResume[]>([]);
+  const { resumes: savedResumes, saveResume: saveResumeToDb, deleteResume: deleteResumeFromDb, getResume, loading } = useResumes();
   const [currentResumeId, setCurrentResumeId] = useState<string | null>(null);
   const [resumeName, setResumeName] = useState("My Resume");
   const [resumeSections, setResumeSections] = useState<ResumeSection[]>([
@@ -87,13 +75,6 @@ const ResumeBuilder = () => {
   const [previewMode, setPreviewMode] = useState(false);
   const [showResumeManager, setShowResumeManager] = useState(false);
 
-  // Load saved resumes from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('savedResumes');
-    if (saved) {
-      setSavedResumes(JSON.parse(saved));
-    }
-  }, []);
   const updatePersonalInfo = (field: string, value: string) => {
     setResumeSections(prev => prev.map(section => 
       section.type === 'personal' ? {
@@ -217,46 +198,78 @@ const ResumeBuilder = () => {
   };
 
   const saveResume = async () => {
-    const newResume: SavedResume = {
-      id: currentResumeId || Date.now().toString(),
-      name: resumeName,
-      sections: resumeSections,
-      lastModified: new Date().toISOString()
-    };
-    
-    const updatedResumes = currentResumeId 
-      ? savedResumes.map(r => r.id === currentResumeId ? newResume : r)
-      : [...savedResumes, newResume];
-    
-    setSavedResumes(updatedResumes);
-    setCurrentResumeId(newResume.id);
-    localStorage.setItem('savedResumes', JSON.stringify(updatedResumes));
-    
-    // Also generate and save PDF to Supabase storage
-    try {
-      if (user) {
-        await saveResumeToStorage();
-      }
-    } catch (error) {
-      console.error('Error saving resume to storage:', error);
+    if (!user) {
+      toast.error("Please log in to save your resume");
+      return;
     }
-    
-    alert("Resume saved successfully!");
+
+    try {
+      const savedResume = await saveResumeToDb(resumeName, resumeSections, currentResumeId || undefined);
+      setCurrentResumeId(savedResume.id);
+      toast.success("Resume saved successfully!");
+    } catch (error) {
+      console.error('Error saving resume:', error);
+      toast.error("Failed to save resume");
+    }
   };
 
-  const loadResume = (resume: SavedResume) => {
+  const loadResume = async (resume: SavedResume) => {
     setResumeSections(resume.sections);
     setResumeName(resume.name);
     setCurrentResumeId(resume.id);
     setShowResumeManager(false);
   };
 
-  const deleteResume = (resumeId: string) => {
-    const updatedResumes = savedResumes.filter(r => r.id !== resumeId);
-    setSavedResumes(updatedResumes);
-    localStorage.setItem('savedResumes', JSON.stringify(updatedResumes));
-    if (currentResumeId === resumeId) {
-      setCurrentResumeId(null);
+  const deleteResume = async (resumeId: string) => {
+    try {
+      await deleteResumeFromDb(resumeId);
+      if (currentResumeId === resumeId) {
+        setCurrentResumeId(null);
+        setResumeName("My Resume");
+        // Reset to default sections
+        setResumeSections([
+          {
+            id: '1',
+            type: 'personal',
+            title: 'Personal Information',
+            data: { fullName: '', email: '', phone: '', address: '' }
+          },
+          {
+            id: '2',
+            type: 'statement',
+            title: 'Personal Statement',
+            data: { statement: '' }
+          },
+          {
+            id: '3',
+            type: 'education',
+            title: 'Education',
+            data: []
+          },
+          {
+            id: '4',
+            type: 'experience',
+            title: 'Work Experience',
+            data: []
+          },
+          {
+            id: '5',
+            type: 'skills',
+            title: 'Skills & Strengths',
+            data: []
+          },
+          {
+            id: '6',
+            type: 'achievements',
+            title: 'Achievements & Awards',
+            data: []
+          }
+        ]);
+      }
+      toast.success("Resume deleted successfully!");
+    } catch (error) {
+      console.error('Error deleting resume:', error);
+      toast.error("Failed to delete resume");
     }
   };
 
@@ -1015,9 +1028,9 @@ const ResumeBuilder = () => {
                           <Badge variant="secondary" className={`${isInternshipMode ? 'bg-purple-600 text-white' : 'bg-blue-600 text-white'}`}>Current</Badge>
                         )}
                       </div>
-                      <CardDescription className={`${isInternshipMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
-                        Last modified: {new Date(resume.lastModified).toLocaleDateString()}
-                      </CardDescription>
+                       <CardDescription className={`${isInternshipMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
+                        Last modified: {new Date(resume.updated_at).toLocaleDateString()}
+                       </CardDescription>
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="flex space-x-2">
