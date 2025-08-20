@@ -15,13 +15,9 @@ const ExperientialLogo: React.FC<ExperientialLogoProps> = ({
   
   return (
     <img 
-      src={isInternshipMode ? "/Experiential 4.png" : "/Experiential.jpeg"}
+      src={isInternshipMode ? "/lovable-uploads/df28ef0f-d3aa-4aeb-921d-770a2a1117bb.png" : "/Experiential.jpeg"}
       alt="Experiential Logo" 
       className={className}
-      style={isInternshipMode ? { 
-        filter: 'brightness(0) invert(1)',
-        WebkitFilter: 'brightness(0) invert(1)'
-      } : {}}
       onLoad={() => console.log('Logo loaded successfully')}
       onError={(e) => {
         console.error('Logo failed to load:', e);
