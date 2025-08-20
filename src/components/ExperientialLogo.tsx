@@ -14,7 +14,11 @@ const ExperientialLogo: React.FC<ExperientialLogoProps> = ({
     <img 
       src="/Experiential.jpeg" 
       alt="Experiential Logo" 
-      className={`${className} ${isInternshipMode ? 'brightness-0 invert' : ''}`}
+      className={className}
+      style={isInternshipMode ? { 
+        filter: 'brightness(0) invert(1)',
+        WebkitFilter: 'brightness(0) invert(1)'
+      } : {}}
     />
   );
 };
