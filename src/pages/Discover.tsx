@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,10 +20,25 @@ const Discover = () => {
   const opportunityType = isInternshipMode ? "internship" : "volunteer";
   const { opportunities, loading } = useOpportunities("", "", location);
   
-  // Filter opportunities by type
-  const filteredOpportunities = opportunities.filter(
-    opp => opp.opportunity_type === opportunityType
-  );
+  // Filter and sort opportunities based on type and location proximity
+  const sortedOpportunities = useMemo(() => {
+    return [...opportunities]
+      .filter(opp => opp.opportunity_type === opportunityType)
+      .sort((a, b) => {
+        // If user has location and both opportunities have distance calculated, sort by distance first
+        if (location && location.latitude !== 0 && location.longitude !== 0) {
+          if (a.distance !== undefined && b.distance !== undefined) {
+            return a.distance - b.distance;
+          }
+          // If only one has distance, prioritize the one with distance
+          if (a.distance !== undefined) return -1;
+          if (b.distance !== undefined) return 1;
+        }
+        
+        // Fallback to newest first
+        return new Date(b.posted_at).getTime() - new Date(a.posted_at).getTime();
+      });
+  }, [opportunities, location, opportunityType]);
   
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -103,7 +118,7 @@ const Discover = () => {
 
               {/* Main Feed */}
               <TabsContent value="feed" className="space-y-6">
-                {filteredOpportunities.map((opportunity) => (
+                {sortedOpportunities.map((opportunity) => (
                   <OpportunityCard
                     key={opportunity.id}
                     opportunity={opportunity}
@@ -115,7 +130,7 @@ const Discover = () => {
                   />
                 ))}
 
-                {filteredOpportunities.length === 0 && (
+                {sortedOpportunities.length === 0 && (
                   <div className="text-center py-12">
                     <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-foreground mb-2">

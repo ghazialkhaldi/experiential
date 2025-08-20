@@ -20,7 +20,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "@/hooks/useLocation";
 import { useMode } from "@/contexts/ModeContext";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import LocationSelector from "@/components/LocationSelector";
@@ -49,6 +49,13 @@ const Index = () => {
     getCurrentLocation,
     setManualLocation 
   } = useLocation();
+  
+  // Update sorting to closest when location becomes available
+  useEffect(() => {
+    if (userLocation && userLocation.latitude !== 0 && userLocation.longitude !== 0 && sortBy === 'newest') {
+      setSortBy('closest');
+    }
+  }, [userLocation, sortBy]);
   
   // Show latest opportunities on home page with location-based sorting
   const { opportunities, loading, error } = useOpportunities('', 'all', userLocation);
