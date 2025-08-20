@@ -620,9 +620,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="mb-4">
-                <span className="text-xl font-bold">
-                  <img src="/Experiential 4.png" alt="Experiential Logo" className="h-20 w-auto" />
-                </span>
+                <ExperientialLogo className="h-20 w-auto" />
               </div>
               <p className="text-gray-400">
                 {isInternshipMode 

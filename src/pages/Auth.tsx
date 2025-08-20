@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, ArrowLeft, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
+import ExperientialLogo from "@/components/ExperientialLogo";
 import { useMode } from "@/contexts/ModeContext";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -320,11 +321,7 @@ const Auth = () => {
         </div>
         
         <div className="flex items-center justify-center mb-12">
-          <span className={`text-3xl font-bold ${
-            isInternshipMode ? 'text-purple-200' : 'text-gray-900'
-          }`}>
-            E<span className="text-blue-500">x</span>per<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-sm">•</span></span>ent<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-sm">•</span></span>al<span className="text-blue-500">.</span>
-          </span>
+          <ExperientialLogo className="h-16 w-auto" />
         </div>
 
         <Card className={isInternshipMode ? 'bg-gray-800/90 border-purple-500/30 backdrop-blur-sm' : ''}>

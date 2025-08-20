@@ -7,6 +7,7 @@ import AuthButton from "@/components/AuthButton";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
+import ExperientialLogo from "@/components/ExperientialLogo";
 
 interface ChecklistItem {
   id: string;
@@ -164,7 +165,7 @@ const UniversityChecklist = () => {
             <Link to="/" className={`flex items-center space-x-2 transition-colors hover:opacity-80 ${
               isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : ''
             }`}>
-              <span className="text-2xl font-bold text-gray-900">E<span className="text-blue-500">x</span>per<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-sm">•</span></span>ent<span className="relative">ı<span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 text-blue-500 text-sm">•</span></span>al<span className="text-blue-500">.</span></span>
+              <ExperientialLogo className="h-16 w-auto" />
             </Link>
             <div className="flex items-center space-x-6">
               {!isMobile && (
