@@ -31,6 +31,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import ProfileSettings from './ProfileSettings';
 import AuthButton from "@/components/AuthButton";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
+import ExperientialLogo from "@/components/ExperientialLogo";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -92,13 +93,7 @@ const Sidebar = () => {
                 setIsOpen(false);
               }}
             >
-              <span className={`text-xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                {isInternshipMode ? (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto brightness-0 invert" />
-                ) : (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
-                )}
-              </span>
+              <ExperientialLogo className="h-16 w-auto" />
             </Link>
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>
               <X className={`h-6 w-6 ${isInternshipMode ? 'text-gray-300' : ''}`} />

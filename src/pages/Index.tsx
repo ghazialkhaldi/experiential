@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
+import ExperientialLogo from "@/components/ExperientialLogo";
 
 import OpportunityDetailDialog from "@/components/OpportunityDetailDialog";
 import { useOpportunities } from "@/hooks/useOpportunities";
@@ -141,11 +142,7 @@ const Index = () => {
               <span className={`text-2xl font-bold ${
                 isInternshipMode ? 'text-white' : 'text-gray-900'
               }`}>
-                {isInternshipMode ? (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-20 w-auto brightness-0 invert" />
-                ) : (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
-                )}
+              <ExperientialLogo className={isInternshipMode ? "h-20 w-auto" : "h-16 w-auto"} />
               </span>
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">

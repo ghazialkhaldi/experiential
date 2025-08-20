@@ -18,6 +18,7 @@ import { useMode } from '@/contexts/ModeContext';
 import AuthButton from "@/components/AuthButton";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import ExperientialLogo from '@/components/ExperientialLogo';
 
 
 const PostOpportunity = () => {
@@ -177,11 +178,7 @@ const PostOpportunity = () => {
               <span className={`text-2xl font-bold ${
                 isInternshipMode ? 'text-white' : 'text-gray-900'
               }`}>
-                {isInternshipMode ? (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto brightness-0 invert" />
-                ) : (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
-                )}
+                <ExperientialLogo className="h-16 w-auto" />
               </span>
             </div>
             <div className="flex items-center space-x-6">

@@ -18,6 +18,7 @@ import ApplicationCard from '@/components/ApplicationCard';
 import AuthButton from '@/components/AuthButton';
 import { useToast } from '@/hooks/use-toast';
 import { useMode } from '@/contexts/ModeContext';
+import ExperientialLogo from '@/components/ExperientialLogo';
 import { Briefcase } from 'lucide-react';
 
 interface OrganizationOpportunity {
@@ -232,11 +233,7 @@ const ManageOpportunities = () => {
                   <Briefcase className="h-8 w-8 text-blue-400" />
                 ) : null}
                 <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                  {isInternshipMode ? (
-                    <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-8 w-auto brightness-0 invert" />
-                  ) : (
-                    <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-8 w-auto" />
-                  )}
+                  <ExperientialLogo className="h-8 w-auto" />
                 </span>
               </Link>
               <div className="flex items-center space-x-6">
@@ -280,11 +277,7 @@ const ManageOpportunities = () => {
                 <Briefcase className="h-8 w-8 text-blue-400" />
               ) : null}
               <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                {isInternshipMode ? (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto brightness-0 invert" />
-                ) : (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
-                )}
+                <ExperientialLogo className="h-16 w-auto" />
               </span>
             </Link>
             <div className="flex items-center space-x-6">

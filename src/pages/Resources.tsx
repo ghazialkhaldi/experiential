@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
 import { useMode } from '@/contexts/ModeContext';
 import { FeedbackDialog } from "@/components/FeedbackDialog";
+import ExperientialLogo from '@/components/ExperientialLogo';
 
 const Resources = () => {
   const { isInternshipMode } = useMode();
@@ -102,11 +103,7 @@ const Resources = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-                {isInternshipMode ? (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto brightness-0 invert" />
-                ) : (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-16 w-auto" />
-                )}
+            <ExperientialLogo className="h-16 w-auto" />
             </Link>
             <div className="flex items-center space-x-6">
               <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
@@ -316,11 +313,7 @@ const Resources = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
-                {isInternshipMode ? (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-6 w-auto brightness-0 invert" />
-                ) : (
-                  <img src="/Experiential.jpeg" alt="Experiential Logo" className="h-6 w-auto" />
-                )}
+                <ExperientialLogo className="h-6 w-auto" />
               </div>
               <p className="text-gray-300">
                 Connecting high school students with meaningful volunteer opportunities.
