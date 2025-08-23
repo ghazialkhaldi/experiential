@@ -250,7 +250,7 @@ const Auth = () => {
         }
       });
 
-      console.log('OTP signup result:', { data, error });
+      console.log('Signup result:', { data, error });
 
       if (error) {
         localStorage.removeItem('pendingSignupData');
@@ -262,35 +262,41 @@ const Auth = () => {
         return;
       }
 
-      // Store email for verification page
-      localStorage.setItem('pendingVerificationEmail', formData.email);
-      
-      toast({
-        title: "Verification Code Sent!",
-        description: "Please check your email for a 6-digit verification code.",
-      });
-
-      // Redirect to verification page
-      navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
-
-      // Reset form
-      setFormData({
-        email: '',
-        password: '',
-        firstName: '',
-        lastName: '',
-        birthday: '',
-        role: '',
-        age: '',
-        preferences: [],
-        organizationName: '',
-        organizationCategory: '',
-        organizationDescription: '',
-        address: '',
-        city: '',
-        state: '',
-        zipCode: ''
-      });
+      if (data.user) {
+        console.log('User created successfully:', formData.email);
+        
+        toast({
+          title: "Account Created!",
+          description: "Please check your email to verify your account before signing in.",
+        });
+        
+        // Clear form and switch to login mode  
+        setFormData({
+          email: '',
+          password: '',
+          firstName: '',
+          lastName: '',
+          birthday: '',
+          role: '',
+          age: '',
+          preferences: [],
+          organizationName: '',
+          organizationCategory: '',
+          organizationDescription: '',
+          address: '',
+          city: '',
+          state: '',
+          zipCode: ''
+        });
+        setIsLogin(true);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Sign Up Failed",
+          description: "Please try again or contact support.",
+        });
+        localStorage.removeItem('pendingSignupData');
+      }
 
     } catch (error) {
       localStorage.removeItem('pendingSignupData');
