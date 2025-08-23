@@ -90,40 +90,16 @@ const VerifyEmail = () => {
       }
 
       if (data.user) {
-        // Now create the actual user account with password
-        const pendingDataStr = localStorage.getItem('pendingSignupData');
-        if (pendingDataStr) {
-          const pendingData = JSON.parse(pendingDataStr);
-          
-          // Sign up the user with their password now that email is verified
-          const { data: signupData, error: signupError } = await supabase.auth.signUp({
-            email: email,
-            password: pendingData.password,
-            options: {
-              data: pendingData.userData,
-              emailRedirectTo: `${window.location.origin}/auth/callback`
-            }
-          });
-
-          if (signupError) {
-            toast({
-              variant: "destructive",
-              title: "Account Creation Failed",
-              description: signupError.message,
-            });
-            return;
-          }
-        }
-
         toast({
           title: "Email Verified!",
           description: "Your account has been verified successfully.",
         });
 
-        // Clean up stored email
+        // Clean up stored email and any pending data
         localStorage.removeItem('pendingVerificationEmail');
+        localStorage.removeItem('pendingSignupData');
 
-        // Redirect to home screen instead of auth callback to avoid 404
+        // Redirect to home screen
         navigate('/');
       }
     } catch (error) {

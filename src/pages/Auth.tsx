@@ -216,8 +216,8 @@ const Auth = () => {
       });
       
       // Store additional signup data in localStorage for post-verification processing
+      // SECURITY FIX: Remove password from localStorage storage to prevent XSS exploitation
       const additionalData = {
-        password: formData.password, // Store password for account creation after OTP verification
         preferences: formData.preferences,
         userData: {
           first_name: formData.firstName,
@@ -239,12 +239,14 @@ const Auth = () => {
       
       localStorage.setItem('pendingSignupData', JSON.stringify(additionalData));
 
-      // Use OTP for verification instead of signup with password
-      // This ensures we get a 6-digit code, not a link
-      const { data, error } = await supabase.auth.signInWithOtp({
+      // Use direct signup with email verification instead of OTP flow
+      // This is more secure as we don't store passwords in localStorage
+      const { data, error } = await supabase.auth.signUp({
         email: formData.email,
+        password: formData.password,
         options: {
-          shouldCreateUser: false, // Don't create user yet, just send verification
+          data: additionalData.userData,
+          emailRedirectTo: `${window.location.origin}/auth/callback`
         }
       });
 
