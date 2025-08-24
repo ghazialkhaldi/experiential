@@ -51,11 +51,11 @@ export const MobileApp: React.FC<MobileAppProps> = () => {
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [showSplash, setShowSplash] = useState(true);
 
-  // Hide splash screen after 3 seconds
+  // Hide splash screen after 4 seconds to show the sophisticated animation
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 3000);
+    }, 4000);
 
     return () => clearTimeout(timer);
   }, []);

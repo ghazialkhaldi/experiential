@@ -16,8 +16,10 @@ const queryClient = new QueryClient();
 
 const App = () => {
   // Use mobile app when running on native platform or when URL contains mobile parameter
+  // Also force mobile mode in development for testing
   const isMobile = Capacitor.isNativePlatform() || 
-                   new URLSearchParams(window.location.search).has('mobile');
+                   new URLSearchParams(window.location.search).has('mobile') ||
+                   window.location.hostname === 'localhost';
 
   return (
     <QueryClientProvider client={queryClient}>
