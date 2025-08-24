@@ -9,7 +9,7 @@ import { ModeProvider } from '@/contexts/ModeContext';
 import { Capacitor } from '@capacitor/core';
 
 // Import both regular and mobile app components
-import { MobileApp } from '@/components/MobileApp';
+import { MobileApp } from '@/mobile';
 import Index from './pages/Index';
 
 const queryClient = new QueryClient();

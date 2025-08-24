@@ -1,0 +1,141 @@
+/* Mobile-specific styles for Meta AI-inspired design */
+
+@media (max-width: 768px) {
+  /* Safe area handling for mobile devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Meta AI-inspired animations */
+  .meta-ai-fade {
+    animation: metaAiFadeIn 0.8s ease-out forwards;
+  }
+
+  .meta-ai-slide-up {
+    animation: metaAiSlideUp 0.6s ease-out forwards;
+  }
+
+  .meta-ai-scale {
+    animation: metaAiScale 1.2s ease-out forwards;
+  }
+
+  /* Floating Action Button styles */
+  .fab-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)) 50%, hsl(var(--primary-foreground)) 100%);
+    box-shadow: 0 8px 32px hsl(var(--primary) / 0.3);
+    backdrop-filter: blur(8px);
+  }
+
+  .fab-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Card styles with backdrop blur */
+  .meta-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .meta-card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Navigation blur effect */
+  .nav-blur {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .dark .nav-blur {
+    background: rgba(0, 0, 0, 0.95);
+  }
+}
+
+/* Keyframe animations */
+@keyframes metaAiFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes metaAiSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes metaAiScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Haptic feedback animations */
+@keyframes hapticPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes hapticBounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-4px); }
+  60% { transform: translateY(-2px); }
+}
+
+@keyframes hapticShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* Apply haptic animations */
+.haptic-pulse {
+  animation: hapticPulse 0.2s ease-in-out;
+}
+
+.haptic-bounce {
+  animation: hapticBounce 0.6s ease-in-out;
+}
+
+.haptic-shake {
+  animation: hapticShake 0.3s ease-in-out;
+}
