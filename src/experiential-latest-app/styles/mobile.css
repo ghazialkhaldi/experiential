@@ -1,22 +1,59 @@
-/* Mobile-specific styles for Meta AI-inspired design */
+/* Experiential Latest APP - Sophisticated Mobile Styles */
+
+/* Safe area handling for iOS and modern devices */
+.safe-area-top {
+  padding-top: max(env(safe-area-inset-top), 1rem);
+}
+
+.safe-area-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+}
+
+.safe-area-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Sophisticated splash screen animations */
+.splash-glow {
+  animation: sophisticatedGlow 4s ease-in-out infinite;
+}
+
+@keyframes sophisticatedGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.6), 0 0 60px hsl(var(--secondary) / 0.3);
+  }
+}
+
+/* Advanced gradient text animations */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-text-animated {
+  background: linear-gradient(-45deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary)));
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 @media (max-width: 768px) {
-  /* Safe area handling for mobile devices */
-  .safe-area-top {
-    padding-top: env(safe-area-inset-top);
-  }
-
-  .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .safe-area-left {
-    padding-left: env(safe-area-inset-left);
-  }
-
-  .safe-area-right {
-    padding-right: env(safe-area-inset-right);
-  }
 
   /* Meta AI-inspired animations */
   .meta-ai-fade {
