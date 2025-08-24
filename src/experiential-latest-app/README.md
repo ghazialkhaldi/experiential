@@ -1,4 +1,4 @@
-# Experiential Mobile App 📱
+# Experiential Latest APP 📱
 
 A Meta AI-inspired mobile application built with React, TypeScript, and Capacitor for cross-platform deployment.
 
@@ -70,7 +70,7 @@ A Meta AI-inspired mobile application built with React, TypeScript, and Capacito
 
 ### File Structure
 ```
-src/mobile/
+src/experiential-latest-app/
 ├── components/
 │   ├── MobileApp.tsx
 │   ├── MobileHeader.tsx
@@ -117,7 +117,7 @@ npx cap open android
 
 ✅ **Complete and Ready for Deployment**
 
-The mobile app preserves all original website functionality while adding native mobile enhancements. The shared authentication and data ensure seamless user experience across platforms.
+The **Experiential Latest APP** preserves all original website functionality while adding native mobile enhancements. The shared authentication and data ensure seamless user experience across platforms.
 
 ### What's Included
 - All requested Meta AI design elements
@@ -128,3 +128,12 @@ The mobile app preserves all original website functionality while adding native 
 - GitHub deployment structure
 
 *The original website remains completely unaffected and continues to function independently.*
+
+## 🎯 GitHub Structure
+
+This folder (`src/experiential-latest-app/`) contains the complete mobile application that can be easily identified and deployed from GitHub. The distinguishable naming makes it perfect for:
+
+- **Clear identification** in repository structure
+- **Easy deployment** to app stores
+- **Independent development** from the main website
+- **Version control** for mobile-specific features

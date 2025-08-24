@@ -1,4 +1,4 @@
-// Mobile App Export
+// Experiential Latest APP - Mobile App Export
 export { default as MobileApp } from './components/MobileApp';
 export { default as MobileHeader } from './components/MobileHeader';
 export { default as MobileNavigation } from './components/MobileNavigation';
