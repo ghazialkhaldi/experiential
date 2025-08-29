@@ -18,18 +18,18 @@ const Footer = () => {
             <div className="mb-4">
               <ExperientialLogo className="h-20 w-auto" />
             </div>
-          <p className="text-gray-400">
-            Connecting ambitious professionals with career-launching opportunities.
-          </p>
+            <p className="text-gray-400">
+              Connecting ambitious professionals with career-launching opportunities.
+            </p>
           </div>
           <div>
             <h3 className="font-semibold mb-4 text-white">
-              {isInternshipMode ? 'For Job Seekers' : 'For Students'}
+              For Job Seekers
             </h3>
             <ul className="space-y-2 text-gray-400">
               <li>
                 <Link to="/" className="hover:text-white transition-colors">
-                  {isInternshipMode ? 'Find Internships' : 'Find Opportunities'}
+                  Find Internships
                 </Link>
               </li>
               <li>
@@ -39,19 +39,19 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/track-hours" className="hover:text-white transition-colors">
-                  {isInternshipMode ? 'Track Experience' : 'Track Hours'}
+                  Track Experience
                 </Link>
               </li>
             </ul>
           </div>
           <div>
             <h3 className="font-semibold mb-4 text-white">
-              {isInternshipMode ? 'For Companies' : 'For Organizations'}
+              For Companies
             </h3>
             <ul className="space-y-2 text-gray-400">
               <li>
                 <Link to="/post-opportunity" className="hover:text-white transition-colors">
-                  {isInternshipMode ? 'Post Internships' : 'Post Opportunities'}
+                  Post Internships
                 </Link>
               </li>
               <li>
@@ -61,7 +61,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/manage-opportunities" className="hover:text-white transition-colors">
-                  {isInternshipMode ? 'Company Dashboard' : 'Organization Dashboard'}
+                  Company Dashboard
                 </Link>
               </li>
             </ul>
@@ -71,18 +71,18 @@ const Footer = () => {
             <ul className="space-y-2 text-gray-400">
               <li>
                 <Link 
-                  to={isInternshipMode ? "/career-resources" : "/resources"} 
+                  to="/career-resources" 
                   className="hover:text-white transition-colors"
                 >
-                  {isInternshipMode ? 'Career Guide' : 'University Guide'}
+                  Career Guide
                 </Link>
               </li>
               <li>
                 <Link 
-                  to={isInternshipMode ? "/career-resources" : "/resources"} 
+                  to="/career-resources" 
                   className="hover:text-white transition-colors"
                 >
-                  {isInternshipMode ? 'Interview Tips' : 'Volunteer Tips'}
+                  Interview Tips
                 </Link>
               </li>
               <li>

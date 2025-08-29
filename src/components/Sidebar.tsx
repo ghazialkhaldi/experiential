@@ -134,7 +134,11 @@ const Sidebar = () => {
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
                     }`}
-                    onClick={() => setIsOpen(false)}
+                    onClick={(e) => {
+                      console.log('Navigate to home clicked');
+                      setIsOpen(false);
+                      navigate('/');
+                    }}
                   >
                     <Search className="h-4 w-4" />
                     <span>{isInternshipMode ? 'Find Internships' : 'Find Opportunities'}</span>
@@ -148,7 +152,11 @@ const Sidebar = () => {
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
                     }`}
-                    onClick={() => setIsOpen(false)}
+                    onClick={(e) => {
+                      console.log('Navigate to discover clicked');
+                      setIsOpen(false);
+                      navigate('/discover');
+                    }}
                   >
                     <Heart className="h-4 w-4" />
                     <span>Discover</span>
