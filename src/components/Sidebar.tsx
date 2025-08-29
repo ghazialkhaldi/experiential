@@ -127,22 +127,21 @@ const Sidebar = () => {
               </h3>
               <ul className="space-y-3">
                 <li>
-                  <Link
-                    to="/"
-                    className={`flex items-center space-x-3 transition-colors ${
+                  <button
+                    onClick={() => {
+                      console.log('Home button clicked');
+                      setIsOpen(false);
+                      navigate('/');
+                    }}
+                    className={`flex items-center space-x-3 transition-colors w-full text-left ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
                     }`}
-                    onClick={(e) => {
-                      console.log('Navigate to home clicked');
-                      setIsOpen(false);
-                      navigate('/');
-                    }}
                   >
                     <Search className="h-4 w-4" />
                     <span>{isInternshipMode ? 'Find Internships' : 'Find Opportunities'}</span>
-                  </Link>
+                  </button>
                 </li>
                 <li>
                   <Link
@@ -176,34 +175,40 @@ const Sidebar = () => {
                   </button>
                 </li>
                 <li>
-                  <Link
-                    to={isInternshipMode ? "/track-experience" : "/track-hours"}
-                    className={`flex items-center space-x-3 transition-colors ${
+                  <button
+                    onClick={() => {
+                      console.log('Track hours button clicked');
+                      setIsOpen(false);
+                      navigate(isInternshipMode ? "/track-experience" : "/track-hours");
+                    }}
+                    className={`flex items-center space-x-3 transition-colors w-full text-left ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
                     }`}
-                    onClick={() => setIsOpen(false)}
                   >
                     <Clock className="h-4 w-4" />
                     <span>{isInternshipMode ? 'Track Experience' : 'Track Hours'}</span>
-                  </Link>
+                  </button>
                 </li>
                 
                 {/* Resume Builder - Available in both modes */}
                 <li>
-                  <Link
-                    to="/resume-builder"
-                    className={`flex items-center space-x-3 transition-colors ${
+                  <button
+                    onClick={() => {
+                      console.log('Resume builder button clicked');
+                      setIsOpen(false);
+                      navigate("/resume-builder");
+                    }}
+                    className={`flex items-center space-x-3 transition-colors w-full text-left ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
                     }`}
-                    onClick={() => setIsOpen(false)}
                   >
                     <FileText className="h-4 w-4" />
                     <span>Resume Builder</span>
-                  </Link>
+                  </button>
                 </li>
                 
                 {/* Mobile-only Auth options */}
