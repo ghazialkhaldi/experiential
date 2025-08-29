@@ -18,12 +18,9 @@ const Footer = () => {
             <div className="mb-4">
               <ExperientialLogo className="h-20 w-auto" />
             </div>
-            <p className="text-gray-400">
-              {isInternshipMode 
-                ? 'Connecting ambitious professionals with career-launching opportunities.'
-                : 'Connecting high school students with meaningful volunteer opportunities.'
-              }
-            </p>
+          <p className="text-gray-400">
+            Connecting ambitious professionals with career-launching opportunities.
+          </p>
           </div>
           <div>
             <h3 className="font-semibold mb-4 text-white">
@@ -99,7 +96,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2025 Experiential. {isInternshipMode ? 'Empowering careers.' : 'Made for students, by students.'}</p>
+          <p>&copy; 2025 Experiential. Empowering careers.</p>
         </div>
       </div>
     </footer>
