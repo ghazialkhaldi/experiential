@@ -20,6 +20,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useMode } from '@/contexts/ModeContext';
 import ExperientialLogo from '@/components/ExperientialLogo';
 import { Briefcase } from 'lucide-react';
+import Footer from '@/components/Footer';
+import SharedNavigation from '@/components/SharedNavigation';
+import Sidebar from '@/components/Sidebar';
 
 interface OrganizationOpportunity {
   id: string;
@@ -266,37 +269,9 @@ const ManageOpportunities = () => {
   }
 
   return (
-    <div className={`min-h-screen ${isInternshipMode ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-gradient-to-br from-blue-50 to-green-50'}`}>
-      {/* Navigation */}
-      <nav className={`shadow-sm border-b ${isInternshipMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <span className={`text-2xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                <ExperientialLogo className="h-16 w-auto" />
-              </span>
-            </Link>
-            <div className="flex items-center space-x-6">
-              <Link to="/" className={`font-medium ${isInternshipMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'}`}>
-                {isInternshipMode ? 'Internships' : 'Opportunities'}
-              </Link>
-              <Link to={isInternshipMode ? "/career-resources" : "/resources"} className={`font-medium ${isInternshipMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'}`}>
-                {isInternshipMode ? 'Career Resources' : 'University Resources'}
-              </Link>
-              <Link to="/manage-opportunities" className={`font-medium ${isInternshipMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                Manage
-              </Link>
-              <AuthButton />
-              <Link to="/post-opportunity">
-                <Button className={`${isInternshipMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
+      <Sidebar />
+      <SharedNavigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
@@ -593,6 +568,7 @@ const ManageOpportunities = () => {
           </div>
         </DialogContent>
       </Dialog>
+      <Footer />
     </div>
   );
 };

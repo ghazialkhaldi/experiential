@@ -446,6 +446,7 @@ const PostOpportunity = () => {
           </CardContent>
         </Card>
       </div>
+      <Footer />
     </div>
   );
 };

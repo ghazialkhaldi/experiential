@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import AuthButton from "@/components/AuthButton";
 import { useMode } from "@/contexts/ModeContext";
 import ExperientialLogo from "@/components/ExperientialLogo";
+import SharedNavigation from "@/components/SharedNavigation";
+import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 
 const CareerResources = () => {
   const { isInternshipMode } = useMode();
@@ -56,33 +59,9 @@ const CareerResources = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      {/* Navigation */}
-      <nav className="bg-gray-800/80 backdrop-blur-md shadow-sm border-b border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center space-x-2 fade-in transition-colors hover:opacity-80">
-              <ExperientialLogo className="h-16 w-auto" />
-            </Link>
-            <div className="flex items-center space-x-6 fade-in-delayed">
-              <Link to="/" className="text-gray-300 hover:text-blue-400 font-medium transition-colors duration-200 relative group">
-                Internships
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-200 group-hover:w-full"></span>
-              </Link>
-              <Link to="/career-resources" className="text-gray-300 hover:text-blue-400 font-medium text-sm transition-colors duration-200 relative group">
-                Career Resources
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-200 group-hover:w-full"></span>
-              </Link>
-              <AuthButton />
-              <Link to="/post-opportunity">
-                <Button className="bg-blue-600 hover:bg-blue-700 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
-                  Post Internship
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
+      <Sidebar />
+      <SharedNavigation />
 
       {/* Back Button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
@@ -193,6 +172,7 @@ const CareerResources = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

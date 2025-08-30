@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useMode } from '@/contexts/ModeContext';
 import { useProfile } from '@/hooks/useProfile';
+import Footer from '@/components/Footer';
+import SharedNavigation from '@/components/SharedNavigation';
+import Sidebar from '@/components/Sidebar';
 
 const Portfolio = () => {
   const navigate = useNavigate();
@@ -73,23 +76,9 @@ const Portfolio = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card shadow-sm border-b p-4">
-        <div className="flex items-center space-x-4">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => navigate('/app/dashboard')}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-6 w-6" />
-          </Button>
-          <h1 className="text-xl font-semibold text-foreground">
-            Your Portfolio
-          </h1>
-        </div>
-      </header>
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
+      <Sidebar />
+      <SharedNavigation />
 
       {/* Content */}
       <div className="p-4">
@@ -151,6 +140,7 @@ const Portfolio = () => {
           })}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

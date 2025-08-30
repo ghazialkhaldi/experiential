@@ -8,6 +8,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMode } from "@/contexts/ModeContext";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import SharedNavigation from "@/components/SharedNavigation";
+import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 
 const Billing = () => {
   const { subscribed, subscription_tier, subscription_end, manageSubscription, loading } = useSubscription();
@@ -91,7 +94,9 @@ const Billing = () => {
   }
 
   return (
-    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
+      <Sidebar />
+      <SharedNavigation />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -254,6 +259,7 @@ const Billing = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

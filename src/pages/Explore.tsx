@@ -10,6 +10,9 @@ import { useLocation } from '@/hooks/useLocation';
 import { useMode } from '@/contexts/ModeContext';
 import LocationSelector from '@/components/LocationSelector';
 import { formatTimeAgo } from '@/utils/dateUtils';
+import SharedNavigation from '@/components/SharedNavigation';
+import Sidebar from '@/components/Sidebar';
+import Footer from '@/components/Footer';
 
 const Explore = () => {
   const navigate = useNavigate();
@@ -32,24 +35,10 @@ const Explore = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b p-4">
-        <div className="flex items-center space-x-4">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => navigate('/app/dashboard')}
-            className="text-gray-600 hover:text-gray-900"
-          >
-            <ArrowLeft className="h-6 w-6" />
-          </Button>
-          <h1 className="text-xl font-semibold text-gray-900">
-            Explore {isInternshipMode ? 'Internships' : 'Opportunities'}
-          </h1>
-        </div>
-      </header>
-
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
+      <Sidebar />
+      <SharedNavigation />
+      
       {/* Search Section */}
       <div className="p-4">
         <Card className="mb-6">
@@ -131,6 +120,7 @@ const Explore = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

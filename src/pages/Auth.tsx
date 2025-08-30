@@ -14,6 +14,9 @@ import { Link } from "react-router-dom";
 import ExperientialLogo from "@/components/ExperientialLogo";
 import { useMode } from "@/contexts/ModeContext";
 import type { Database } from "@/integrations/supabase/types";
+import SharedNavigation from "@/components/SharedNavigation";
+import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 
 type VolunteerCategory = Database['public']['Enums']['volunteer_category'];
 

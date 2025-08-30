@@ -1580,6 +1580,7 @@ const ResumeBuilder = () => {
 
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
