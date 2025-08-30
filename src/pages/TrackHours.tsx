@@ -14,6 +14,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { useVolunteerHours } from "@/hooks/useVolunteerHours";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
+import Sidebar from "@/components/Sidebar";
+import ExperientialLogo from "@/components/ExperientialLogo";
+import { useMode } from "@/contexts/ModeContext";
+import { NotificationBell } from "@/components/NotificationBell";
+import { useIsMobile } from "@/hooks/use-mobile";
+import Footer from "@/components/Footer";
 
 interface LogHoursForm {
   title: string;
@@ -24,7 +30,8 @@ interface LogHoursForm {
 }
 
 const TrackHours = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
+  const { isInternshipMode } = useMode();
   const navigate = useNavigate();
   const { hours: volunteerHours, loading: hoursLoading, addHours, totalHours, totalOpportunities } = useVolunteerHours();
   const [hourGoal, setHourGoal] = useState(() => {
@@ -34,6 +41,7 @@ const TrackHours = () => {
   const [newGoal, setNewGoal] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<LogHoursForm>();
 
@@ -77,19 +85,34 @@ const TrackHours = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
+      {/* Sidebar */}
+      <Sidebar />
+      
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b">
+      <nav className={`backdrop-blur-md shadow-sm border-b ${
+        isInternshipMode 
+          ? 'bg-gray-800/80 border-gray-700' 
+          : 'bg-white/80 border-blue-100'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <span className="text-2xl font-bold text-gray-900">E<span className="text-blue-500">x</span>per<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>ent<span className="relative">i<span className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full"></span></span>al<span className="text-blue-500">.</span></span>
-            </Link>
-            <div className="flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
-                Home
+            {/* Mobile: Center the logo, Desktop: Left align */}
+            <div className={`flex items-center space-x-2 fade-in ${
+              isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : ''
+            }`}>
+              <Link to="/" className="hover:opacity-80 transition-opacity">
+                <ExperientialLogo className={isInternshipMode ? "h-20 w-auto" : "h-16 w-auto"} />
               </Link>
-              <AuthButton />
+            </div>
+            <div className="flex items-center space-x-6 fade-in-delayed">
+              {/* Desktop navigation - hide some items on mobile */}
+              {!isMobile && (
+                <>
+                  {user && <NotificationBell />}
+                  <AuthButton />
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -366,6 +389,9 @@ const TrackHours = () => {
           </>
         )}
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

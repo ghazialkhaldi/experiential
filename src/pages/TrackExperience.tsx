@@ -12,10 +12,15 @@ import { Calendar } from '@/components/ui/calendar';
 import { Separator } from '@/components/ui/separator';
 import Sidebar from '@/components/Sidebar';
 import AuthButton from '@/components/AuthButton';
+import ExperientialLogo from '@/components/ExperientialLogo';
+import Footer from '@/components/Footer';
 import { Progress } from '@/components/ui/progress';
 import { CalendarIcon, Building, Clock, MapPin, Plus, Target, TrendingUp, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMode } from '@/contexts/ModeContext';
+import { NotificationBell } from '@/components/NotificationBell';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Link } from 'react-router-dom';
 
 interface LogExperienceForm {
   title: string;
@@ -32,6 +37,7 @@ const TrackExperience = () => {
   const { user } = useAuth();
   const { isInternshipMode } = useMode();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [experienceGoal, setExperienceGoal] = useState(() => {
     return parseInt(localStorage.getItem('experienceGoal') || '6');
@@ -92,8 +98,37 @@ const TrackExperience = () => {
   };
 
   return (
-    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-background'}`}>
+    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
       <Sidebar />
+      
+      {/* Navigation */}
+      <nav className={`backdrop-blur-md shadow-sm border-b ${
+        isInternshipMode 
+          ? 'bg-gray-800/80 border-gray-700' 
+          : 'bg-white/80 border-blue-100'
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Mobile: Center the logo, Desktop: Left align */}
+            <div className={`flex items-center space-x-2 fade-in ${
+              isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : ''
+            }`}>
+              <Link to="/" className="hover:opacity-80 transition-opacity">
+                <ExperientialLogo className={isInternshipMode ? "h-20 w-auto" : "h-16 w-auto"} />
+              </Link>
+            </div>
+            <div className="flex items-center space-x-6 fade-in-delayed">
+              {/* Desktop navigation - hide some items on mobile */}
+              {!isMobile && (
+                <>
+                  {user && <NotificationBell />}
+                  <AuthButton />
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </nav>
       
       <main className="lg:ml-64">
         <div className="container mx-auto px-4 py-8">
@@ -104,7 +139,6 @@ const TrackExperience = () => {
                 Log your internships and work experience to build your professional portfolio
               </p>
             </div>
-            <AuthButton />
           </div>
 
           {/* Overview Cards */}
@@ -341,6 +375,9 @@ const TrackExperience = () => {
           </div>
         </div>
       </main>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
