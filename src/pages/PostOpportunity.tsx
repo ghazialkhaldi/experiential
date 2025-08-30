@@ -18,6 +18,7 @@ import { useMode } from '@/contexts/ModeContext';
 import AuthButton from "@/components/AuthButton";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import Footer from "@/components/Footer";
 import ExperientialLogo from '@/components/ExperientialLogo';
 
 

@@ -18,6 +18,7 @@ import { useMode } from "@/contexts/ModeContext";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useResumes, ResumeSection, SavedResume } from '@/hooks/useResumes';
+import Footer from '@/components/Footer';
 import { toast } from "sonner";
 
 const ResumeBuilder = () => {
