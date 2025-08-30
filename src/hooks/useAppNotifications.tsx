@@ -26,8 +26,67 @@ export const useAppNotifications = () => {
   useEffect(() => {
     if (user) {
       fetchNotifications();
+      setupRealtimeSubscription();
     }
+    
+    return () => {
+      // Cleanup will be handled by the subscription cleanup
+    };
   }, [user]);
+
+  // Setup real-time subscription for notifications
+  const setupRealtimeSubscription = () => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('notifications')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          const newNotification = payload.new as Notification;
+          setNotifications(prev => [newNotification, ...prev]);
+          
+          // Show toast for new notifications
+          if (newNotification.type !== 'welcome') {
+            toast({
+              title: newNotification.title,
+              description: newNotification.message,
+              duration: 5000,
+            });
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'notifications',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          const updatedNotification = payload.new as Notification;
+          setNotifications(prev =>
+            prev.map(notification =>
+              notification.id === updatedNotification.id
+                ? updatedNotification
+                : notification
+            )
+          );
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  };
 
   const fetchNotifications = async () => {
     try {

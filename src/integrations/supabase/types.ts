@@ -467,6 +467,17 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      create_notification: {
+        Args: {
+          p_application_id?: string
+          p_message: string
+          p_opportunity_id?: string
+          p_title: string
+          p_type: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       get_opportunity_like_count: {
         Args: { opportunity_id_param: string }
         Returns: number
