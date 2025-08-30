@@ -128,12 +128,14 @@ const Sidebar = () => {
               <ul className="space-y-3">
                 <li>
                   <button
-                    onClick={() => {
-                      console.log('Home button clicked');
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Home button clicked - navigating to /');
                       setIsOpen(false);
                       navigate('/');
                     }}
-                    className={`flex items-center space-x-3 transition-colors w-full text-left ${
+                    className={`flex items-center space-x-3 transition-colors w-full text-left p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
@@ -176,12 +178,15 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <button
-                    onClick={() => {
-                      console.log('Track hours button clicked');
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const targetPath = isInternshipMode ? "/track-experience" : "/track-hours";
+                      console.log('Track hours button clicked - navigating to:', targetPath);
                       setIsOpen(false);
-                      navigate(isInternshipMode ? "/track-experience" : "/track-hours");
+                      navigate(targetPath);
                     }}
-                    className={`flex items-center space-x-3 transition-colors w-full text-left ${
+                    className={`flex items-center space-x-3 transition-colors w-full text-left p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
@@ -195,12 +200,14 @@ const Sidebar = () => {
                 {/* Resume Builder - Available in both modes */}
                 <li>
                   <button
-                    onClick={() => {
-                      console.log('Resume builder button clicked');
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Resume builder button clicked - navigating to /resume-builder');
                       setIsOpen(false);
                       navigate("/resume-builder");
                     }}
-                    className={`flex items-center space-x-3 transition-colors w-full text-left ${
+                    className={`flex items-center space-x-3 transition-colors w-full text-left p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
