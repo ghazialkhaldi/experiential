@@ -32,7 +32,7 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { isInternshipMode } = useMode();
+  const { isInternshipMode, isJobsMode } = useMode();
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -66,6 +66,14 @@ const Index = () => {
 
   // Hero text rotation - moved before conditional return
   const heroTexts = useMemo(() => {
+    if (isJobsMode) {
+      return [
+        { firstPart: "Advance Your", secondPart: "Professional Career" },
+        { firstPart: "Discover Your Next", secondPart: "Dream Job" },
+        { firstPart: "Find Amazing", secondPart: "Career Opportunities" },
+        { firstPart: "Unlock Your", secondPart: "Career Potential" }
+      ];
+    }
     if (isInternshipMode) {
       return [
         { firstPart: "Launch Your", secondPart: "Career Journey" },
@@ -80,7 +88,7 @@ const Index = () => {
       { firstPart: "Connect with Meaningful", secondPart: "Service Projects" },
       { firstPart: "Explore Impactful", secondPart: "Community Opportunities" }
     ];
-  }, [isInternshipMode]);
+  }, [isInternshipMode, isJobsMode]);
 
   const currentHeroText = useMemo(() => {
     // Random selection that changes on each page visit/refresh
@@ -132,15 +140,23 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'hero-bg'}`}>
+    <div className={`min-h-screen ${
+      isJobsMode 
+        ? 'bg-gradient-to-br from-jobs-dark to-slate-900' 
+        : isInternshipMode 
+          ? 'bg-gray-900' 
+          : 'hero-bg'
+    }`}>
       {/* Sidebar */}
       <Sidebar />
       
       {/* Navigation */}
       <nav className={`backdrop-blur-md shadow-sm border-b ${
-        isInternshipMode 
-          ? 'bg-gray-800/80 border-gray-700' 
-          : 'bg-white/80 border-blue-100'
+        isJobsMode
+          ? 'bg-jobs-dark/80 border-green-700'
+          : isInternshipMode 
+            ? 'bg-gray-800/80 border-gray-700' 
+            : 'bg-white/80 border-blue-100'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -149,9 +165,13 @@ const Index = () => {
               isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : ''
             }`}>
               <span className={`text-2xl font-bold ${
-                isInternshipMode ? 'text-white' : 'text-gray-900'
+                isJobsMode 
+                  ? 'text-green-100' 
+                  : isInternshipMode 
+                    ? 'text-white' 
+                    : 'text-gray-900'
               }`}>
-              <ExperientialLogo className={isInternshipMode ? "h-20 w-auto" : "h-16 w-auto"} />
+              <ExperientialLogo className="h-20 w-auto" />
               </span>
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">
@@ -163,11 +183,13 @@ const Index = () => {
                   {isOrganization && (
                     <Link to="/post-opportunity">
                       <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
-                        isInternshipMode 
-                          ? 'bg-blue-600 hover:bg-blue-700' 
-                          : 'bg-blue-600 hover:bg-blue-700'
+                        isJobsMode
+                          ? 'bg-jobs-primary hover:bg-jobs-accent text-white'
+                          : isInternshipMode 
+                            ? 'bg-blue-600 hover:bg-blue-700' 
+                            : 'bg-blue-600 hover:bg-blue-700'
                       }`}>
-                        {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
+                        {isJobsMode ? 'Post Job' : isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
                       </Button>
                     </Link>
                   )}
@@ -190,7 +212,29 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {!isInternshipMode ? (
+        {isJobsMode ? (
+          <>
+            {/* Jobs Mode Background Elements - Green/Grey theme */}
+            <div className="absolute inset-0 bg-gradient-to-b from-jobs-primary/20 via-jobs-secondary/10 to-jobs-light"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-jobs-primary/15 via-jobs-secondary/8 to-transparent"></div>
+            
+            {/* Green mode circles */}
+            <div className="absolute top-10 left-10 w-48 h-48 bg-jobs-primary/30 rounded-full blur-2xl animate-pulse"></div>
+            <div className="absolute top-20 right-20 w-72 h-72 bg-jobs-secondary/25 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+            <div className="absolute bottom-10 left-1/4 w-40 h-40 bg-jobs-accent/20 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+            <div className="absolute top-1/2 right-10 w-32 h-32 bg-jobs-primary/35 rounded-full blur-lg animate-pulse" style={{animationDelay: '2s'}}></div>
+            <div className="absolute bottom-20 right-1/3 w-36 h-36 bg-jobs-secondary/18 rounded-full blur-xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
+            <div className="absolute top-1/3 left-1/2 w-28 h-28 bg-jobs-accent/25 rounded-full blur-lg animate-pulse" style={{animationDelay: '3s'}}></div>
+            <div className="absolute bottom-1/4 left-1/6 w-24 h-24 bg-jobs-primary/25 rounded-full blur-md animate-pulse" style={{animationDelay: '2.5s'}}></div>
+            
+            {/* Green decorative grid */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-jobs-light/80"></div>
+            <div className="absolute top-0 left-0 right-0 h-3/4 opacity-[0.08]" style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--jobs-primary)) 1px, transparent 0)`,
+              backgroundSize: '30px 30px'
+            }}></div>
+          </>
+        ) : !isInternshipMode ? (
           <>
             {/* Light Mode Background Elements */}
             <div className="absolute inset-0 bg-gradient-to-b from-blue-600/15 via-blue-400/8 to-white"></div>
@@ -239,21 +283,35 @@ const Index = () => {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="fade-in">
             <h1 className={`text-6xl font-bold mb-6 leading-tight drop-shadow-sm ${
-              isInternshipMode ? 'text-white' : 'text-gray-900'
+              isJobsMode 
+                ? 'text-jobs-dark' 
+                : isInternshipMode 
+                  ? 'text-white' 
+                  : 'text-gray-900'
             }`}>
               {currentHeroText.firstPart}
               <span className={`block ${
-                isInternshipMode ? 'text-blue-400' : 'text-gradient-blue'
+                isJobsMode 
+                  ? 'text-jobs-primary' 
+                  : isInternshipMode 
+                    ? 'text-blue-400' 
+                    : 'text-gradient-blue'
               }`}> {currentHeroText.secondPart}</span>
             </h1>
           </div>
           <div className="fade-in-delayed">
             <p className={`text-xl mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-sm ${
-              isInternshipMode ? 'text-gray-300' : 'text-gray-700'
+              isJobsMode 
+                ? 'text-jobs-dark' 
+                : isInternshipMode 
+                  ? 'text-gray-300' 
+                  : 'text-gray-700'
             }`}>
-              {isInternshipMode 
-                ? 'Launch your professional journey with internships and temporary positions that provide real-world experience and industry connections.'
-                : 'Connect with local organizations and make a difference in your community while building experience for college applications.'
+              {isJobsMode
+                ? 'Advance your professional career with high-quality job opportunities that match your skills and aspirations. Connect with top employers and take the next step in your journey.'
+                : isInternshipMode 
+                  ? 'Launch your professional journey with internships and temporary positions that provide real-world experience and industry connections.'
+                  : 'Connect with local organizations and make a difference in your community while building experience for college applications.'
               }
             </p>
           </div>
@@ -261,9 +319,11 @@ const Index = () => {
           {/* Search Bar */}
           <div className="fade-in-delayed-2">
             <div className={`backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto border relative ${
-              isInternshipMode 
-                ? 'bg-gray-800/95 border-gray-600/50' 
-                : 'bg-white/95 border-blue-200/50'
+              isJobsMode
+                ? 'bg-white/95 border-jobs-primary/20'
+                : isInternshipMode 
+                  ? 'bg-gray-800/95 border-gray-600/50' 
+                  : 'bg-white/95 border-blue-200/50'
             }`}>
               {/* Search bar glow effect */}
               <div className={`absolute inset-0 rounded-2xl ${

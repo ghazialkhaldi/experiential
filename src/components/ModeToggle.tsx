@@ -4,6 +4,13 @@ import { Briefcase, Heart, Users } from 'lucide-react';
 
 const ModeToggle = () => {
   const { mode, setMode } = useMode();
+  
+  console.log('Current mode in ModeToggle:', mode); // Debug log
+
+  const handleModeChange = (newMode: 'volunteer' | 'internship' | 'jobs') => {
+    console.log('Changing mode from', mode, 'to', newMode);
+    setMode(newMode);
+  };
 
   const modes = [
     { 
@@ -33,20 +40,20 @@ const ModeToggle = () => {
   ];
 
   return (
-    <div className="p-4 border-t border-sidebar-border">
-      <div className="text-xs font-medium text-sidebar-foreground/60 mb-3 uppercase tracking-wide">
+    <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wide">
         Switch Mode
       </div>
       <div className="space-y-2">
         {modes.map(({ id, label, icon: Icon, color, bgColor, textColor }) => (
           <button
             key={id}
-            onClick={() => setMode(id as any)}
+            onClick={() => handleModeChange(id as any)}
             className={`
               w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-300 
               ${mode === id 
-                ? `bg-gradient-to-r ${color} text-white shadow-lg scale-105 border-2 border-white/20` 
-                : `${bgColor} ${textColor} hover:scale-102 border border-transparent`
+                ? `bg-gradient-to-r ${color} text-white shadow-lg transform scale-105 border-2 border-white/20` 
+                : `${bgColor} ${textColor} hover:transform hover:scale-[1.02] border border-transparent`
               }
             `}
           >

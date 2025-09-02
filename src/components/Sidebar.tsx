@@ -57,18 +57,18 @@ const Sidebar = () => {
     <>
       {/* Sidebar Toggle Button */}
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         onClick={toggleSidebar}
-        className={`fixed top-4 left-4 z-50 shadow-md ${
+        className={`fixed top-4 left-4 z-50 shadow-lg border-2 ${
           isJobsMode
-            ? 'bg-jobs-dark hover:bg-jobs-primary text-white'
+            ? 'bg-jobs-dark hover:bg-jobs-primary text-green-100 border-green-500/30'
             : isInternshipMode 
-              ? 'bg-gray-800 hover:bg-gray-700 text-white' 
-              : 'bg-white hover:bg-gray-50'
+              ? 'bg-gray-800 hover:bg-gray-700 text-white border-gray-600' 
+              : 'bg-white hover:bg-gray-50 border-gray-300'
         }`}
       >
-        <Menu className="h-6 w-6" />
+        <Menu className="h-5 w-5" />
       </Button>
 
       {/* Sidebar Overlay */}
