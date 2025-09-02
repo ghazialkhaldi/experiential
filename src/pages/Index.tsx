@@ -168,7 +168,11 @@ const Index = () => {
                   <AuthButton />
                   {isOrganization && (
                     <Link to="/post-opportunity">
-                      <Button className="transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl bg-blue-600 hover:bg-blue-700">
+                      <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
+                        isInternshipMode 
+                          ? 'bg-purple-600 hover:bg-purple-700' 
+                          : 'bg-blue-600 hover:bg-blue-700'
+                      }`}>
                         {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
                       </Button>
                     </Link>
@@ -327,7 +331,11 @@ const Index = () => {
                       <SelectItem value="healthcare">Healthcare</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button className="h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl" onClick={handleSearch}>
+                  <Button className={`h-12 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
+                    isInternshipMode 
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800' 
+                      : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800'
+                  }`} onClick={handleSearch}>
                     <Search className="h-4 w-4 mr-2" />
                     Search
                   </Button>

@@ -41,7 +41,11 @@ const SharedNavigation = () => {
                 <AuthButton />
                 {isOrganization && (
                   <Link to="/post-opportunity">
-                    <Button className="transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl bg-blue-600 hover:bg-blue-700">
+                    <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
+                      isInternshipMode 
+                        ? 'bg-purple-600 hover:bg-purple-700' 
+                        : 'bg-blue-600 hover:bg-blue-700'
+                    }`}>
                       {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
                     </Button>
                   </Link>

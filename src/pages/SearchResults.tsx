@@ -134,7 +134,11 @@ const SearchResults = () => {
               )}
               <AuthButton />
               <Link to="/post-opportunity">
-                <Button className={`${isInternshipMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
+                <Button className={`${
+                  isInternshipMode 
+                    ? 'bg-purple-600 hover:bg-purple-700' 
+                    : 'bg-blue-600 hover:bg-blue-700'
+                }`}>
                   {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
                 </Button>
               </Link>
@@ -186,7 +190,11 @@ const SearchResults = () => {
                   <SelectItem value="healthcare">Healthcare</SelectItem>
                 </SelectContent>
               </Select>
-              <Button className="h-12 bg-blue-600 hover:bg-blue-700" onClick={handleSearch}>
+              <Button className={`h-12 ${
+                isInternshipMode 
+                  ? 'bg-purple-600 hover:bg-purple-700' 
+                  : 'bg-blue-600 hover:bg-blue-700'
+              }`} onClick={handleSearch}>
                 Search
               </Button>
             </div>
