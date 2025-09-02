@@ -150,7 +150,7 @@ const Index = () => {
           <div className="flex justify-between items-center h-16">
             {/* Mobile: Center the logo, Desktop: Left align */}
             <div className={`flex items-center space-x-2 fade-in ${
-              isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : ''
+              isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : 'ml-16'
             }`}>
               <span className={`text-2xl font-bold ${
                 isInternshipMode 
