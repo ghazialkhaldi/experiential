@@ -27,10 +27,10 @@ const AuthButton = () => {
   if (!isAuthenticated) {
     return (
       <Button 
-        variant="outline" 
+        variant={isInternshipMode ? "default" : "outline"}
         className={`transition-all duration-200 hover:scale-105 ${
           isInternshipMode 
-            ? 'border-purple-600 text-purple-600 hover:bg-purple-50' 
+            ? 'bg-purple-700 hover:bg-purple-800 text-white border-0' 
             : 'border-blue-600 text-blue-600 hover:bg-blue-50'
         }`}
         onClick={() => navigate('/auth')}
@@ -43,10 +43,10 @@ const AuthButton = () => {
   if (loading) {
     return (
       <Button 
-        variant="outline" 
+        variant={isInternshipMode ? "default" : "outline"}
         className={`transition-all duration-200 ${
           isInternshipMode 
-            ? 'border-purple-600 text-purple-600' 
+            ? 'bg-purple-700 text-white border-0' 
             : 'border-blue-600 text-blue-600'
         }`} 
         disabled
@@ -60,10 +60,10 @@ const AuthButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button 
-          variant="outline" 
+          variant={isInternshipMode ? "default" : "outline"}
           className={`transition-all duration-200 hover:scale-105 ${
             isInternshipMode 
-              ? 'border-purple-600 text-purple-600 hover:bg-purple-50' 
+              ? 'bg-purple-700 hover:bg-purple-800 text-white border-0' 
               : 'border-blue-600 text-blue-600 hover:bg-blue-50'
           }`}
         >
