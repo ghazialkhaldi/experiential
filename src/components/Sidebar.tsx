@@ -32,11 +32,12 @@ import ProfileSettings from './ProfileSettings';
 import AuthButton from "@/components/AuthButton";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 import ExperientialLogo from "@/components/ExperientialLogo";
+import ModeToggle from "@/components/ModeToggle";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
-  const { mode, setMode, isInternshipMode } = useMode();
+  const { isInternshipMode, isJobsMode, mode, setMode } = useMode();
   const { subscribed, subscription_tier, createCheckoutSession, manageSubscription, loading } = useSubscription();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -60,9 +61,11 @@ const Sidebar = () => {
         size="icon"
         onClick={toggleSidebar}
         className={`fixed top-4 left-4 z-50 shadow-md ${
-          isInternshipMode 
-            ? 'bg-gray-800 hover:bg-gray-700 text-white' 
-            : 'bg-white hover:bg-gray-50'
+          isJobsMode
+            ? 'bg-jobs-dark hover:bg-jobs-primary text-white'
+            : isInternshipMode 
+              ? 'bg-gray-800 hover:bg-gray-700 text-white' 
+              : 'bg-white hover:bg-gray-50'
         }`}
       >
         <Menu className="h-6 w-6" />
@@ -80,7 +83,12 @@ const Sidebar = () => {
       <div
         className={`fixed top-0 left-0 h-full w-80 transform transition-transform duration-300 ease-in-out z-50 overflow-y-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } ${isInternshipMode ? 'bg-gray-900 shadow-2xl' : 'bg-white shadow-lg'}`}
+        } ${isJobsMode 
+            ? 'bg-gradient-to-b from-jobs-dark to-slate-900 shadow-2xl' 
+            : isInternshipMode 
+              ? 'bg-gray-900 shadow-2xl' 
+              : 'bg-white shadow-lg'
+        }`}
       >
         <div className="p-6 pb-8">{/* Added extra bottom padding to ensure mode switch is accessible */}
           {/* Header */}
@@ -96,7 +104,7 @@ const Sidebar = () => {
               <ExperientialLogo className="h-16 w-auto" />
             </Link>
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-              <X className={`h-6 w-6 ${isInternshipMode ? 'text-gray-300' : ''}`} />
+              <X className={`h-6 w-6 ${isJobsMode || isInternshipMode ? 'text-gray-300' : ''}`} />
             </Button>
           </div>
 
@@ -122,8 +130,14 @@ const Sidebar = () => {
           <div className="space-y-8">
             {/* For Students */}
             <div>
-              <h3 className={`font-semibold mb-4 ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                {isInternshipMode ? 'For Job Seekers' : 'For Students'}
+              <h3 className={`font-semibold mb-4 ${
+                isJobsMode 
+                  ? 'text-green-100' 
+                  : isInternshipMode 
+                    ? 'text-white' 
+                    : 'text-gray-900'
+              }`}>
+                {isJobsMode ? 'For Professionals' : isInternshipMode ? 'For Job Seekers' : 'For Students'}
               </h3>
               <ul className="space-y-3">
                 <li>
@@ -383,38 +397,8 @@ const Sidebar = () => {
               </div>
             )}
 
-            {/* Mode Switch - Made more prominent */}
-            <div className={`pt-6 mt-6 border-t ${isInternshipMode ? 'border-gray-700' : 'border-gray-200'}`}>
-              <div className={`p-4 rounded-lg ${isInternshipMode ? 'bg-gray-800/50' : 'bg-blue-50'}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex flex-col">
-                    <span className={`text-sm font-semibold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>
-                      {isInternshipMode ? 'Internship Mode' : 'Volunteer Mode'}
-                    </span>
-                    <span className={`text-xs ${isInternshipMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      {isInternshipMode ? 'Find internships & jobs' : 'Find volunteer opportunities'}
-                    </span>
-                  </div>
-                  <Switch
-                    checked={isInternshipMode}
-                    onCheckedChange={(checked) => {
-                      console.log('Switch toggled:', { 
-                        checked, 
-                        currentMode: mode, 
-                        isInternshipMode,
-                        isMobile 
-                      });
-                      setMode(checked ? 'internship' : 'volunteer');
-                      navigate('/');
-                    }}
-                    className="data-[state=checked]:bg-blue-600 scale-110"
-                  />
-                </div>
-                <div className={`text-xs text-center ${isInternshipMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Toggle to switch between modes
-                </div>
-              </div>
-            </div>
+            {/* Mode Toggle Component */}
+            <ModeToggle />
           </div>
         </div>
       </div>

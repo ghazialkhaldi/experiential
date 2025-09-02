@@ -47,10 +47,19 @@ All colors MUST be HSL.
     --accent-purple: 250 84% 54%;
     --accent-pink: 333 71% 51%;
     
+    /* Jobs Mode Colors */
+    --jobs-primary: 142 71% 45%;    /* Forest green */
+    --jobs-secondary: 158 64% 52%;  /* Emerald green */
+    --jobs-dark: 220 13% 18%;       /* Dark grey */
+    --jobs-light-grey: 220 14% 96%; /* Light grey */
+    --jobs-accent: 142 76% 36%;     /* Darker green for accents */
+    
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary-blue)) 0%, hsl(var(--accent-cyan)) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(var(--accent-purple)) 0%, hsl(var(--accent-pink)) 100%);
     --gradient-subtle: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--primary-blue) / 0.05) 100%);
+    --gradient-jobs: linear-gradient(135deg, hsl(var(--jobs-primary)) 0%, hsl(var(--jobs-secondary)) 100%);
+    --gradient-jobs-subtle: linear-gradient(135deg, hsl(var(--jobs-light-grey)) 0%, hsl(var(--jobs-primary) / 0.05) 100%);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;

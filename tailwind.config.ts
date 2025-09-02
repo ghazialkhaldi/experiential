@@ -49,6 +49,13 @@ export default {
 					purple: 'hsl(var(--accent-purple))',
 					pink: 'hsl(var(--accent-pink))'
 				},
+				jobs: {
+					primary: 'hsl(var(--jobs-primary))',
+					secondary: 'hsl(var(--jobs-secondary))',
+					dark: 'hsl(var(--jobs-dark))',
+					light: 'hsl(var(--jobs-light-grey))',
+					accent: 'hsl(var(--jobs-accent))'
+				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))'
