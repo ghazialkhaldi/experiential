@@ -6,16 +6,14 @@ interface ExperientialLogoProps {
 }
 
 const ExperientialLogo: React.FC<ExperientialLogoProps> = ({ 
-  className = "h-20 w-auto" 
+  className = "h-16 w-auto" 
 }) => {
-  const { isInternshipMode, isJobsMode } = useMode();
+  const { isInternshipMode } = useMode();
   
-  // Use same size for all modes now
-  const logoSrc = isJobsMode 
-    ? "/Experiential 3.png" 
-    : isInternshipMode 
-      ? "/Experiential 4.png" 
-      : "/Experiential.jpeg";
+  // Use original volunteer size for all modes
+  const logoSrc = isInternshipMode 
+    ? "/Experiential 4.png" 
+    : "/Experiential.jpeg";
   
   return (
     <img 

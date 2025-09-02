@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useProfile } from '@/hooks/useProfile';
 
 const SharedNavigation = () => {
-  const { isInternshipMode, isJobsMode } = useMode();
+  const { isInternshipMode } = useMode();
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const { profile, organization } = useProfile();
@@ -19,11 +19,9 @@ const SharedNavigation = () => {
 
   return (
     <nav className={`backdrop-blur-md shadow-sm border-b ${
-      isJobsMode
-        ? 'bg-jobs-dark/80 border-green-700'
-        : isInternshipMode 
-          ? 'bg-gray-800/80 border-gray-700' 
-          : 'bg-white/80 border-blue-100'
+      isInternshipMode 
+        ? 'bg-gray-800/80 border-gray-700' 
+        : 'bg-white/80 border-blue-100'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -32,7 +30,7 @@ const SharedNavigation = () => {
             isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : 'ml-8'
           }`}>
             <Link to="/" className="hover:opacity-80 transition-opacity">
-              <ExperientialLogo className="h-20 w-auto" />
+              <ExperientialLogo className="h-16 w-auto" />
             </Link>
           </div>
           <div className="flex items-center space-x-6 fade-in-delayed">
@@ -43,14 +41,8 @@ const SharedNavigation = () => {
                 <AuthButton />
                 {isOrganization && (
                   <Link to="/post-opportunity">
-                    <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
-                      isJobsMode
-                        ? 'bg-jobs-primary hover:bg-jobs-accent text-white'
-                        : isInternshipMode 
-                          ? 'bg-blue-600 hover:bg-blue-700' 
-                          : 'bg-blue-600 hover:bg-blue-700'
-                    }`}>
-                      {isJobsMode ? 'Post Job' : isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
+                    <Button className="transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl bg-blue-600 hover:bg-blue-700">
+                      {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
                     </Button>
                   </Link>
                 )}

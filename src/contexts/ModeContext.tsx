@@ -1,12 +1,11 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-export type AppMode = 'volunteer' | 'internship' | 'jobs';
+export type AppMode = 'volunteer' | 'internship';
 
 interface ModeContextType {
   mode: AppMode;
   setMode: (mode: AppMode) => void;
   isInternshipMode: boolean;
-  isJobsMode: boolean;
 }
 
 const ModeContext = createContext<ModeContextType | undefined>(undefined);
@@ -18,8 +17,7 @@ export const ModeProvider = ({ children }: { children: ReactNode }) => {
     <ModeContext.Provider value={{
       mode,
       setMode,
-      isInternshipMode: mode === 'internship',
-      isJobsMode: mode === 'jobs'
+      isInternshipMode: mode === 'internship'
     }}>
       {children}
     </ModeContext.Provider>

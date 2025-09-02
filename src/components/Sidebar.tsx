@@ -37,7 +37,7 @@ import ModeToggle from "@/components/ModeToggle";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
-  const { isInternshipMode, isJobsMode, mode, setMode } = useMode();
+  const { isInternshipMode, mode, setMode } = useMode();
   const { subscribed, subscription_tier, createCheckoutSession, manageSubscription, loading } = useSubscription();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -61,11 +61,9 @@ const Sidebar = () => {
         size="icon"
         onClick={toggleSidebar}
         className={`fixed top-4 left-4 z-50 shadow-lg border-2 ${
-          isJobsMode
-            ? 'bg-jobs-dark hover:bg-jobs-primary text-green-100 border-green-500/30'
-            : isInternshipMode 
-              ? 'bg-gray-800 hover:bg-gray-700 text-white border-gray-600' 
-              : 'bg-white hover:bg-gray-50 border-gray-300'
+          isInternshipMode 
+            ? 'bg-gray-800 hover:bg-gray-700 text-white border-gray-600' 
+            : 'bg-white hover:bg-gray-50 border-gray-300'
         }`}
       >
         <Menu className="h-5 w-5" />
@@ -83,11 +81,9 @@ const Sidebar = () => {
       <div
         className={`fixed top-0 left-0 h-full w-80 transform transition-transform duration-300 ease-in-out z-50 overflow-y-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } ${isJobsMode 
-            ? 'bg-gradient-to-b from-jobs-dark to-slate-900 shadow-2xl' 
-            : isInternshipMode 
-              ? 'bg-gray-900 shadow-2xl' 
-              : 'bg-white shadow-lg'
+        } ${isInternshipMode 
+            ? 'bg-gray-900 shadow-2xl' 
+            : 'bg-white shadow-lg'
         }`}
       >
         <div className="p-6 pb-8">{/* Added extra bottom padding to ensure mode switch is accessible */}
@@ -104,7 +100,7 @@ const Sidebar = () => {
               <ExperientialLogo className="h-16 w-auto" />
             </Link>
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-              <X className={`h-6 w-6 ${isJobsMode || isInternshipMode ? 'text-gray-300' : ''}`} />
+              <X className={`h-6 w-6 ${isInternshipMode ? 'text-gray-300' : ''}`} />
             </Button>
           </div>
 
@@ -131,13 +127,11 @@ const Sidebar = () => {
             {/* For Students */}
             <div>
               <h3 className={`font-semibold mb-4 ${
-                isJobsMode 
-                  ? 'text-green-100' 
-                  : isInternshipMode 
-                    ? 'text-white' 
-                    : 'text-gray-900'
+                isInternshipMode 
+                  ? 'text-white' 
+                  : 'text-gray-900'
               }`}>
-                {isJobsMode ? 'For Professionals' : isInternshipMode ? 'For Job Seekers' : 'For Students'}
+                {isInternshipMode ? 'For Job Seekers' : 'For Students'}
               </h3>
               <ul className="space-y-3">
                 <li>

@@ -7,7 +7,7 @@ const ModeToggle = () => {
   
   console.log('Current mode in ModeToggle:', mode); // Debug log
 
-  const handleModeChange = (newMode: 'volunteer' | 'internship' | 'jobs') => {
+  const handleModeChange = (newMode: 'volunteer' | 'internship') => {
     console.log('Changing mode from', mode, 'to', newMode);
     setMode(newMode);
   };
@@ -28,14 +28,6 @@ const ModeToggle = () => {
       color: 'from-purple-500 to-indigo-500', 
       bgColor: 'bg-purple-50 hover:bg-purple-100',
       textColor: 'text-purple-700'
-    },
-    { 
-      id: 'jobs', 
-      label: 'Jobs', 
-      icon: Users,
-      color: 'from-green-500 to-emerald-500',
-      bgColor: 'bg-green-50 hover:bg-green-100', 
-      textColor: 'text-green-700'
     }
   ];
 
