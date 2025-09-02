@@ -10,7 +10,10 @@ const ExperientialLogo: React.FC<ExperientialLogoProps> = ({
 }) => {
   const { isInternshipMode } = useMode();
   
-  // Use original volunteer size for all modes
+  // Use larger size for internship mode to match volunteer
+  const logoSize = isInternshipMode ? "h-20 w-auto" : "h-16 w-auto";
+  const finalClassName = className === "h-16 w-auto" ? logoSize : className;
+  
   const logoSrc = isInternshipMode 
     ? "/Experiential 4.png" 
     : "/Experiential.jpeg";
@@ -19,7 +22,7 @@ const ExperientialLogo: React.FC<ExperientialLogoProps> = ({
     <img 
       src={logoSrc}
       alt="Experiential Logo" 
-      className={className}
+      className={finalClassName}
     />
   );
 };
