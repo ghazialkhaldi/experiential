@@ -97,7 +97,7 @@ const Sidebar = () => {
                 setIsOpen(false);
               }}
             >
-              <ExperientialLogo className="h-16 w-auto" />
+              <ExperientialLogo />
             </Link>
             <Button variant="ghost" size="icon" onClick={toggleSidebar}>
               <X className={`h-6 w-6 ${isInternshipMode ? 'text-gray-300' : ''}`} />

@@ -20,7 +20,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-start-2">
             <div className="mb-4 flex justify-start ml-8">
-              <ExperientialLogo className="h-16 w-auto" />
+              <ExperientialLogo />
             </div>
             <p className="text-gray-400">
               {isInternshipMode 

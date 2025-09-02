@@ -157,7 +157,7 @@ const Index = () => {
                   ? 'text-white' 
                   : 'text-gray-900'
               }`}>
-              <ExperientialLogo className="h-16 w-auto" />
+              <ExperientialLogo />
               </span>
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">

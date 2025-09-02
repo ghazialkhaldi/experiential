@@ -30,7 +30,7 @@ const SharedNavigation = () => {
             isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : 'ml-16'
           }`}>
             <Link to="/" className="hover:opacity-80 transition-opacity">
-              <ExperientialLogo className="h-16 w-auto" />
+              <ExperientialLogo />
             </Link>
           </div>
           <div className="flex items-center space-x-6 fade-in-delayed">
