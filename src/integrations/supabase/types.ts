@@ -273,6 +273,7 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
+          notification_preferences: Json | null
           role: Database["public"]["Enums"]["user_role"]
           updated_at: string | null
         }
@@ -283,6 +284,7 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
+          notification_preferences?: Json | null
           role: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
         }
@@ -293,6 +295,7 @@ export type Database = {
           first_name?: string
           id?: string
           last_name?: string
+          notification_preferences?: Json | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
         }

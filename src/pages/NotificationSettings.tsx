@@ -53,7 +53,7 @@ const NotificationSettings = () => {
 
       if (error) throw error;
 
-      if (data?.notification_preferences) {
+      if (data?.notification_preferences && typeof data.notification_preferences === 'object') {
         setPreferences({ ...preferences, ...data.notification_preferences });
       }
     } catch (error) {
@@ -66,7 +66,7 @@ const NotificationSettings = () => {
       setLoading(true);
       const { error } = await supabase
         .from('profiles')
-        .update({ notification_preferences: preferences })
+        .update({ notification_preferences: preferences as any })
         .eq('id', user?.id);
 
       if (error) throw error;

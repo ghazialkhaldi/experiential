@@ -95,6 +95,14 @@ const Footer = () => {
                   </button>
                 </FeedbackDialog>
               </li>
+              <li>
+                <Link 
+                  to="/notification-settings" 
+                  className="hover:text-white transition-colors"
+                >
+                  Notification Settings
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

@@ -39,6 +39,7 @@ import TrackExperience from './pages/TrackExperience';
 import TrackHours from './pages/TrackHours';
 import UniversityChecklist from './pages/UniversityChecklist';
 import VerifyEmail from './pages/VerifyEmail';
+import NotificationSettings from './pages/NotificationSettings';
 
 const queryClient = new QueryClient();
 
@@ -82,7 +83,7 @@ const App = () => {
                 <Route path="/track-hours" element={<TrackHours />} />
                 <Route path="/university-checklist" element={<UniversityChecklist />} />
                 <Route path="/verify-email" element={<VerifyEmail />} />
-                <Route path="*" element={<NotFound />} />
+                <Route path="/notification-settings" element={<NotificationSettings />} />
               </Routes>
             )}
           </BrowserRouter>
