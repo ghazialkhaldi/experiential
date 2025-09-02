@@ -49,7 +49,7 @@ All colors MUST be HSL.
     
     /* Jobs Mode Colors */
     --jobs-primary: 142 71% 45%;    /* Forest green */
-    --jobs-secondary: 158 64% 52%;  /* Emerald green */
+    --jobs-secondary: 142 40% 80%;  /* Light green-gray */
     --jobs-dark: 220 13% 18%;       /* Dark grey */
     --jobs-light-grey: 220 14% 96%; /* Light grey */
     --jobs-accent: 142 76% 36%;     /* Darker green for accents */
