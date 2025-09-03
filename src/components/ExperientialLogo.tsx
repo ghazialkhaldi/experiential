@@ -15,7 +15,7 @@ const ExperientialLogo: React.FC<ExperientialLogoProps> = ({
   
   // If no className provided or standard sizes, apply mode-based sizing
   if (!className || className === "h-16 w-auto" || className === "h-20 w-auto") {
-    const logoSize = isInternshipMode ? "h-28 w-auto" : "h-24 w-auto";
+    const logoSize = "h-20 w-auto"; // Same size for both modes
     finalClassName = logoSize;
   }
   
