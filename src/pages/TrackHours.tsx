@@ -102,7 +102,7 @@ const TrackHours = () => {
               isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : ''
             }`}>
               <Link to="/" className="hover:opacity-80 transition-opacity">
-                <ExperientialLogo className={isInternshipMode ? "h-22 w-auto" : "h-18 w-auto"} />
+                <ExperientialLogo className="h-12 w-auto" />
               </Link>
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">
