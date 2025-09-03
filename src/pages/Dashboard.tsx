@@ -99,7 +99,7 @@ const Dashboard = () => {
       <main className="flex-1 flex flex-col items-center justify-center px-4">
         {/* Logo */}
         <div className="mb-8">
-          <ExperientialLogo className="h-12 w-auto mx-auto" />
+          <ExperientialLogo className={isInternshipMode ? "h-18 w-auto mx-auto" : "h-16 w-auto mx-auto"} />
         </div>
 
         {/* Greeting */}
