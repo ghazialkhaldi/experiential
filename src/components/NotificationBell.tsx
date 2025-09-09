@@ -10,6 +10,19 @@ import { useMode } from '@/contexts/ModeContext';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
+interface Notification {
+  id: string;
+  user_id: string;
+  type: string;
+  title: string;
+  message: string;
+  is_read: boolean;
+  application_id: string | null;
+  opportunity_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 const getNotificationIcon = (type: string) => {
   switch (type) {
     case 'acceptance':
@@ -45,19 +58,27 @@ export const NotificationBell = () => {
     );
   }
 
-  const handleNotificationClick = async (notification: any) => {
-    await markAsRead(notification.id);
-    
-    // Navigate based on notification type
-    if (notification.opportunity_id) {
-      navigate(`/opportunity/${notification.opportunity_id}`);
-    } else if (notification.application_id) {
-      navigate('/manage-opportunities');
+  const handleNotificationClick = async (notification: Notification) => {
+    try {
+      await markAsRead(notification.id);
+      
+      // Navigate based on notification type
+      if (notification.opportunity_id) {
+        navigate(`/opportunity/${notification.opportunity_id}`);
+      } else if (notification.application_id) {
+        navigate('/manage-opportunities');
+      }
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
     }
   };
 
   const handleMarkAllAsRead = async () => {
-    await markAllAsRead();
+    try {
+      await markAllAsRead();
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+    }
   };
 
   return (
