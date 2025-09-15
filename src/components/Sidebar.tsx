@@ -226,9 +226,8 @@ const Sidebar = () => {
                   </button>
                 </li>
                 
-                {/* My Applications - Only show for logged in users */}
-                {user && (
-                  <li>
+                {/* My Applications - Show for all users for testing */}
+                <li>
                     <button
                       onClick={(e) => {
                         e.preventDefault();
@@ -245,9 +244,8 @@ const Sidebar = () => {
                     >
                       <Briefcase className="h-4 w-4" />
                       <span>My Applications</span>
-                    </button>
-                  </li>
-                )}
+                  </button>
+                </li>
                 
                 {/* Mobile-only Auth options */}
                 {isMobile && !user && (
