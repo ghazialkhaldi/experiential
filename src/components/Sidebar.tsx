@@ -156,7 +156,7 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to="/discover"
-                    className={`flex items-center space-x-3 transition-colors ${
+                    className={`flex items-center space-x-3 transition-colors p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
@@ -174,7 +174,7 @@ const Sidebar = () => {
                 <li>
                   <button
                     onClick={handleCreateProfile}
-                    className={`flex items-center space-x-3 transition-colors w-full text-left ${
+                    className={`flex items-center space-x-3 transition-colors w-full text-left p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
@@ -236,7 +236,7 @@ const Sidebar = () => {
                       setIsOpen(false);
                       navigate("/my-applications");
                     }}
-                      className={`flex items-center space-x-3 transition-colors w-full text-left ${
+                      className={`flex items-center space-x-3 transition-colors w-full text-left p-2 rounded hover:bg-gray-100 ${
                         isInternshipMode 
                           ? 'text-gray-300 hover:text-blue-400' 
                           : 'text-gray-600 hover:text-blue-600'
@@ -252,7 +252,7 @@ const Sidebar = () => {
                   <li>
                     <Link
                       to="/auth"
-                      className={`flex items-center space-x-3 transition-colors ${
+                      className={`flex items-center space-x-3 transition-colors p-2 rounded hover:bg-gray-100 ${
                         isInternshipMode 
                           ? 'text-gray-300 hover:text-blue-400' 
                           : 'text-gray-600 hover:text-blue-600'
@@ -288,7 +288,7 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to="/post-opportunity"
-                    className={`flex items-center space-x-3 transition-colors ${
+                    className={`flex items-center space-x-3 transition-colors p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
@@ -302,7 +302,7 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to="/manage-opportunities"
-                    className={`flex items-center space-x-3 transition-colors ${
+                    className={`flex items-center space-x-3 transition-colors p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
@@ -316,7 +316,7 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to="/manage-opportunities"
-                    className={`flex items-center space-x-3 transition-colors ${
+                    className={`flex items-center space-x-3 transition-colors p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
@@ -339,7 +339,7 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to={isInternshipMode ? "/career-resources" : "/resources"}
-                    className={`flex items-center space-x-3 transition-colors ${
+                    className={`flex items-center space-x-3 transition-colors p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
@@ -354,7 +354,9 @@ const Sidebar = () => {
                   <li>
                     <Link
                       to="/university-checklist"
-                      className="flex items-center space-x-3 transition-colors text-gray-600 hover:text-blue-600"
+                      className={`flex items-center space-x-3 transition-colors p-2 rounded hover:bg-gray-100 ${
+                        isInternshipMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'
+                      }`}
                       onClick={() => setIsOpen(false)}
                     >
                       <CheckSquare className="h-4 w-4" />
@@ -365,7 +367,7 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to={isInternshipMode ? "/career-resources" : "/resources"}
-                    className={`flex items-center space-x-3 transition-colors ${
+                    className={`flex items-center space-x-3 transition-colors p-2 rounded hover:bg-gray-100 ${
                       isInternshipMode 
                         ? 'text-gray-300 hover:text-blue-400' 
                         : 'text-gray-600 hover:text-blue-600'
@@ -379,7 +381,7 @@ const Sidebar = () => {
                 <li>
                   <FeedbackDialog>
                     <button
-                      className={`flex items-center space-x-3 transition-colors w-full text-left ${
+                      className={`flex items-center space-x-3 transition-colors w-full text-left p-2 rounded hover:bg-gray-100 ${
                         isInternshipMode 
                           ? 'text-gray-300 hover:text-blue-400' 
                           : 'text-gray-600 hover:text-blue-600'
