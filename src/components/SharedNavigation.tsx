@@ -24,7 +24,7 @@ const SharedNavigation = () => {
         : 'bg-white/80 border-blue-100'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="relative flex justify-between items-center h-16">
           {/* Mobile: Center the logo, Desktop: Left align */}
           <div className={`flex items-center space-x-2 fade-in ${
             isMobile ? 'absolute left-1/2 transform -translate-x-1/2' : 'ml-16'
@@ -34,26 +34,28 @@ const SharedNavigation = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-6 fade-in-delayed">
-            {isMobile ? (
-              <NotificationBell />
-            ) : (
-              <>
-                {user && <NotificationBell />}
-                <AuthButton />
-                {isOrganization && (
-                  <Link to="/post-opportunity">
-                    <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
-                      isInternshipMode 
-                        ? 'bg-purple-600 hover:bg-purple-700' 
-                        : 'bg-blue-600 hover:bg-blue-700'
-                    }`}>
-                      {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
-                    </Button>
-                  </Link>
-                )}
-              </>
-            )}
+            <>
+              {user && <NotificationBell />}
+              <AuthButton />
+              {isOrganization && (
+                <Link to="/post-opportunity">
+                  <Button className={`transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl ${
+                    isInternshipMode 
+                      ? 'bg-purple-600 hover:bg-purple-700' 
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  }`}>
+                    {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
+                  </Button>
+                </Link>
+              )}
+            </>
           </div>
+
+          {isMobile && (
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10">
+              <NotificationBell />
+            </div>
+          )}
         </div>
       </div>
     </nav>
