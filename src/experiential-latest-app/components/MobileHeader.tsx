@@ -1,21 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, User } from 'lucide-react';
+import { Search, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import ExperientialLogo from '@/components/ExperientialLogo';
+import { NotificationBell } from '@/components/NotificationBell';
 
 interface MobileHeaderProps {
   isNative: boolean;
-  unreadCount: number;
-  onNotificationPress: () => void;
 }
 
 export const MobileHeader: React.FC<MobileHeaderProps> = ({ 
-  isNative, 
-  unreadCount, 
-  onNotificationPress 
+  isNative 
 }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -48,23 +44,8 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
             <Search className="h-4 w-4" />
           </Button>
 
-          {/* Notifications Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onNotificationPress}
-            className="relative h-9 w-9"
-          >
-            <Bell className="h-4 w-4" />
-            {unreadCount > 0 && (
-              <Badge 
-                variant="destructive" 
-                className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
-              >
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </Badge>
-            )}
-          </Button>
+          {/* Notifications */}
+          <NotificationBell />
 
           {/* Profile Button */}
           <Button

@@ -132,8 +132,6 @@ export const MobileApp: React.FC<MobileAppProps> = () => {
     <div className="min-h-screen bg-background flex flex-col safe-area-top safe-area-bottom">
       <MobileHeader 
         isNative={isNative}
-        unreadCount={unreadNotifications}
-        onNotificationPress={handleNotificationPress}
       />
       
       <div className="flex-1 flex flex-col">
