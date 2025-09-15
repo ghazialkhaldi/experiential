@@ -159,11 +159,13 @@ const Index = () => {
               }`}>
               <ExperientialLogo />
               </span>
-              {isMobile && user && <NotificationBell />}
+              
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">
-              {/* Desktop navigation - hide some items on mobile */}
-              {!isMobile && (
+              {/* Right side actions */}
+              {isMobile ? (
+                <NotificationBell />
+              ) : (
                 <>
                   {user && <NotificationBell />}
                   <AuthButton />

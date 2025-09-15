@@ -32,11 +32,12 @@ const SharedNavigation = () => {
             <Link to="/" className="hover:opacity-80 transition-opacity">
               <ExperientialLogo />
             </Link>
-            {isMobile && user && <NotificationBell />}
+            
           </div>
           <div className="flex items-center space-x-6 fade-in-delayed">
-            {/* Desktop navigation - hide some items on mobile */}
-            {!isMobile && (
+            {isMobile ? (
+              <NotificationBell />
+            ) : (
               <>
                 {user && <NotificationBell />}
                 <AuthButton />
