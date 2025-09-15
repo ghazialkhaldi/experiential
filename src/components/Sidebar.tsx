@@ -228,22 +228,22 @@ const Sidebar = () => {
                 
                 {/* My Applications - Show for all users for testing */}
                 <li>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('My Applications button clicked - navigating to /my-applications');
-                        setIsOpen(false);
-                        navigate("/my-applications");
-                      }}
-                      className={`flex items-center space-x-3 transition-colors w-full text-left p-2 rounded hover:bg-gray-100 ${
-                        isInternshipMode 
-                          ? 'text-gray-300 hover:text-blue-400' 
-                          : 'text-gray-600 hover:text-blue-600'
-                      }`}
-                    >
-                      <Briefcase className="h-4 w-4" />
-                      <span>My Applications</span>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('My Applications button clicked - navigating to /my-applications');
+                      setIsOpen(false);
+                      navigate("/my-applications");
+                    }}
+                    className={`flex items-center space-x-3 transition-colors w-full text-left p-2 rounded hover:bg-gray-100 ${
+                      isInternshipMode 
+                        ? 'text-gray-300 hover:text-blue-400' 
+                        : 'text-gray-600 hover:text-blue-600'
+                    }`}
+                  >
+                    <Briefcase className="h-4 w-4" />
+                    <span>My Applications</span>
                   </button>
                 </li>
                 
