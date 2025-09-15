@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Search, TrendingUp, User, BookOpen } from 'lucide-react';
+import { Home, Search, TrendingUp, User, BookOpen, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useMobile } from '../hooks/useMobile';
+import { useAuth } from '@/hooks/useAuth';
 
 interface MobileNavigationProps {
   currentPath: string;
@@ -13,8 +14,10 @@ interface MobileNavigationProps {
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({ currentPath, isNative }) => {
   const navigate = useNavigate();
   const { triggerHaptic } = useMobile();
+  const { user } = useAuth();
 
-  const navigationItems = [
+  // Base navigation items
+  const baseNavigationItems = [
     {
       icon: Home,
       label: 'Home',
@@ -39,6 +42,26 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({ currentPath,
       path: '/app/portfolio',
       badge: null,
     },
+  ];
+
+  // Add My Applications for authenticated users
+  const navigationItems = user ? [
+    ...baseNavigationItems.slice(0, 2), // Home and Discover
+    {
+      icon: Briefcase,
+      label: 'Applications',
+      path: '/app/my-applications',
+      badge: null,
+    },
+    ...baseNavigationItems.slice(2), // Track and Portfolio
+    {
+      icon: User,
+      label: 'Profile',
+      path: '/app/settings',
+      badge: null,
+    },
+  ] : [
+    ...baseNavigationItems,
     {
       icon: User,
       label: 'Profile',

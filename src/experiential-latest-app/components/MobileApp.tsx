@@ -28,6 +28,7 @@ import SearchResults from '@/pages/SearchResults';
 import PostOpportunity from '@/pages/PostOpportunity';
 import ManageOpportunities from '@/pages/ManageOpportunities';
 import OrganizationDashboard from '@/pages/OrganizationDashboard';
+import MyApplications from '@/pages/MyApplications';
 
 // Mobile-specific components
 import { MobileNavigation } from './MobileNavigation';
@@ -170,6 +171,7 @@ export const MobileApp: React.FC<MobileAppProps> = () => {
                 <Route path="/app/post-opportunity" element={<PostOpportunity />} />
                 <Route path="/app/manage-opportunities" element={<ManageOpportunities />} />
                 <Route path="/app/organization-dashboard" element={<OrganizationDashboard />} />
+                <Route path="/app/my-applications" element={<MyApplications />} />
                 <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />
                 <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
               </>
