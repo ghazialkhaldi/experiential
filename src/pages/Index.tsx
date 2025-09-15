@@ -159,8 +159,6 @@ const Index = () => {
               }`}>
               <ExperientialLogo />
               </span>
-              {isMobile && <NotificationBell />}
-              
             </div>
             <div className="flex items-center space-x-6 fade-in-delayed">
               {/* Right side actions */}

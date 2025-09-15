@@ -32,8 +32,6 @@ const SharedNavigation = () => {
             <Link to="/" className="hover:opacity-80 transition-opacity">
               <ExperientialLogo />
             </Link>
-            {isMobile && <NotificationBell />}
-            
           </div>
           <div className="flex items-center space-x-6 fade-in-delayed">
             {isMobile ? (
