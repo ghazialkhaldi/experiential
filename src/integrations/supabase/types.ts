@@ -481,6 +481,10 @@ export type Database = {
         }
         Returns: string
       }
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
       get_opportunity_like_count: {
         Args: { opportunity_id_param: string }
         Returns: number
@@ -493,9 +497,13 @@ export type Database = {
         Args: { opportunity_id_param: string; user_id_param: string }
         Returns: boolean
       }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
-      user_role: "volunteer" | "volunteer_searcher"
+      user_role: "volunteer" | "volunteer_searcher" | "admin"
       volunteer_category:
         | "education"
         | "environment"
@@ -629,7 +637,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      user_role: ["volunteer", "volunteer_searcher"],
+      user_role: ["volunteer", "volunteer_searcher", "admin"],
       volunteer_category: [
         "education",
         "environment",
