@@ -41,6 +41,7 @@ import UniversityChecklist from './pages/UniversityChecklist';
 import VerifyEmail from './pages/VerifyEmail';
 import NotificationSettings from './pages/NotificationSettings';
 import MyApplications from './pages/MyApplications';
+import AdminDashboard from './pages/AdminDashboard';
 
 const queryClient = new QueryClient();
 
@@ -86,6 +87,7 @@ const App = () => {
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route path="/notification-settings" element={<NotificationSettings />} />
                 <Route path="/my-applications" element={<MyApplications />} />
+                <Route path="/admin" element={<AdminDashboard />} />
               </Routes>
             )}
           </BrowserRouter>

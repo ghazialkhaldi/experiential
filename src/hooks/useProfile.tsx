@@ -6,7 +6,7 @@ interface Profile {
   id: string;
   first_name: string;
   last_name: string;
-  role: 'volunteer' | 'volunteer_searcher';
+  role: 'volunteer' | 'volunteer_searcher' | 'admin';
 }
 
 interface Organization {
