@@ -270,14 +270,28 @@ const Auth = () => {
         
         toast({
           title: "Account Created!",
-          description: "Please check your email for a verification code.",
+          description: "Please check your email and click the verification link to complete your account setup.",
         });
         
-        // Store email for verification page
-        localStorage.setItem('verificationEmail', formData.email);
-        
-        // Redirect to verification page
-        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+        // Clear form and switch to login mode  
+        setFormData({
+          email: '',
+          password: '',
+          firstName: '',
+          lastName: '',
+          birthday: '',
+          role: '',
+          age: '',
+          preferences: [],
+          organizationName: '',
+          organizationCategory: '',
+          organizationDescription: '',
+          address: '',
+          city: '',
+          state: '',
+          zipCode: ''
+        });
+        setIsLogin(true);
       } else {
         toast({
           variant: "destructive",
