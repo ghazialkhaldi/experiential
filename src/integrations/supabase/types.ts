@@ -270,6 +270,7 @@ export type Database = {
           age: number | null
           birthday: string
           created_at: string | null
+          email: string | null
           first_name: string
           id: string
           last_name: string
@@ -281,6 +282,7 @@ export type Database = {
           age?: number | null
           birthday: string
           created_at?: string | null
+          email?: string | null
           first_name: string
           id: string
           last_name: string
@@ -292,6 +294,7 @@ export type Database = {
           age?: number | null
           birthday?: string
           created_at?: string | null
+          email?: string | null
           first_name?: string
           id?: string
           last_name?: string
