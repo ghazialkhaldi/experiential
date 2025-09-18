@@ -19,7 +19,7 @@ const GoogleUserNotification: React.FC<GoogleUserNotificationProps> = ({ onDismi
   console.log('GoogleUserNotification - Profile:', profile);
   console.log('GoogleUserNotification - Auth loading:', loading);
   console.log('GoogleUserNotification - Profile loading:', profileLoading);
-  console.log('GoogleUserNotification - User metadata:', user?.app_metadata);
+  console.log('GoogleUserNotification - User metadata:', user?.user_metadata);
 
   // Don't show anything while loading
   if (loading || profileLoading) {
@@ -27,8 +27,10 @@ const GoogleUserNotification: React.FC<GoogleUserNotificationProps> = ({ onDismi
     return null;
   }
 
-  // Only show for Google users without a complete profile
-  const isGoogleUser = user?.app_metadata?.provider === 'google';
+  // Check if user signed up with Google - access the full user object from supabase
+  const userData = user?.user_metadata || {};
+  // For Google users, the metadata should contain provider information
+  const isGoogleUser = userData?.iss === 'https://accounts.google.com' || userData?.provider_id || userData?.full_name;
   const needsProfile = !profile?.role;
 
   console.log('GoogleUserNotification - Is Google user:', isGoogleUser);

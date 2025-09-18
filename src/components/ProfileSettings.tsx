@@ -42,14 +42,38 @@ const ProfileSettings = () => {
     setLoading(true);
 
     try {
+      // Get user data from user_metadata (Supabase stores Google data here)
+      const userData = user?.user_metadata || {};
+      
+      console.log('ProfileSettings - User metadata:', userData);
+      
+      // Extract name from Google data - could be in 'name', 'full_name', or separate fields
+      let firstName = userData.first_name || userData.given_name || '';
+      let lastName = userData.last_name || userData.family_name || '';
+      
+      // If we have full_name but not separate fields, try to split it
+      if (!firstName && !lastName && userData.full_name) {
+        const nameParts = userData.full_name.split(' ');
+        firstName = nameParts[0] || '';
+        lastName = nameParts.slice(1).join(' ') || '';
+      }
+      
+      // If still no name, use the name field
+      if (!firstName && userData.name) {
+        const nameParts = userData.name.split(' ');
+        firstName = nameParts[0] || '';
+        lastName = nameParts.slice(1).join(' ') || '';
+      }
+
       // First, ensure the user's profile record exists and update it with role
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({ 
           id: user.id,
-          first_name: user.user_metadata?.first_name || '',
-          last_name: user.user_metadata?.last_name || '',
-          birthday: user.user_metadata?.birthday || null,
+          email: user.email,
+          first_name: firstName || 'User',
+          last_name: lastName || '',
+          birthday: userData.birthday || '1990-01-01', // Default birthday
           role: formData.role as 'volunteer' | 'volunteer_searcher',
           age: null // Will be calculated if birthday exists
         }, { 
@@ -92,12 +116,15 @@ const ProfileSettings = () => {
     }
   };
 
-  // Don't show if user already has a role in profiles table OR in user_metadata
-  const hasRole = profile?.role || user?.user_metadata?.role;
-  
-  if (hasRole) {
+  // Don't show if user already has a role in profiles table
+  // Show for users without profiles (like Google users) or users with incomplete profiles
+  if (profile?.role) {
     return null;
   }
+
+  console.log('ProfileSettings - User:', user);
+  console.log('ProfileSettings - Profile:', profile);
+  console.log('ProfileSettings - User raw_user_meta_data:', user?.user_metadata);
 
   return (
     <Card className={`mt-4 ${isInternshipMode ? 'bg-gray-800/90 border-purple-500/30' : ''}`}>
