@@ -29,8 +29,11 @@ const GoogleUserNotification: React.FC<GoogleUserNotificationProps> = ({ onDismi
 
   // Check if user signed up with Google - access the full user object from supabase
   const userData = user?.user_metadata || {};
-  // For Google users, the metadata should contain provider information
-  const isGoogleUser = userData?.iss === 'https://accounts.google.com' || userData?.provider_id || userData?.full_name;
+  // For Google users, check multiple possible indicators
+  const isGoogleUser = userData?.iss === 'https://accounts.google.com' || 
+                       userData?.provider_id === 'google' || 
+                       userData?.sub?.startsWith('google-') ||
+                       (userData?.full_name && userData?.avatar_url && userData?.email_verified);
   const needsProfile = !profile?.role;
 
   console.log('GoogleUserNotification - Is Google user:', isGoogleUser);

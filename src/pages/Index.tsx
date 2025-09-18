@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import LocationSelector from "@/components/LocationSelector";
 import GoogleUserNotification from "@/components/GoogleUserNotification";
+import ProfileSettings from "@/components/ProfileSettings";
 import { NotificationBell } from "@/components/NotificationBell";
 import { isNewOpportunity, formatTimeAgo } from "@/utils/dateUtils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -199,6 +200,11 @@ const Index = () => {
           }} />
         </div>
       )}
+
+      {/* Profile Settings for users without complete profiles */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ProfileSettings />
+      </div>
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
