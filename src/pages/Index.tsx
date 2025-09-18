@@ -387,12 +387,12 @@ const Index = () => {
               <div className={`text-5xl font-bold mb-3 ${
                 isInternshipMode ? 'text-green-400' : 'text-green-600'
               }`}>
-                {isInternshipMode ? '50K+' : '10K+'}
+                {isInternshipMode ? '78%' : '92%'}
               </div>
               <div className={`font-medium ${
                 isInternshipMode ? 'text-gray-300' : 'text-gray-600'
               }`}>
-                {isInternshipMode ? 'Opportunities Available' : 'Hours Tracked'}
+                {isInternshipMode ? 'Career Advancement Rate' : 'User Satisfaction Rate'}
               </div>
               <div className={`w-12 h-1 mx-auto mt-4 rounded ${
                 isInternshipMode ? 'bg-green-400' : 'bg-green-600'
