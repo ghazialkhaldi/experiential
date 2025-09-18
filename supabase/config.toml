@@ -2,3 +2,13 @@ project_id = "cbylovabchsfrhmmndbn"
 
 [functions.cleanup-opportunities]
 verify_jwt = false
+
+[functions.send-verification-email]
+verify_jwt = false
+
+[auth]
+# Configure auth hooks
+hook_custom_access_token_uri = ""
+hook_mfa_verification_attempt_uri = ""
+hook_password_verification_attempt_uri = ""
+hook_send_email_uri = "https://cbylovabchsfrhmmndbn.supabase.co/functions/v1/send-verification-email"

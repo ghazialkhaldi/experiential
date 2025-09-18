@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
     )
 
     const { data: emailData, error } = await resend.emails.send({
-      from: 'Experiential <noreply@experiential.care>',
+      from: 'Experiential <onboarding@resend.dev>',
       to: [user.email],
       subject: 'Welcome to Experiential - Please verify your email',
       html,
