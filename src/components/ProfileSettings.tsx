@@ -10,10 +10,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useMode } from "@/contexts/ModeContext";
-import { User, Building } from "lucide-react";
+import { User, Building, Building2, AlertCircle } from "lucide-react";
 
 const ProfileSettings = () => {
   const [loading, setLoading] = useState(false);
+  const [showOrgSetup, setShowOrgSetup] = useState(false);
   const [formData, setFormData] = useState({
     role: '',
     organizationName: '',
@@ -37,7 +38,7 @@ const ProfileSettings = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleRoleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
@@ -84,13 +85,82 @@ const ProfileSettings = () => {
         throw profileError;
       }
 
-
       toast({
         title: "Profile Updated!",
         description: "Your profile has been updated successfully.",
       });
 
-      // Reset form
+      // If user selected volunteer_searcher, show organization setup
+      if (formData.role === 'volunteer_searcher') {
+        setShowOrgSetup(true);
+      } else {
+        // For volunteers, just refresh the page
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Profile update error:', error);
+      toast({
+        variant: "destructive",
+        title: "Update Error",
+        description: "There was an error updating your profile. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOrgSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Validate required fields
+      const requiredFields = [
+        { field: 'organizationName', label: 'Organization Name' },
+        { field: 'address', label: 'Address' },
+        { field: 'city', label: 'City' },
+        { field: 'state', label: 'State' },
+        { field: 'zipCode', label: 'ZIP Code' }
+      ];
+      
+      const missingFields = requiredFields.filter(
+        ({ field }) => !formData[field as keyof typeof formData]?.trim()
+      );
+
+      if (missingFields.length > 0) {
+        toast({
+          variant: "destructive",
+          title: "Missing Required Fields",
+          description: `Please fill in: ${missingFields.map(f => f.label).join(', ')}`,
+        });
+        return;
+      }
+
+      const orgPayload = {
+        user_id: user.id,
+        name: formData.organizationName,
+        category: formData.organizationCategory || null,
+        description: formData.organizationDescription || null,
+        address_line1: formData.address,
+        city: formData.city,
+        state: formData.state,
+        zip_code: formData.zipCode
+      };
+
+      const { error } = await supabase
+        .from('organizations')
+        .insert(orgPayload);
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Organization Setup Complete!",
+        description: "Your organization has been set up successfully.",
+      });
+
+      // Reset form and refresh page
       setFormData({
         role: '',
         organizationName: '',
@@ -101,15 +171,14 @@ const ProfileSettings = () => {
         state: '',
         zipCode: ''
       });
-
-      // Refresh the page to update the UI
+      setShowOrgSetup(false);
       window.location.reload();
     } catch (error) {
-      console.error('Profile update error:', error);
+      console.error('Organization setup error:', error);
       toast({
         variant: "destructive",
-        title: "Update Error",
-        description: "There was an error updating your profile. Please try again.",
+        title: "Setup Error",
+        description: "There was an error setting up your organization. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -126,6 +195,130 @@ const ProfileSettings = () => {
   console.log('ProfileSettings - Profile:', profile);
   console.log('ProfileSettings - User raw_user_meta_data:', user?.user_metadata);
 
+  // Show organization setup if user selected volunteer_searcher
+  if (showOrgSetup) {
+    return (
+      <Card className={`mt-4 ${isInternshipMode ? 'bg-gray-800/90 border-purple-500/30' : ''}`}>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Building2 className="h-5 w-5 text-orange-500" />
+            <CardTitle className={isInternshipMode ? 'text-purple-200' : ''}>Organization Information Required</CardTitle>
+          </div>
+          <CardDescription className={isInternshipMode ? 'text-purple-300' : ''}>
+            Please complete your organization profile to post opportunities.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleOrgSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="organizationName" className={isInternshipMode ? 'text-purple-200' : ''}>Organization Name *</Label>
+              <Input
+                id="organizationName"
+                value={formData.organizationName}
+                onChange={(e) => handleInputChange('organizationName', e.target.value)}
+                placeholder="Enter organization name"
+                className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="organizationCategory" className={isInternshipMode ? 'text-purple-200' : ''}>Organization Category</Label>
+              <Select 
+                value={formData.organizationCategory} 
+                onValueChange={(value) => handleInputChange('organizationCategory', value)}
+              >
+                <SelectTrigger className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}>
+                  <SelectValue placeholder="Select organization category" />
+                </SelectTrigger>
+                <SelectContent className={isInternshipMode ? 'bg-gray-700 border-gray-600' : ''}>
+                  <SelectItem value="education" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Education</SelectItem>
+                  <SelectItem value="environment" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Environment</SelectItem>
+                  <SelectItem value="animal_care" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Animal Care</SelectItem>
+                  <SelectItem value="community_service" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Community Service</SelectItem>
+                  <SelectItem value="healthcare" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Healthcare</SelectItem>
+                  <SelectItem value="other" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="organizationDescription" className={isInternshipMode ? 'text-purple-200' : ''}>Organization Description</Label>
+              <Input
+                id="organizationDescription"
+                value={formData.organizationDescription}
+                onChange={(e) => handleInputChange('organizationDescription', e.target.value)}
+                placeholder="Brief description of your organization"
+                className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="address" className={isInternshipMode ? 'text-purple-200' : ''}>Address *</Label>
+              <Input
+                id="address"
+                value={formData.address}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+                placeholder="Street address"
+                className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="city" className={isInternshipMode ? 'text-purple-200' : ''}>City *</Label>
+                <Input
+                  id="city"
+                  value={formData.city}
+                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  placeholder="City"
+                  className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="state" className={isInternshipMode ? 'text-purple-200' : ''}>State *</Label>
+                <Input
+                  id="state"
+                  value={formData.state}
+                  onChange={(e) => handleInputChange('state', e.target.value)}
+                  placeholder="State"
+                  className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="zipCode" className={isInternshipMode ? 'text-purple-200' : ''}>ZIP Code *</Label>
+              <Input
+                id="zipCode"
+                value={formData.zipCode}
+                onChange={(e) => handleInputChange('zipCode', e.target.value)}
+                placeholder="ZIP Code"
+                className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}
+                required
+              />
+            </div>
+
+            <Button 
+              type="submit" 
+              className={`w-full ${
+                isInternshipMode 
+                  ? 'bg-purple-600 hover:bg-purple-700' 
+                  : 'bg-blue-600 hover:bg-blue-700'
+              }`}
+              disabled={loading}
+            >
+              {loading ? 'Saving...' : 'Complete Setup'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className={`mt-4 ${isInternshipMode ? 'bg-gray-800/90 border-purple-500/30' : ''}`}>
       <CardHeader>
@@ -138,7 +331,7 @@ const ProfileSettings = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleRoleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="role" className={isInternshipMode ? 'text-purple-200' : ''}>I am a...</Label>
             <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
@@ -155,7 +348,6 @@ const ProfileSettings = () => {
               </SelectContent>
             </Select>
           </div>
-
 
           <Button 
             type="submit" 
