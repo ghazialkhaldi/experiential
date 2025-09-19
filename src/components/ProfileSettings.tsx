@@ -185,9 +185,20 @@ const ProfileSettings = () => {
     }
   };
 
-  // Don't show if user already has a role in profiles table
-  // Show for users without profiles (like Google users) or users with incomplete profiles
-  if (profile?.role) {
+  // Only show for authenticated users without a profile role
+  // And only for Google users (check for Google metadata)
+  if (!user || profile?.role) {
+    return null;
+  }
+
+  // Check if this is a Google user by looking for Google-specific metadata
+  const isGoogleUser = user?.app_metadata?.provider === 'google' || 
+                       user?.user_metadata?.iss === 'https://accounts.google.com' ||
+                       user?.user_metadata?.provider === 'google' ||
+                       user?.user_metadata?.sub?.startsWith('google-oauth2|');
+
+  // Only show for Google users
+  if (!isGoogleUser) {
     return null;
   }
 
