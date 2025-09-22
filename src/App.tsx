@@ -6,6 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ModeProvider } from '@/contexts/ModeContext';
+import { OpportunityRefreshProvider } from '@/contexts/OpportunityRefreshContext';
 import { Capacitor } from '@capacitor/core';
 
 // Import both regular and mobile app components
@@ -53,45 +54,47 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ModeProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            {isMobile ? <MobileApp /> : (
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/auth/callback" element={<AuthCallback />} />
-                <Route path="/billing" element={<Billing />} />
-                <Route path="/career-resources" element={<CareerResources />} />
-                <Route path="/complete-profile" element={<CompleteProfile />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/discover" element={<Discover />} />
-                <Route path="/explore" element={<Explore />} />
-                <Route path="/legal" element={<LegalDocuments />} />
-                <Route path="/manage-opportunities" element={<ManageOpportunities />} />
-                <Route path="/opportunity/:id" element={<OpportunityDetail />} />
-                <Route path="/organization-dashboard" element={<OrganizationDashboard />} />
-                <Route path="/portfolio" element={<Portfolio />} />
-                <Route path="/post-opportunity" element={<PostOpportunity />} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/pro" element={<ProFeatures />} />
-                <Route path="/resources" element={<Resources />} />
-                <Route path="/resume-builder" element={<ResumeBuilder />} />
-                <Route path="/search" element={<SearchResults />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/terms" element={<TermsAndConditions />} />
-                <Route path="/track-experience" element={<TrackExperience />} />
-                <Route path="/track-hours" element={<TrackHours />} />
-                <Route path="/university-checklist" element={<UniversityChecklist />} />
-                <Route path="/verify-email" element={<VerifyEmail />} />
-                <Route path="/notification-settings" element={<NotificationSettings />} />
-                <Route path="/my-applications" element={<MyApplications />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-              </Routes>
-            )}
-          </BrowserRouter>
-        </TooltipProvider>
+        <OpportunityRefreshProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              {isMobile ? <MobileApp /> : (
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/auth/callback" element={<AuthCallback />} />
+                  <Route path="/billing" element={<Billing />} />
+                  <Route path="/career-resources" element={<CareerResources />} />
+                  <Route path="/complete-profile" element={<CompleteProfile />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/discover" element={<Discover />} />
+                  <Route path="/explore" element={<Explore />} />
+                  <Route path="/legal" element={<LegalDocuments />} />
+                  <Route path="/manage-opportunities" element={<ManageOpportunities />} />
+                  <Route path="/opportunity/:id" element={<OpportunityDetail />} />
+                  <Route path="/organization-dashboard" element={<OrganizationDashboard />} />
+                  <Route path="/portfolio" element={<Portfolio />} />
+                  <Route path="/post-opportunity" element={<PostOpportunity />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/pro" element={<ProFeatures />} />
+                  <Route path="/resources" element={<Resources />} />
+                  <Route path="/resume-builder" element={<ResumeBuilder />} />
+                  <Route path="/search" element={<SearchResults />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/terms" element={<TermsAndConditions />} />
+                  <Route path="/track-experience" element={<TrackExperience />} />
+                  <Route path="/track-hours" element={<TrackHours />} />
+                  <Route path="/university-checklist" element={<UniversityChecklist />} />
+                  <Route path="/verify-email" element={<VerifyEmail />} />
+                  <Route path="/notification-settings" element={<NotificationSettings />} />
+                  <Route path="/my-applications" element={<MyApplications />} />
+                  <Route path="/admin" element={<AdminDashboard />} />
+                </Routes>
+              )}
+            </BrowserRouter>
+          </TooltipProvider>
+        </OpportunityRefreshProvider>
       </ModeProvider>
     </QueryClientProvider>
   );

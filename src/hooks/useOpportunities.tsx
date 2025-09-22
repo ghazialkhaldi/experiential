@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useMode } from '@/contexts/ModeContext';
+import { useOpportunityRefresh } from '@/contexts/OpportunityRefreshContext';
 
 interface Opportunity {
   id: string;
@@ -29,6 +30,7 @@ interface UserLocation {
 
 export const useOpportunities = (searchQuery: string = '', categoryFilter: string = '', userLocation?: UserLocation | null) => {
   const { isInternshipMode } = useMode();
+  const { refreshTrigger } = useOpportunityRefresh();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -133,7 +135,73 @@ export const useOpportunities = (searchQuery: string = '', categoryFilter: strin
     };
 
     fetchOpportunities();
+  }, [searchQuery, categoryFilter, memoizedUserLocation, calculateDistance, parseLocationCoordinates, isInternshipMode, refreshTrigger]);
+
+  const refetch = useCallback(() => {
+    setLoading(true);
+    const fetchOpportunities = async () => {
+      try {
+        let query = supabase
+          .from('opportunities')
+          .select(`
+            *,
+            organization:organizations (
+              name,
+              id
+            )
+          `)
+          .eq('is_active', true)
+          .eq('opportunity_type', isInternshipMode ? 'internship' : 'volunteer')
+          .order('posted_at', { ascending: false });
+
+        if (categoryFilter && categoryFilter !== 'all') {
+          query = query.eq('category', categoryFilter);
+        }
+
+        if (searchQuery.trim()) {
+          query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,location.ilike.%${searchQuery}%`);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+          throw error;
+        }
+
+        let processedOpportunities = data || [];
+
+        // Add distance calculation only if user location has valid coordinates
+        if (memoizedUserLocation && memoizedUserLocation.latitude !== 0 && memoizedUserLocation.longitude !== 0 && processedOpportunities.length > 0) {
+          const opportunitiesWithDistance = await Promise.all(
+            processedOpportunities.map(async (opportunity) => {
+              const coords = await parseLocationCoordinates(opportunity.location);
+              if (coords) {
+                const distance = calculateDistance(
+                  memoizedUserLocation.latitude,
+                  memoizedUserLocation.longitude,
+                  coords.lat,
+                  coords.lon
+                );
+                return { ...opportunity, distance };
+              }
+              return { ...opportunity, distance: undefined };
+            })
+          );
+          processedOpportunities = opportunitiesWithDistance;
+        }
+
+        setOpportunities(processedOpportunities);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching opportunities:', err);
+        setError('Failed to load opportunities');
+        setOpportunities([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOpportunities();
   }, [searchQuery, categoryFilter, memoizedUserLocation, calculateDistance, parseLocationCoordinates, isInternshipMode]);
 
-  return { opportunities, loading, error };
+  return { opportunities, loading, error, refetch };
 };

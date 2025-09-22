@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from './useAuth';
+import { useAuth } from '@/hooks/useAuth';
+import { useOpportunityRefresh } from '@/contexts/OpportunityRefreshContext';
 import { useSubscription } from './useSubscription';
 
 interface Application {
@@ -28,6 +29,7 @@ export const useApplications = (opportunityId?: string) => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const { subscribed } = useSubscription();
+  const { triggerRefresh } = useOpportunityRefresh();
 
   useEffect(() => {
     if (user) {
@@ -126,6 +128,8 @@ export const useApplications = (opportunityId?: string) => {
       }
 
       await fetchApplications();
+      // Trigger refresh of opportunities to update volunteer count
+      triggerRefresh();
     } catch (err) {
       console.error('Error updating application status:', err);
       throw err;
