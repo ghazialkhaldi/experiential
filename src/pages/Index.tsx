@@ -363,7 +363,8 @@ const Index = () => {
         isInternshipMode 
           ? 'bg-gradient-to-r from-gray-900 via-gray-800/50 to-gray-900' 
           : 'bg-gradient-to-r from-white via-blue-50/30 to-white'
-      }`}>
+      }`} role="region" aria-labelledby="stats-heading">
+        <h2 id="stats-heading" className="sr-only">Platform Statistics</h2>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className={`stat-card rounded-xl p-8 shadow-lg border ${
