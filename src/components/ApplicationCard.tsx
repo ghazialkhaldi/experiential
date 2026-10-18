@@ -1,202 +1,119 @@
-import { Clock, Mail, User, MessageSquare, FileText, Download, Eye } from 'lucide-react';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Check, ChevronDown, FileText, Mail, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useApplications, type Application, type ApplicationStatus } from '@/hooks/useApplications';
 import { useToast } from '@/hooks/use-toast';
-import { useApplications } from '@/hooks/useApplications';
-import ApplicationDetailDialog from './ApplicationDetailDialog';
-import { useState } from 'react';
+import { formatTimeAgo } from '@/lib/opportunities';
+import { StatusBadge } from '@/pages/MyApplications';
+import { cn } from '@/lib/utils';
 
-interface Application {
-  id: string;
-  opportunity_id: string;
-  user_id: string;
-  applicant_email: string;
-  applicant_name: string;
-  message: string | null;
-  resume_url: string | null;
-  status: string;
-  applied_at: string;
-  updated_at: string;
-  opportunity?: {
-    title: string;
-    organization: {
-      name: string;
-    };
-  };
-}
-
-interface ApplicationCardProps {
-  application: Application;
-  showOpportunityTitle?: boolean;
-}
-
-const ApplicationCard = ({ application, showOpportunityTitle = false }: ApplicationCardProps) => {
+/** One applicant, as an organization sees them. */
+const ApplicationCard = ({ application: a }: { application: Application }) => {
   const { updateApplicationStatus } = useApplications();
   const { toast } = useToast();
-  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const [pending, setPending] = useState<ApplicationStatus | null>(null);
+  const [expanded, setExpanded] = useState(false);
+  const messageRef = useRef<HTMLParagraphElement>(null);
+  const [overflows, setOverflows] = useState(false);
 
-  const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 24) {
-      return `${diffInHours} hours ago`;
-    } else {
-      const diffInDays = Math.floor(diffInHours / 24);
-      return `${diffInDays} days ago`;
-    }
-  };
+  // Offer "Read full note" only when the clamped note is actually cut off.
+  useLayoutEffect(() => {
+    const el = messageRef.current;
+    if (!el || expanded) return;
+    const check = () => setOverflows(el.scrollHeight > el.clientHeight + 1);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [a.message, expanded]);
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'accepted':
-        return 'bg-green-100 text-green-800';
-      case 'rejected':
-        return 'bg-red-100 text-red-800';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const handleStatusUpdate = async (newStatus: string) => {
+  const decide = async (status: ApplicationStatus) => {
+    setPending(status);
     try {
-      await updateApplicationStatus(application.id, newStatus);
+      await updateApplicationStatus(a.id, status);
       toast({
-        title: "Status Updated",
-        description: `Application has been ${newStatus.toLowerCase()}.`,
+        title: status === 'accepted' ? `Accepted ${a.applicant_name}` : `Declined ${a.applicant_name}`,
+        description: 'They’ll be notified in the app.',
       });
-    } catch (error) {
-      toast({
-        title: "Update Failed",
-        description: "Failed to update application status. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleResumeDownload = () => {
-    if (application.resume_url) {
-      const link = document.createElement('a');
-      link.href = application.resume_url;
-      link.download = `${application.applicant_name.replace(/\s+/g, '_')}_resume`;
-      link.click();
+    } catch {
+      toast({ title: 'Couldn’t update this application', description: 'Please try again.', variant: 'destructive' });
+    } finally {
+      setPending(null);
     }
   };
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <div>
-            {showOpportunityTitle && application.opportunity && (
-              <CardTitle className="text-lg mb-1">
-                {application.opportunity.title}
-              </CardTitle>
-            )}
-            <CardDescription className="flex items-center">
-              <User className="h-4 w-4 mr-2" />
-              {application.applicant_name}
-            </CardDescription>
+    <li className="py-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="font-semibold">{a.applicant_name}</h3>
+            {a.is_pro_user && <Badge variant="accent">Pro</Badge>}
+            <StatusBadge status={a.status} />
           </div>
-          <div className="flex flex-col items-end space-y-2">
-            <Badge className={getStatusColor(application.status)}>
-              {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
-            </Badge>
-            <span className="text-sm text-gray-500 flex items-center">
-              <Clock className="h-3 w-3 mr-1" />
-              {formatTimeAgo(application.applied_at)}
-            </span>
-          </div>
-        </div>
-      </CardHeader>
-      
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex items-center text-gray-600">
-            <Mail className="h-4 w-4 mr-2" />
-            <a href={`mailto:${application.applicant_email}`} className="text-blue-600 hover:underline">
-              {application.applicant_email}
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {a.opportunity ? (
+              <Link to={`/opportunity/${a.opportunity.id}`} className="hover:text-foreground hover:underline">
+                {a.opportunity.title}
+              </Link>
+            ) : (
+              'Removed opportunity'
+            )}{' '}
+            · applied {formatTimeAgo(a.applied_at)}
+          </p>
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            <a href={`mailto:${a.applicant_email}`} className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline">
+              <Mail className="h-3.5 w-3.5" />
+              {a.applicant_email}
             </a>
-          </div>
-          
-          {application.message && (
-            <div>
-              <div className="flex items-center text-gray-600 mb-2">
-                <MessageSquare className="h-4 w-4 mr-2" />
-                <span className="font-medium">Message:</span>
-              </div>
-              <p className="text-gray-700 bg-gray-50 p-3 rounded-lg text-sm">
-                {application.message}
-              </p>
-            </div>
-          )}
-
-          {application.resume_url && (
-            <div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center text-gray-600">
-                  <FileText className="h-4 w-4 mr-2" />
-                  <span className="font-medium">Resume:</span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleResumeDownload}
-                  className="flex items-center space-x-1"
-                >
-                  <Download className="h-3 w-3" />
-                  <span>Download</span>
-                </Button>
-              </div>
-            </div>
-          )}
-          
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setDetailDialogOpen(true)}
-                className="flex items-center space-x-1"
+            {a.resume_url && (
+              <a
+                href={a.resume_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
               >
-                <Eye className="h-3 w-3" />
-                <span>View Details</span>
-              </Button>
-            </div>
-            
-            {application.status === 'pending' && (
-              <div className="flex space-x-2">
-                <Button 
-                  size="sm" 
-                  className="bg-green-600 hover:bg-green-700"
-                  onClick={() => handleStatusUpdate('accepted')}
-                >
-                  Accept
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => handleStatusUpdate('rejected')}
-                  className="border-red-200 text-red-600 hover:bg-red-50"
-                >
-                  Reject
-                </Button>
-              </div>
+                <FileText className="h-3.5 w-3.5" />
+                Resume
+              </a>
             )}
           </div>
         </div>
-      </CardContent>
-      
-      <ApplicationDetailDialog
-        application={application}
-        open={detailDialogOpen}
-        onOpenChange={setDetailDialogOpen}
-      />
-    </Card>
+
+        {a.status === 'pending' && (
+          <div className="flex shrink-0 gap-2">
+            <Button size="sm" variant="outline" onClick={() => decide('rejected')} disabled={!!pending}>
+              <X />
+              {pending === 'rejected' ? 'Declining…' : 'Decline'}
+            </Button>
+            <Button size="sm" onClick={() => decide('accepted')} disabled={!!pending}>
+              <Check />
+              {pending === 'accepted' ? 'Accepting…' : 'Accept'}
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {a.message && (
+        <div className="mt-3 max-w-[68ch] rounded-md bg-muted/60 px-4 py-3">
+          <p ref={messageRef} className={cn('whitespace-pre-line text-sm leading-6', !expanded && 'line-clamp-3')}>
+            {a.message}
+          </p>
+          {(overflows || expanded) && (
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-primary"
+              aria-expanded={expanded}
+            >
+              {expanded ? 'Show less' : 'Read full note'}
+              <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', expanded && 'rotate-180')} />
+            </button>
+          )}
+        </div>
+      )}
+    </li>
   );
 };
 

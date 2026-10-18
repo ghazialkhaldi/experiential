@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Phone, MessageSquare, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface FeedbackForm {
@@ -40,8 +40,6 @@ export const FeedbackDialog = ({ children }: FeedbackDialogProps) => {
         rating: rating || undefined
       };
 
-      console.log('Submitting feedback:', feedbackData);
-      
       const { error } = await supabase.functions.invoke('send-feedback', {
         body: feedbackData
       });
@@ -51,8 +49,8 @@ export const FeedbackDialog = ({ children }: FeedbackDialogProps) => {
       }
       
       toast({
-        title: "Feedback Sent!",
-        description: "Thank you for your feedback. We'll review it and get back to you if needed.",
+        title: "Thanks for the feedback",
+        description: "We'll follow up by email if we need more detail.",
       });
       
       reset();
@@ -61,8 +59,8 @@ export const FeedbackDialog = ({ children }: FeedbackDialogProps) => {
     } catch (error) {
       console.error('Error submitting feedback:', error);
       toast({
-        title: "Error",
-        description: "There was an error sending your feedback. Please try again.",
+        title: "Your feedback didn't send",
+        description: "Please try again in a moment.",
         variant: "destructive",
       });
     } finally {
@@ -76,8 +74,10 @@ export const FeedbackDialog = ({ children }: FeedbackDialogProps) => {
         key={index}
         type="button"
         onClick={() => setRating(index + 1)}
+        aria-label={`${index + 1} star${index ? 's' : ''}`}
+        aria-pressed={index < rating}
         className={`text-2xl transition-colors ${
-          index < rating ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-400'
+          index < rating ? 'text-warning' : 'text-border hover:text-warning'
         }`}
       >
         <Star className={`h-6 w-6 ${index < rating ? 'fill-current' : ''}`} />
@@ -92,12 +92,9 @@ export const FeedbackDialog = ({ children }: FeedbackDialogProps) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
-            Give Feedback
-          </DialogTitle>
+          <DialogTitle>Send feedback</DialogTitle>
           <DialogDescription>
-            Help us improve Experiential with your feedback and suggestions.
+            Found a bug or have an idea? We read every message.
           </DialogDescription>
         </DialogHeader>
         
@@ -195,7 +192,7 @@ export const FeedbackDialog = ({ children }: FeedbackDialogProps) => {
           <div className="flex gap-3 pt-4">
             <Button 
               type="submit" 
-              className="flex-1 btn-rainbow"
+              className="flex-1"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Sending...' : 'Send Feedback'}

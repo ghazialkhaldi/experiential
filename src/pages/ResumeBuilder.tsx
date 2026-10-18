@@ -1,11 +1,9 @@
-import { ArrowLeft, Download, Upload, FileText, User, GraduationCap, Briefcase, Award, Plus, Save, Eye, Trash2, Edit3, Star, Target } from "lucide-react";
+import { ArrowLeft, Download, Upload, FileText, GraduationCap, Briefcase, Award, Plus, Save, Eye, Trash2, Edit3, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
-import AuthButton from "@/components/AuthButton";
-import ExperientialLogo from "@/components/ExperientialLogo";
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -14,15 +12,19 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import jsPDF from 'jspdf';
-import { useMode } from "@/contexts/ModeContext";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useResumes, ResumeSection, SavedResume } from '@/hooks/useResumes';
-import Footer from '@/components/Footer';
-import { toast } from "sonner";
+import { PageShell } from '@/components/layout/PageShell';
+import { toast as notify } from '@/hooks/use-toast';
+
+// Adapter so existing toast.success / toast.error calls use the app toaster.
+const toast = {
+  success: (title: string) => notify({ title }),
+  error: (title: string) => notify({ title, variant: 'destructive' }),
+};
 
 const ResumeBuilder = () => {
-  const { isInternshipMode } = useMode();
   const { user } = useAuth();
   const { resumes: savedResumes, saveResume: saveResumeToDb, deleteResume: deleteResumeFromDb, getResume, loading } = useResumes();
   const [currentResumeId, setCurrentResumeId] = useState<string | null>(null);
@@ -207,7 +209,7 @@ const ResumeBuilder = () => {
     try {
       const savedResume = await saveResumeToDb(resumeName, resumeSections, currentResumeId || undefined);
       setCurrentResumeId(savedResume.id);
-      toast.success("Resume saved successfully!");
+      toast.success("Resume saved");
     } catch (error) {
       console.error('Error saving resume:', error);
       toast.error("Failed to save resume");
@@ -267,7 +269,7 @@ const ResumeBuilder = () => {
           }
         ]);
       }
-      toast.success("Resume deleted successfully!");
+      toast.success("Resume deleted");
     } catch (error) {
       console.error('Error deleting resume:', error);
       toast.error("Failed to delete resume");
@@ -539,7 +541,6 @@ const ResumeBuilder = () => {
     const timestamp = Date.now();
     const filePath = `${user.id}/resume_${timestamp}.pdf`;
     
-    console.log('Saving resume to storage:', filePath);
     
     const { data, error } = await supabase.storage
       .from('resumes')
@@ -550,7 +551,6 @@ const ResumeBuilder = () => {
       throw error;
     }
     
-    console.log('Resume saved successfully:', data);
     return data;
   };
 
@@ -774,7 +774,6 @@ const ResumeBuilder = () => {
     try {
       if (user) {
         await saveResumeToStorage();
-        console.log('Resume saved to storage successfully');
       }
     } catch (error) {
       console.error('Error saving resume to storage:', error);
@@ -790,38 +789,27 @@ const ResumeBuilder = () => {
 
   if (previewMode) {
     return (
-      <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-white'}`}>
-        {/* Navigation */}
-        <nav className={`${isInternshipMode ? 'bg-gray-800/80' : 'bg-blue-50/80'} backdrop-blur-md shadow-sm border-b ${isInternshipMode ? 'border-gray-700' : 'border-blue-200'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-                <ExperientialLogo className="h-16 w-auto" />
-              </Link>
-              <div className="flex items-center space-x-4">
-                <Button onClick={() => setPreviewMode(false)} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Editor
-                </Button>
-                <Button onClick={downloadResume} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-                  <Download className="h-4 w-4 mr-2" />
-                  Download PDF
-                </Button>
-              </div>
-            </div>
-          </div>
-        </nav>
-
+      <PageShell width="narrow">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <Button variant="ghost" onClick={() => setPreviewMode(false)}>
+            <ArrowLeft />
+            Back to editor
+          </Button>
+          <Button onClick={downloadResume}>
+            <Download />
+            Download PDF
+          </Button>
+        </div>
         {/* Resume Preview */}
-        <div className="py-8 px-4">
-          <div className={`max-w-4xl mx-auto ${isInternshipMode ? 'bg-white' : 'bg-white'} rounded-lg shadow-2xl p-8 text-gray-900`}>
+        <div>
+          <div className="mx-auto max-w-[8.5in] rounded-sm border border-border bg-white p-8 text-neutral-900 shadow-lift sm:p-12">
             {/* Header */}
             <div className="text-center mb-8 pb-6 border-b-2 border-gray-200">
               <h1 className="text-4xl font-bold text-gray-900 mb-2">{personalInfo.fullName || 'Your Name'}</h1>
               <div className="text-gray-600 space-y-1">
-                <p>{personalInfo.email || 'your.email@example.com'}</p>
-                <p>{personalInfo.phone || '(555) 123-4567'}</p>
-                <p>{personalInfo.address || 'Your Address'}</p>
+                <p>{personalInfo.email}</p>
+                <p>{personalInfo.phone}</p>
+                <p>{personalInfo.address}</p>
               </div>
               {personalStatement.statement && (
                 <div className="mt-4 p-4 bg-gray-50 rounded">
@@ -833,13 +821,13 @@ const ResumeBuilder = () => {
             {/* Education */}
             {education.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <GraduationCap className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-purple-600' : 'text-blue-600'}`} />
+                <h2 className="font-sans text-sm font-bold uppercase tracking-[0.12em] text-neutral-900 mb-3 flex items-center border-b border-neutral-200 pb-1">
+                  <GraduationCap className={`hidden text-neutral-500`} />
                   Education
                 </h2>
                 <div className="space-y-3">
                   {education.map((edu: any) => (
-                    <div key={edu.id} className={`border-l-4 ${isInternshipMode ? 'border-purple-600' : 'border-blue-600'} pl-4`}>
+                    <div key={edu.id} className={`border-l-4 border-neutral-300 pl-4`}>
                       <h3 className="font-semibold text-lg">{edu.degree} in {edu.field}</h3>
                       <p className="text-gray-700">{edu.institution}</p>
                       <p className="text-gray-600">Class of {edu.graduationYear} {edu.gpa && `• GPA: ${edu.gpa}`}</p>
@@ -852,13 +840,13 @@ const ResumeBuilder = () => {
             {/* Experience */}
             {experience.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <Briefcase className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-purple-600' : 'text-blue-600'}`} />
-                  Work Experience
+                <h2 className="font-sans text-sm font-bold uppercase tracking-[0.12em] text-neutral-900 mb-3 flex items-center border-b border-neutral-200 pb-1">
+                  <Briefcase className={`hidden text-neutral-500`} />
+                  Experience
                 </h2>
                 <div className="space-y-4">
                   {experience.map((exp: any) => (
-                    <div key={exp.id} className={`border-l-4 ${isInternshipMode ? 'border-purple-600' : 'border-blue-600'} pl-4`}>
+                    <div key={exp.id} className={`border-l-4 border-neutral-300 pl-4`}>
                       <h3 className="font-semibold text-lg">{exp.position}</h3>
                       <p className="text-gray-700 font-medium">{exp.company}</p>
                       <p className="text-gray-600 mb-2">{exp.startDate} - {exp.endDate}</p>
@@ -872,9 +860,9 @@ const ResumeBuilder = () => {
             {/* Skills */}
             {skills.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <Star className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-purple-600' : 'text-blue-600'}`} />
-                  Skills & Strengths
+                <h2 className="font-sans text-sm font-bold uppercase tracking-[0.12em] text-neutral-900 mb-3 flex items-center border-b border-neutral-200 pb-1">
+                  <Star className={`hidden text-neutral-500`} />
+                  Skills
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {skills.map((skill: any) => (
@@ -890,13 +878,13 @@ const ResumeBuilder = () => {
             {/* Achievements */}
             {achievements.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <Award className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-purple-600' : 'text-blue-600'}`} />
-                  Achievements & Awards
+                <h2 className="font-sans text-sm font-bold uppercase tracking-[0.12em] text-neutral-900 mb-3 flex items-center border-b border-neutral-200 pb-1">
+                  <Award className={`hidden text-neutral-500`} />
+                  Awards and achievements
                 </h2>
                 <div className="space-y-3">
                   {achievements.map((achievement: any) => (
-                    <div key={achievement.id} className={`border-l-4 ${isInternshipMode ? 'border-purple-600' : 'border-blue-600'} pl-4`}>
+                    <div key={achievement.id} className={`border-l-4 border-neutral-300 pl-4`}>
                       <h3 className="font-semibold">{achievement.title}</h3>
                       <p className="text-gray-700">{achievement.description}</p>
                       <p className="text-gray-600 text-sm">{achievement.date}</p>
@@ -907,106 +895,68 @@ const ResumeBuilder = () => {
             )}
           </div>
         </div>
-      </div>
+      </PageShell>
     );
   }
 
   return (
-    <div className={`min-h-screen ${isInternshipMode ? 'bg-gray-900' : 'bg-white'}`}>
-      {/* Navigation */}
-        <nav className={`${isInternshipMode ? 'bg-gray-800/80' : 'bg-blue-50/80'} backdrop-blur-md shadow-sm border-b ${isInternshipMode ? 'border-gray-700' : 'border-blue-200'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link to="/" className="flex items-center space-x-2 transition-colors hover:opacity-80">
-                <ExperientialLogo className="h-16 w-auto" />
-              </Link>
-              <div className="flex items-center space-x-6">
-                <Link to="/" className={`${isInternshipMode ? 'text-gray-300 hover:text-purple-400' : 'text-gray-600 hover:text-blue-600'} font-medium`}>
-                  {isInternshipMode ? 'Internships' : 'Volunteer'}
-                </Link>
-                <AuthButton />
-                <Button className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-                  {isInternshipMode ? 'Post Internship' : 'Post Opportunity'}
-                </Button>
-            </div>
-          </div>
+    <PageShell width="narrow">
+      <div className="mb-8 flex flex-col gap-5">
+        <div>
+          <h1 className="text-3xl font-semibold leading-tight md:text-[2.125rem]">Resume builder</h1>
+          <p className="mt-2 text-muted-foreground">Fill in the sections, preview, and download a clean one-page PDF.</p>
         </div>
-      </nav>
-
-      {/* Back Button */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <Link to="/">
-          <Button variant="ghost" className={`mb-4 ${isInternshipMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-600 hover:text-gray-900 hover:bg-blue-50'}`}>
-            <ArrowLeft className={`h-4 w-4 mr-2 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
-            {isInternshipMode ? 'Back to Internships' : 'Back to Volunteer'}
-          </Button>
-        </Link>
-      </div>
-
-      {/* Header */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className={`absolute inset-0 ${isInternshipMode ? 'bg-gradient-to-b from-purple-500/20 via-purple-600/10 to-gray-900' : 'bg-gradient-to-b from-blue-500/20 via-blue-600/10 to-white'}`}></div>
-        
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="fade-in">
-            <h1 className={`text-6xl font-bold ${isInternshipMode ? 'text-white' : 'text-gray-900'} mb-6 leading-tight`}>
-              Professional Resume
-              <span className={`${isInternshipMode ? 'text-gradient-purple-rainbow' : 'text-gradient-blue'} block`}>Builder</span>
-            </h1>
-          </div>
-          <div className="fade-in-delayed">
-            <p className={`text-xl ${isInternshipMode ? 'text-gray-300' : 'text-gray-600'} mb-10 max-w-2xl mx-auto leading-relaxed`}>
-              Create a professional resume that stands out to employers and gets you interviews.
-            </p>
-          </div>
-          
-          <div className="flex justify-center space-x-4 fade-in-delayed-2 mb-6">
-            <Input
-              placeholder="Resume Name"
-              value={resumeName}
-              onChange={(e) => setResumeName(e.target.value)}
-              className={`${isInternshipMode ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'} max-w-xs`}
-            />
-            <Button onClick={() => setShowResumeManager(true)} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-              <FileText className="h-4 w-4 mr-2" />
-              Manage Resumes
+        <div className="sticky top-16 z-20 -mx-4 flex flex-wrap items-center gap-2 border-y border-border bg-background/95 px-4 py-3 backdrop-blur sm:mx-0 sm:rounded-lg sm:border sm:bg-card sm:shadow-card">
+          <Label htmlFor="resume-name" className="sr-only">Resume name</Label>
+          <Input
+            id="resume-name"
+            value={resumeName}
+            onChange={(e) => setResumeName(e.target.value)}
+            className="h-9 w-full font-medium sm:w-56"
+          />
+          <div className="flex flex-1 flex-wrap justify-end gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setShowResumeManager(true)}>
+              <FileText />
+              My resumes
             </Button>
-          </div>
-          
-          <div className="flex justify-center space-x-4 fade-in-delayed-2">
-            <Button onClick={saveResume} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-              <Save className="h-4 w-4 mr-2" />
-              Save Resume
-            </Button>
-            <Button onClick={() => setPreviewMode(true)} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-              <Eye className="h-4 w-4 mr-2" />
+            <Button variant="outline" size="sm" onClick={() => setPreviewMode(true)}>
+              <Eye />
               Preview
             </Button>
-            <Button onClick={downloadResume} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
-              <Download className="h-4 w-4 mr-2" />
-              Download PDF
+            <Button variant="outline" size="sm" onClick={downloadResume}>
+              <Download />
+              PDF
+            </Button>
+            <Button size="sm" onClick={saveResume}>
+              <Save />
+              Save
             </Button>
           </div>
         </div>
-      </section>
+        {!user && (
+          <p className="text-sm text-muted-foreground">
+            You can build and download without an account.{' '}
+            <Link to="/auth?next=/resume-builder" className="font-semibold text-primary hover:underline">Sign in</Link> to save your work and attach it to applications.
+          </p>
+        )}
+      </div>
 
       {/* Resume Manager Dialog */}
       <Dialog open={showResumeManager} onOpenChange={setShowResumeManager}>
-        <DialogContent className={`${isInternshipMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-blue-200 text-gray-900'} max-w-4xl`}>
+        <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-              <FileText className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
+            <DialogTitle className={`text-foreground flex items-center`}>
               Resume Manager
             </DialogTitle>
-            <DialogDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
+            <DialogDescription className="text-muted-foreground">
               Manage your saved resumes and create new ones
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className={`text-lg font-semibold ${isInternshipMode ? 'text-white' : 'text-gray-900'}`}>Saved Resumes</h3>
-              <Button onClick={createNewResume} className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
+              <h3 className={`text-lg font-semibold text-foreground`}>Saved Resumes</h3>
+              <Button onClick={createNewResume} >
                 <Plus className="h-4 w-4 mr-2" />
                 New Resume
               </Button>
@@ -1015,21 +965,21 @@ const ResumeBuilder = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
               {savedResumes.length === 0 ? (
                 <div className="col-span-2 text-center py-8">
-                  <FileText className={`h-12 w-12 ${isInternshipMode ? 'text-gray-400' : 'text-gray-400'} mx-auto mb-4`} />
-                  <p className={isInternshipMode ? "text-gray-400" : "text-gray-500"}>No saved resumes yet</p>
-                  <p className={`${isInternshipMode ? 'text-gray-500' : 'text-gray-400'} text-sm`}>Create your first resume to get started</p>
+                  <FileText className={`h-12 w-12 text-muted-foreground mx-auto mb-4`} />
+                  <p className="text-muted-foreground">No saved resumes yet</p>
+                  <p className={`text-muted-foreground text-sm`}>Create your first resume to get started</p>
                 </div>
               ) : (
                 savedResumes.map((resume) => (
-                  <Card key={resume.id} className={`${isInternshipMode ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-700/70' : 'bg-blue-50/50 border-blue-200 hover:bg-blue-50/70'} transition-colors`}>
+                  <Card key={resume.id} className="shadow-none transition-colors hover:border-primary/40">
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
-                        <CardTitle className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} text-lg`}>{resume.name}</CardTitle>
+                        <CardTitle className={`text-foreground text-lg`}>{resume.name}</CardTitle>
                         {currentResumeId === resume.id && (
-                          <Badge variant="secondary" className={`${isInternshipMode ? 'bg-purple-600 text-white' : 'bg-blue-600 text-white'}`}>Current</Badge>
+                          <Badge variant="accent">Current</Badge>
                         )}
                       </div>
-                       <CardDescription className={`${isInternshipMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
+                       <CardDescription className={`text-muted-foreground text-sm`}>
                         Last modified: {new Date(resume.updated_at).toLocaleDateString()}
                        </CardDescription>
                     </CardHeader>
@@ -1038,29 +988,29 @@ const ResumeBuilder = () => {
                         <Button
                           onClick={() => loadResume(resume)}
                           size="sm"
-                          className={`${isInternshipMode ? 'btn-purple-rainbow' : 'btn-rainbow'} flex-1`}
+                          className="flex-1"
                         >
                           <Edit3 className="h-4 w-4 mr-1" />
                           Load
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="outline" size="sm" className="border-red-500 text-red-400 hover:bg-red-500/20">
+                            <Button variant="outline" size="sm" className="text-muted-foreground hover:border-destructive/40 hover:text-destructive">
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </AlertDialogTrigger>
-                          <AlertDialogContent className={`${isInternshipMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-blue-200'}`}>
+                          <AlertDialogContent >
                             <AlertDialogHeader>
-                              <AlertDialogTitle className={isInternshipMode ? "text-white" : "text-gray-900"}>Delete Resume</AlertDialogTitle>
-                              <AlertDialogDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
+                              <AlertDialogTitle className="text-foreground">Delete Resume</AlertDialogTitle>
+                              <AlertDialogDescription className="text-muted-foreground">
                                 Are you sure you want to delete "{resume.name}"? This action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel className={`${isInternshipMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-blue-200'}`}>Cancel</AlertDialogCancel>
+                              <AlertDialogCancel >Cancel</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => deleteResume(resume.id)}
-                                className="bg-red-600 hover:bg-red-700 text-white"
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
                                 Delete
                               </AlertDialogAction>
@@ -1078,40 +1028,39 @@ const ResumeBuilder = () => {
       </Dialog>
 
       {/* Resume Builder Form */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <section>
+        <div className="space-y-6">
           
           {/* Personal Information */}
-          <Card className={`${isInternshipMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white border-blue-200'}`}>
+          <Card >
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <CardTitle className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-                    <User className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-purple-400' : 'text-blue-600'}`} />
-                    Personal Information
+                  <CardTitle className={`text-foreground flex items-center`}>
+                    Contact details
                   </CardTitle>
-                  <CardDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
-                    Basic contact information
+                  <CardDescription className="text-muted-foreground">
+                    How schools and organizations can reach you.
                   </CardDescription>
                 </div>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="border-red-500 text-red-400 hover:bg-red-500/20">
+                    <Button variant="outline" size="sm" className="text-muted-foreground hover:border-destructive/40 hover:text-destructive">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent className={`${isInternshipMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-blue-200'}`}>
+                  <AlertDialogContent >
                     <AlertDialogHeader>
-                      <AlertDialogTitle className={isInternshipMode ? "text-white" : "text-gray-900"}>Delete Section</AlertDialogTitle>
-                      <AlertDialogDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
+                      <AlertDialogTitle className="text-foreground">Delete Section</AlertDialogTitle>
+                      <AlertDialogDescription className="text-muted-foreground">
                         Are you sure you want to delete this section? This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel className={`${isInternshipMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-blue-200'}`}>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel >Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => deleteSection('1')}
-                        className="bg-red-600 hover:bg-red-700 text-white"
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
                         Delete
                       </AlertDialogAction>
@@ -1123,78 +1072,77 @@ const ResumeBuilder = () => {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
-                  placeholder="Full Name"
+                  placeholder="Full name"
                   value={personalInfo.fullName}
                   onChange={(e) => updatePersonalInfo('fullName', e.target.value)}
-                  className={`${isInternshipMode ? 'bg-card border-border text-card-foreground placeholder:text-muted-foreground' : 'bg-background border-border text-foreground placeholder:text-muted-foreground'}`}
+                  className={`bg-background border-border text-foreground placeholder:text-muted-foreground`}
                 />
                 <Input
-                  placeholder="Email Address"
+                  placeholder="Email"
                   type="email"
                   value={personalInfo.email}
                   onChange={(e) => updatePersonalInfo('email', e.target.value)}
-                  className={`${isInternshipMode ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                  className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                 />
                 <Input
-                  placeholder="Phone Number"
+                  placeholder="Phone"
                   value={personalInfo.phone}
                   onChange={(e) => updatePersonalInfo('phone', e.target.value)}
-                  className={`${isInternshipMode ? 'bg-card border-border text-card-foreground placeholder:text-muted-foreground' : 'bg-background border-border text-foreground placeholder:text-muted-foreground'}`}
+                  className={`bg-background border-border text-foreground placeholder:text-muted-foreground`}
                 />
                 <Input
-                  placeholder="Address"
+                  placeholder="City, province or state"
                   value={personalInfo.address}
                   onChange={(e) => updatePersonalInfo('address', e.target.value)}
-                  className={`${isInternshipMode ? 'bg-card border-border text-card-foreground placeholder:text-muted-foreground' : 'bg-background border-border text-foreground placeholder:text-muted-foreground'}`}
+                  className={`bg-background border-border text-foreground placeholder:text-muted-foreground`}
                 />
               </div>
               <Textarea
-                placeholder="Professional Objective (Optional)"
+                placeholder="Objective (optional)"
                 value={personalInfo.objective}
                 onChange={(e) => updatePersonalInfo('objective', e.target.value)}
-                className={`${isInternshipMode ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                 rows={3}
               />
             </CardContent>
           </Card>
 
           {/* Education */}
-          <Card className={`${isInternshipMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white border-blue-200'}`}>
+          <Card >
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <CardTitle className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-                    <GraduationCap className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                  <CardTitle className={`text-foreground flex items-center`}>
                     Education
                   </CardTitle>
-                  <CardDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
-                    Academic background and qualifications
+                  <CardDescription className="text-muted-foreground">
+                    Your high school, and college if you’ve started.
                   </CardDescription>
                 </div>
-                <div className="flex space-x-2">
-                  <Button onClick={() => addEducationEntry('university')} size="sm" className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={() => addEducationEntry('university')} size="sm" variant="outline">
                     <Plus className="h-4 w-4 mr-1" />
-                    Add University
+                    Add college
                   </Button>
-                  <Button onClick={() => addEducationEntry('highschool')} size="sm" variant="outline" className={`${isInternshipMode ? 'border-purple-400 text-purple-400 hover:bg-purple-400/20' : 'border-blue-400 text-blue-400 hover:bg-blue-400/20'}`}>
+                  <Button onClick={() => addEducationEntry('highschool')} size="sm" variant="outline" >
                     <Plus className="h-4 w-4 mr-1" />
-                    Add High School
+                    Add high school
                   </Button>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {education.map((edu: any, index: number) => (
-                <div key={edu.id} className={`p-4 ${isInternshipMode ? 'bg-gray-700/50' : 'bg-blue-50/50'} rounded-lg space-y-3`}>
+                <div key={edu.id} className={`p-4 bg-muted/50 rounded-lg space-y-3`}>
                   <div className="flex justify-between items-center mb-3">
-                    <Badge variant="secondary" className={edu.type === 'university' ? (isInternshipMode ? 'bg-blue-600' : 'bg-blue-600') : (isInternshipMode ? 'bg-green-600' : 'bg-green-600')}>
+                    <Badge variant={edu.type === 'university' ? 'accent' : 'muted'}>
                       {edu.type === 'university' ? 'University' : 'High School'}
                     </Badge>
                     <Button
                       onClick={() => deleteEducationEntry(edu.id)}
                       size="sm"
                       variant="outline"
-                      className="border-red-500 text-red-400 hover:bg-red-500/20"
+                      className="text-muted-foreground hover:border-destructive/40 hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -1210,7 +1158,7 @@ const ResumeBuilder = () => {
                           section.type === 'education' ? { ...section, data: newEducation } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                     <Input
                       placeholder={edu.type === 'university' ? 'Degree' : 'High School Diploma'}
@@ -1222,7 +1170,7 @@ const ResumeBuilder = () => {
                           section.type === 'education' ? { ...section, data: newEducation } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                     <Input
                       placeholder={edu.type === 'university' ? 'Field of Study' : 'Concentration/Track (Optional)'}
@@ -1234,10 +1182,10 @@ const ResumeBuilder = () => {
                           section.type === 'education' ? { ...section, data: newEducation } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                     <Input
-                      placeholder="Graduation Year"
+                      placeholder="Graduation year"
                       value={edu.graduationYear}
                       onChange={(e) => {
                         const newEducation = [...education];
@@ -1246,11 +1194,11 @@ const ResumeBuilder = () => {
                           section.type === 'education' ? { ...section, data: newEducation } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                   </div>
                   <Input
-                    placeholder="GPA (Optional)"
+                    placeholder="GPA (optional)"
                     value={edu.gpa}
                     onChange={(e) => {
                       const newEducation = [...education];
@@ -1259,53 +1207,52 @@ const ResumeBuilder = () => {
                         section.type === 'education' ? { ...section, data: newEducation } : section
                       ));
                     }}
-                    className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                    className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                   />
                 </div>
               ))}
               {education.length === 0 && (
-                <p className={`${isInternshipMode ? 'text-gray-400' : 'text-gray-500'} text-center py-4`}>No education entries added yet</p>
+                <p className={`text-muted-foreground text-center py-4`}>No schools added yet.</p>
               )}
             </CardContent>
           </Card>
 
           {/* Work Experience */}
 
-          <Card className={`${isInternshipMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white border-blue-200'}`}>
+          <Card >
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <CardTitle className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-                    <Briefcase className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                    Work Experience
+                  <CardTitle className={`text-foreground flex items-center`}>
+                    Experience
                   </CardTitle>
-                  <CardDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
-                    Previous work experience and internships
+                  <CardDescription className="text-muted-foreground">
+                    Jobs, volunteer roles, and leadership positions.
                   </CardDescription>
                 </div>
-                <Button onClick={addExperienceEntry} size="sm" className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
+                <Button onClick={addExperienceEntry} size="sm" variant="outline">
                   <Plus className="h-4 w-4 mr-1" />
-                  Add Experience
+                  Add experience
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {experience.map((exp: any, index: number) => (
-                <div key={exp.id} className={`p-4 ${isInternshipMode ? 'bg-gray-700/50' : 'bg-blue-50/50'} rounded-lg space-y-3`}>
+                <div key={exp.id} className={`p-4 bg-muted/50 rounded-lg space-y-3`}>
                   <div className="flex justify-between items-center mb-3">
-                    <h4 className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} font-medium`}>Experience #{index + 1}</h4>
+                    <h4 className={`text-foreground font-medium`}>Experience #{index + 1}</h4>
                     <Button
                       onClick={() => deleteExperienceEntry(exp.id)}
                       size="sm"
                       variant="outline"
-                      className="border-red-500 text-red-400 hover:bg-red-500/20"
+                      className="text-muted-foreground hover:border-destructive/40 hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Input
-                      placeholder="Company Name"
+                      placeholder="Organization"
                       value={exp.company}
                       onChange={(e) => {
                         const newExperience = [...experience];
@@ -1314,10 +1261,10 @@ const ResumeBuilder = () => {
                           section.type === 'experience' ? { ...section, data: newExperience } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                     <Input
-                      placeholder="Position/Role"
+                      placeholder="Role"
                       value={exp.position}
                       onChange={(e) => {
                         const newExperience = [...experience];
@@ -1326,10 +1273,10 @@ const ResumeBuilder = () => {
                           section.type === 'experience' ? { ...section, data: newExperience } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                     <Input
-                      placeholder="Start Date"
+                      placeholder="Start (e.g. Sep 2025)"
                       value={exp.startDate}
                       onChange={(e) => {
                         const newExperience = [...experience];
@@ -1338,10 +1285,10 @@ const ResumeBuilder = () => {
                           section.type === 'experience' ? { ...section, data: newExperience } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                     <Input
-                      placeholder="End Date (or 'Present')"
+                      placeholder="End (or Present)"
                       value={exp.endDate}
                       onChange={(e) => {
                         const newExperience = [...experience];
@@ -1350,11 +1297,11 @@ const ResumeBuilder = () => {
                           section.type === 'experience' ? { ...section, data: newExperience } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                   </div>
                   <Textarea
-                    placeholder="Job description and achievements..."
+                    placeholder="What you did, in two or three lines. Start each with a verb: Tutored, Organized, Led."
                     value={exp.description}
                     onChange={(e) => {
                       const newExperience = [...experience];
@@ -1363,79 +1310,77 @@ const ResumeBuilder = () => {
                         section.type === 'experience' ? { ...section, data: newExperience } : section
                       ));
                     }}
-                    className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                    className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     rows={3}
                   />
                 </div>
               ))}
               {experience.length === 0 && (
-                <p className={`${isInternshipMode ? 'text-gray-400' : 'text-gray-500'} text-center py-4`}>No work experience added yet</p>
+                <p className={`text-muted-foreground text-center py-4`}>No experience added yet.</p>
               )}
             </CardContent>
           </Card>
 
           {/* Personal Statement Section */}
-          <Card className={`${isInternshipMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white border-blue-200'}`}>
+          <Card >
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <CardTitle className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-                    <Target className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-green-400' : 'text-green-600'}`} />
-                    Personal Statement
+                  <CardTitle className={`text-foreground flex items-center`}>
+                    Personal statement
                   </CardTitle>
-                  <CardDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
-                    A brief paragraph about yourself, your goals and aspirations
+                  <CardDescription className="text-muted-foreground">
+                    Two or three sentences on who you are and what you’re working toward.
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
               <Textarea
-                placeholder="Write a compelling personal statement that showcases your personality, goals, and what makes you unique..."
+                placeholder="e.g. High school junior who has tutored middle-school math every week since grade 9. Planning to study education."
                 value={personalStatement.statement}
                 onChange={(e) => updatePersonalStatement(e.target.value)}
-                className={`${isInternshipMode ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                 rows={4}
               />
             </CardContent>
           </Card>
 
           {/* Skills Section */}
-          <Card className={`${isInternshipMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white border-blue-200'}`}>
+          <Card >
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <CardTitle className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-                    <Star className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-yellow-400' : 'text-yellow-600'}`} />
-                    Skills & Strengths
+                  <CardTitle className={`text-foreground flex items-center`}>
+                    Skills
                   </CardTitle>
-                  <CardDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
-                    Technical and soft skills that highlight your abilities
+                  <CardDescription className="text-muted-foreground">
+                    Languages, tools, and strengths you can back up with an example.
                   </CardDescription>
                 </div>
-                <Button onClick={addSkill} size="sm" className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
+                <Button onClick={addSkill} size="sm" variant="outline">
                   <Plus className="h-4 w-4 mr-1" />
-                  Add Skill
+                  Add skill
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {skills.map((skill: any, index: number) => (
-                <div key={skill.id} className={`p-4 ${isInternshipMode ? 'bg-gray-700/50' : 'bg-blue-50/50'} rounded-lg space-y-3`}>
+                <div key={skill.id} className={`p-4 bg-muted/50 rounded-lg space-y-3`}>
                   <div className="flex justify-between items-center mb-3">
-                    <h4 className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} font-medium`}>Skill #{index + 1}</h4>
+                    <h4 className={`text-foreground font-medium`}>Skill #{index + 1}</h4>
                     <Button
                       onClick={() => deleteSkillEntry(skill.id)}
                       size="sm"
                       variant="outline"
-                      className="border-red-500 text-red-400 hover:bg-red-500/20"
+                      className="text-muted-foreground hover:border-destructive/40 hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Input
-                      placeholder="Skill Name"
+                      placeholder="Skill"
                       value={skill.name}
                       onChange={(e) => {
                         const newSkills = [...skills];
@@ -1444,7 +1389,7 @@ const ResumeBuilder = () => {
                           section.type === 'skills' ? { ...section, data: newSkills } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                     <Select 
                       value={skill.level} 
@@ -1456,10 +1401,10 @@ const ResumeBuilder = () => {
                         ));
                       }}
                     >
-                      <SelectTrigger className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-blue-200 text-gray-900'}`}>
-                        <SelectValue placeholder="Skill Level" />
+                      <SelectTrigger className={`bg-white border-border text-foreground`}>
+                        <SelectValue placeholder="Level" />
                       </SelectTrigger>
-                      <SelectContent className={`${isInternshipMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-blue-200'}`}>
+                      <SelectContent >
                         <SelectItem value="Beginner">Beginner</SelectItem>
                         <SelectItem value="Intermediate">Intermediate</SelectItem>
                         <SelectItem value="Advanced">Advanced</SelectItem>
@@ -1470,47 +1415,46 @@ const ResumeBuilder = () => {
                 </div>
               ))}
               {skills.length === 0 && (
-                <p className={`${isInternshipMode ? 'text-gray-400' : 'text-gray-500'} text-center py-4`}>No skills added yet</p>
+                <p className={`text-muted-foreground text-center py-4`}>No skills added yet.</p>
               )}
             </CardContent>
           </Card>
 
           {/* Achievements Section */}
-          <Card className={`${isInternshipMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white border-blue-200'}`}>
+          <Card >
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <CardTitle className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-                    <Award className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-yellow-400' : 'text-yellow-600'}`} />
-                    Achievements & Awards
+                  <CardTitle className={`text-foreground flex items-center`}>
+                    Awards and achievements
                   </CardTitle>
-                  <CardDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
-                    Notable achievements, awards, and recognition
+                  <CardDescription className="text-muted-foreground">
+                    Awards, honors, and service milestones.
                   </CardDescription>
                 </div>
-                <Button onClick={addAchievement} size="sm" className={isInternshipMode ? "btn-purple-rainbow" : "btn-rainbow"}>
+                <Button onClick={addAchievement} size="sm" variant="outline">
                   <Plus className="h-4 w-4 mr-1" />
-                  Add Achievement
+                  Add award
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {achievements.map((achievement: any, index: number) => (
-                <div key={achievement.id} className={`p-4 ${isInternshipMode ? 'bg-gray-700/50' : 'bg-blue-50/50'} rounded-lg space-y-3`}>
+                <div key={achievement.id} className={`p-4 bg-muted/50 rounded-lg space-y-3`}>
                   <div className="flex justify-between items-center mb-3">
-                    <h4 className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} font-medium`}>Achievement #{index + 1}</h4>
+                    <h4 className={`text-foreground font-medium`}>Achievement #{index + 1}</h4>
                     <Button
                       onClick={() => deleteAchievementEntry(achievement.id)}
                       size="sm"
                       variant="outline"
-                      className="border-red-500 text-red-400 hover:bg-red-500/20"
+                      className="text-muted-foreground hover:border-destructive/40 hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Input
-                      placeholder="Achievement Title"
+                      placeholder="Award or achievement"
                       value={achievement.title}
                       onChange={(e) => {
                         const newAchievements = [...achievements];
@@ -1519,7 +1463,7 @@ const ResumeBuilder = () => {
                           section.type === 'achievements' ? { ...section, data: newAchievements } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                     <Input
                       placeholder="Date"
@@ -1531,11 +1475,11 @@ const ResumeBuilder = () => {
                           section.type === 'achievements' ? { ...section, data: newAchievements } : section
                         ));
                       }}
-                      className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                      className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     />
                   </div>
                   <Textarea
-                    placeholder="Description of the achievement..."
+                    placeholder="One line on what it was for."
                     value={achievement.description}
                     onChange={(e) => {
                       const newAchievements = [...achievements];
@@ -1544,45 +1488,22 @@ const ResumeBuilder = () => {
                         section.type === 'achievements' ? { ...section, data: newAchievements } : section
                       ));
                     }}
-                    className={`${isInternshipMode ? 'bg-gray-600 border-gray-500 text-white placeholder:text-gray-400' : 'bg-white border-blue-200 text-gray-900 placeholder:text-gray-500'}`}
+                    className={`bg-white border-border text-foreground placeholder:text-muted-foreground`}
                     rows={2}
                   />
                 </div>
               ))}
               {achievements.length === 0 && (
-                <p className={`${isInternshipMode ? 'text-gray-400' : 'text-gray-500'} text-center py-4`}>No achievements added yet</p>
+                <p className={`text-muted-foreground text-center py-4`}>No awards added yet.</p>
               )}
             </CardContent>
           </Card>
 
           {/* Upload Resume Section */}
-          <Card className={`${isInternshipMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white border-blue-200'}`}>
-            <CardHeader>
-              <CardTitle className={`${isInternshipMode ? 'text-white' : 'text-gray-900'} flex items-center`}>
-                <Upload className={`h-6 w-6 mr-2 ${isInternshipMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                Upload Existing Resume
-              </CardTitle>
-              <CardDescription className={isInternshipMode ? "text-gray-400" : "text-gray-600"}>
-                Upload a resume file from your computer
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className={`border-2 border-dashed ${isInternshipMode ? 'border-gray-600' : 'border-blue-300'} rounded-lg p-8 text-center`}>
-                <Upload className={`h-12 w-12 ${isInternshipMode ? 'text-gray-400' : 'text-blue-400'} mx-auto mb-4`} />
-                <p className={`${isInternshipMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Drag and drop your resume here, or click to browse</p>
-                <p className={`${isInternshipMode ? 'text-gray-500' : 'text-gray-500'} text-sm`}>Supports PDF, DOC, DOCX files</p>
-                <Button className={`mt-4 ${isInternshipMode ? 'btn-purple-rainbow' : 'btn-rainbow'}`}>
-                  <Upload className="h-4 w-4 mr-2" />
-                  Choose File
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
 
         </div>
       </section>
-      <Footer />
-    </div>
+    </PageShell>
   );
 };
 

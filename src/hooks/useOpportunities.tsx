@@ -1,207 +1,117 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useMode } from '@/contexts/ModeContext';
-import { useOpportunityRefresh } from '@/contexts/OpportunityRefreshContext';
+import { distanceKm, geocode, type Coordinates } from '@/lib/geo';
+import { parseDate, sanitizeSearch, type Opportunity } from '@/lib/opportunities';
 
-interface Opportunity {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  time_commitment: string;
-  requirements: string | null;
-  location: string;
-  posted_at: string;
-  opportunity_type: string;
-  max_volunteers: number | null;
-  current_volunteers: number;
-  resume_required?: boolean;
-  distance?: number;
-  organization: {
-    name: string;
-    id: string;
-  };
+interface Options {
+  search?: string;
+  category?: string;
+  /** When set, each result gets a `distance` in km from this point. */
+  origin?: Coordinates | null;
+  limit?: number;
 }
 
-interface UserLocation {
-  latitude: number;
-  longitude: number;
-}
+export const OPPORTUNITIES_KEY = 'opportunities';
 
-export const useOpportunities = (searchQuery: string = '', categoryFilter: string = '', userLocation?: UserLocation | null) => {
-  const { isInternshipMode } = useMode();
-  const { refreshTrigger } = useOpportunityRefresh();
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+/** Hide postings whose application deadline or end date has already passed. */
+const isStillOpen = (o: { expires_at?: string | null; end_date?: string | null }) => {
+  const now = new Date();
+  if (o.expires_at && new Date(o.expires_at) < now) return false;
+  if (o.end_date && parseDate(o.end_date) < new Date(now.getFullYear(), now.getMonth(), now.getDate())) return false;
+  return true;
+};
 
-  const calculateDistance = useCallback((lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371; // Radius of the Earth in kilometers
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    const distance = R * c; // Distance in kilometers
-    return distance;
-  }, []);
+export const useOpportunities = ({ search = '', category = 'all', origin = null, limit }: Options = {}) => {
+  const q = sanitizeSearch(search);
 
-  const parseLocationCoordinates = useCallback(async (locationString: string): Promise<{lat: number, lon: number} | null> => {
-    try {
-      // Using a CORS-friendly geocoding service
-      const response = await fetch(
-        `https://geocode.maps.co/search?q=${encodeURIComponent(locationString)}&format=json&limit=1`
-      );
-      const data = await response.json();
-      if (data && data.length > 0) {
-        return {
-          lat: parseFloat(data[0].lat),
-          lon: parseFloat(data[0].lon)
-        };
-      }
-    } catch (error) {
-      console.error('Error geocoding location:', error);
-    }
-    return null;
-  }, []);
+  const query = useQuery({
+    queryKey: [OPPORTUNITIES_KEY, { q, category, limit }],
+    staleTime: 60 * 1000,
+    queryFn: async () => {
+      let request = supabase
+        .from('opportunities')
+        .select('*, organization:organizations ( name, id )')
+        .eq('is_active', true)
+        .eq('opportunity_type', 'volunteer')
+        .order('posted_at', { ascending: false });
 
-  // Memoize user location to prevent unnecessary re-renders
-  const memoizedUserLocation = useMemo(() => userLocation, [userLocation?.latitude, userLocation?.longitude]);
+      if (category && category !== 'all') request = request.eq('category', category);
+      if (q) request = request.or(`title.ilike.%${q}%,description.ilike.%${q}%,location.ilike.%${q}%`);
+      if (limit) request = request.limit(limit);
+
+      const { data, error } = await request;
+      if (error) throw error;
+      return ((data ?? []) as unknown as (Opportunity & { expires_at: string | null })[]).filter(isStillOpen);
+    },
+  });
+
+  // Distances resolve after the list renders, so results never wait on geocoding.
+  const [distances, setDistances] = useState<Record<string, number>>({});
+  const originKey = origin ? `${origin.latitude.toFixed(3)},${origin.longitude.toFixed(3)}` : '';
 
   useEffect(() => {
-    const fetchOpportunities = async () => {
-      try {
-        setLoading(true);
-        let query = supabase
-          .from('opportunities')
-          .select(`
-            *,
-            organization:organizations (
-              name,
-              id
-            )
-          `)
-          .eq('is_active', true)
-          .eq('opportunity_type', isInternshipMode ? 'internship' : 'volunteer')
-          .order('posted_at', { ascending: false });
-
-        if (categoryFilter && categoryFilter !== 'all') {
-          query = query.eq('category', categoryFilter);
-        }
-
-        if (searchQuery.trim()) {
-          query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,location.ilike.%${searchQuery}%`);
-        }
-
-        const { data, error } = await query;
-
-        if (error) {
-          throw error;
-        }
-
-        let processedOpportunities = data || [];
-
-        // Add distance calculation only if user location has valid coordinates
-        if (memoizedUserLocation && memoizedUserLocation.latitude !== 0 && memoizedUserLocation.longitude !== 0 && processedOpportunities.length > 0) {
-          const opportunitiesWithDistance = await Promise.all(
-            processedOpportunities.map(async (opportunity) => {
-              const coords = await parseLocationCoordinates(opportunity.location);
-              if (coords) {
-                const distance = calculateDistance(
-                  memoizedUserLocation.latitude,
-                  memoizedUserLocation.longitude,
-                  coords.lat,
-                  coords.lon
-                );
-                return { ...opportunity, distance };
-              }
-              return { ...opportunity, distance: undefined };
-            })
-          );
-          processedOpportunities = opportunitiesWithDistance;
-        }
-
-        setOpportunities(processedOpportunities);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching opportunities:', err);
-        setError('Failed to load opportunities');
-        setOpportunities([]);
-      } finally {
-        setLoading(false);
+    if (!origin || !query.data?.length) {
+      setDistances({});
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const next: Record<string, number> = {};
+      for (const opp of query.data) {
+        const place = await geocode(opp.location);
+        if (cancelled) return;
+        if (place) next[opp.id] = distanceKm(origin, place);
       }
+      if (!cancelled) setDistances(next);
+    })();
+    return () => {
+      cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originKey, query.data]);
 
-    fetchOpportunities();
-  }, [searchQuery, categoryFilter, memoizedUserLocation, calculateDistance, parseLocationCoordinates, isInternshipMode, refreshTrigger]);
+  const opportunities = useMemo(
+    () => (query.data ?? []).map((o) => (o.id in distances ? { ...o, distance: distances[o.id] } : o)),
+    [query.data, distances]
+  );
 
-  const refetch = useCallback(() => {
-    setLoading(true);
-    const fetchOpportunities = async () => {
-      try {
-        let query = supabase
-          .from('opportunities')
-          .select(`
-            *,
-            organization:organizations (
-              name,
-              id
-            )
-          `)
-          .eq('is_active', true)
-          .eq('opportunity_type', isInternshipMode ? 'internship' : 'volunteer')
-          .order('posted_at', { ascending: false });
+  return {
+    opportunities,
+    loading: query.isLoading,
+    error: query.error ? 'We couldn’t load opportunities right now.' : null,
+    refetch: query.refetch,
+  };
+};
 
-        if (categoryFilter && categoryFilter !== 'all') {
-          query = query.eq('category', categoryFilter);
-        }
+export const useOpportunity = (id?: string) =>
+  useQuery({
+    queryKey: [OPPORTUNITIES_KEY, 'detail', id],
+    enabled: !!id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('opportunities')
+        .select('*, organization:organizations ( name, id, description, website, city, state )')
+        .eq('id', id!)
+        .maybeSingle();
+      if (error) throw error;
+      return data as unknown as (Opportunity & {
+        organization: { name: string; id: string; description: string | null; website: string | null; city: string; state: string } | null;
+      }) | null;
+    },
+  });
 
-        if (searchQuery.trim()) {
-          query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,location.ilike.%${searchQuery}%`);
-        }
+export type SortKey = 'newest' | 'closest';
 
-        const { data, error } = await query;
-
-        if (error) {
-          throw error;
-        }
-
-        let processedOpportunities = data || [];
-
-        // Add distance calculation only if user location has valid coordinates
-        if (memoizedUserLocation && memoizedUserLocation.latitude !== 0 && memoizedUserLocation.longitude !== 0 && processedOpportunities.length > 0) {
-          const opportunitiesWithDistance = await Promise.all(
-            processedOpportunities.map(async (opportunity) => {
-              const coords = await parseLocationCoordinates(opportunity.location);
-              if (coords) {
-                const distance = calculateDistance(
-                  memoizedUserLocation.latitude,
-                  memoizedUserLocation.longitude,
-                  coords.lat,
-                  coords.lon
-                );
-                return { ...opportunity, distance };
-              }
-              return { ...opportunity, distance: undefined };
-            })
-          );
-          processedOpportunities = opportunitiesWithDistance;
-        }
-
-        setOpportunities(processedOpportunities);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching opportunities:', err);
-        setError('Failed to load opportunities');
-        setOpportunities([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchOpportunities();
-  }, [searchQuery, categoryFilter, memoizedUserLocation, calculateDistance, parseLocationCoordinates, isInternshipMode]);
-
-  return { opportunities, loading, error, refetch };
+export const sortOpportunities = (list: Opportunity[], sort: SortKey) => {
+  const copy = [...list];
+  if (sort === 'closest') {
+    return copy.sort((a, b) => {
+      if (a.distance !== undefined && b.distance !== undefined) return a.distance - b.distance;
+      if (a.distance !== undefined) return -1;
+      if (b.distance !== undefined) return 1;
+      return new Date(b.posted_at).getTime() - new Date(a.posted_at).getTime();
+    });
+  }
+  return copy.sort((a, b) => new Date(b.posted_at).getTime() - new Date(a.posted_at).getTime());
 };

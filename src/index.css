@@ -1,222 +1,64 @@
-@import './experiential-latest-app/styles/mobile.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/*
+  Experiential design tokens.
+  Ink-black type on a faintly blue paper ground; one accent taken from the
+  periwinkle period in the wordmark. All colors are HSL channels for Tailwind.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 220 33% 98.5%;
+    --foreground: 228 32% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 228 32% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 228 32% 9%;
 
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 210 40% 98%;
+    /* Interactive brand blue: deep enough for white text (AA) */
+    --primary: 224 68% 48%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* The logo's period — decorative accent only, never body text */
+    --brand-dot: 222 72% 63%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --secondary: 222 30% 94.5%;
+    --secondary-foreground: 228 32% 12%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 222 26% 95%;
+    --muted-foreground: 225 12% 38%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 222 60% 95.5%;
+    --accent-foreground: 224 68% 36%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 217.2 91.2% 59.8%;
+    --destructive: 2 70% 48%;
+    --destructive-foreground: 0 0% 100%;
 
-    --radius: 0.75rem;
+    --success: 152 58% 32%;
+    --success-soft: 150 50% 94%;
+    --warning: 34 90% 34%;
+    --warning-soft: 42 95% 93%;
 
-    /* Design System Colors */
-    --primary-blue: 217.2 91.2% 59.8%;
-    --secondary-blue: 213 94% 68%;
-    --accent-cyan: 187 85% 53%;
-    --accent-purple: 250 84% 54%;
-    --accent-pink: 333 71% 51%;
-    
-    /* Jobs Mode Colors */
-    --jobs-primary: 142 71% 45%;    /* Forest green */
-    --jobs-secondary: 142 40% 80%;  /* Light green-gray */
-    --jobs-dark: 220 13% 18%;       /* Dark grey */
-    --jobs-light-grey: 220 14% 96%; /* Light grey */
-    --jobs-accent: 142 76% 36%;     /* Darker green for accents */
-    
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary-blue)) 0%, hsl(var(--accent-cyan)) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--accent-purple)) 0%, hsl(var(--accent-pink)) 100%);
-    --gradient-subtle: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--primary-blue) / 0.05) 100%);
-    --gradient-jobs: linear-gradient(135deg, hsl(var(--jobs-primary)) 0%, hsl(var(--jobs-secondary)) 100%);
-    --gradient-jobs-subtle: linear-gradient(135deg, hsl(var(--jobs-light-grey)) 0%, hsl(var(--jobs-primary) / 0.05) 100%);
+    --border: 222 22% 89%;
+    --input: 222 20% 84%;
+    --ring: 224 68% 48%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+    --radius: 0.625rem;
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Inverse surfaces: deep navy rather than neutral black */
+    --ink: 226 58% 13%;
+    --ink-foreground: 222 45% 94%;
+    --ink-muted: 223 30% 72%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-}
-
-@layer components {
-  .text-gradient-blue {
-    @apply bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent;
-  }
-  
-  .text-gradient-rainbow {
-    @apply bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-600 bg-clip-text text-transparent;
-  }
-  
-  .text-gradient-purple-rainbow {
-    @apply bg-gradient-to-r from-purple-500 via-pink-400 to-indigo-600 bg-clip-text text-transparent;
-  }
-  
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:shadow-blue-500/25;
-  }
-  
-  .stat-card {
-    @apply transform transition-all duration-500 hover:scale-110 hover:shadow-lg;
-  }
-  
-  .fade-in {
-    @apply animate-fade-in;
-  }
-  
-  .fade-in-delayed {
-    @apply animate-fade-in [animation-delay:200ms];
-  }
-  
-  .fade-in-delayed-2 {
-    @apply animate-fade-in [animation-delay:400ms];
-  }
-  
-  .floating {
-    @apply animate-pulse;
-  }
-  
-  .hero-bg {
-    background: var(--gradient-subtle);
-  }
-  
-  .rainbow-ring-blue {
-    @apply ring-4 ring-blue-400/40 focus:ring-blue-500/60 transition-all duration-300;
-    box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
-  }
-  
-  .rainbow-ring-purple {
-    @apply ring-4 ring-purple-400/40 focus:ring-purple-500/60 transition-all duration-300;
-    box-shadow: 0 0 25px rgba(147, 51, 234, 0.4);
-  }
-  
-  .btn-rainbow {
-    @apply bg-white text-gray-900 border-2 border-transparent bg-clip-padding hover:bg-gray-50 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-2xl;
-    background-image: linear-gradient(white, white), var(--gradient-primary);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-    color: #1f2937 !important;
-  }
-  
-  .btn-purple-rainbow {
-    @apply bg-white text-gray-900 border-2 border-transparent bg-clip-padding hover:bg-gray-50 transform transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-2xl;
-    background-image: linear-gradient(white, white), var(--gradient-secondary);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-    color: #1f2937 !important;
-  }
-  
-  .btn-gradient {
-    @apply text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105;
-    background: var(--gradient-primary);
-  }
-  
-  .btn-gradient-purple {
-    @apply text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105;
-    background: var(--gradient-secondary);
-  }
-  
-  .i-blue-dot {
-    position: relative;
-    color: inherit;
-  }
-  
-  .i-blue-dot::before {
-    content: '•';
-    position: absolute;
-    top: -0.2em;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #3b82f6;
-    font-size: 0.3em;
-    line-height: 1;
-  }
-  
-  .i-blue-dot-white {
-    position: relative;
-    color: inherit;
-  }
-  
-  .i-blue-dot-white::before {
-    content: '•';
-    position: absolute;
-    top: -0.2em;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #3b82f6;
-    font-size: 0.3em;
-    line-height: 1;
+    /* The blue world: hero field, its lighter ripples, and a page wash */
+    --blue-field: 225 66% 31%;
+    --blue-field-deep: 227 64% 22%;
+    --blue-line: 222 72% 63%;
+    --blue-wash: 222 80% 95.5%;
   }
 }
 
@@ -225,32 +67,109 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
   }
 
-  /* Performance optimizations */
-  * {
-    scroll-behavior: smooth;
+  h1, h2, h3, h4 {
+    @apply text-foreground;
+    text-wrap: balance;
+    letter-spacing: -0.015em;
   }
 
-  /* Improve rendering performance */
-  .page-transition {
-    @apply transition-all duration-300 ease-in-out;
+  h1, h2 {
+    @apply font-display;
   }
 
-  /* Reduce layout shift */
-  img {
-    @apply transition-all duration-200;
+  p {
+    text-wrap: pretty;
   }
 
-  /* Better button interactions */
-  button, a {
-    @apply transition-all duration-150 ease-in-out;
+  ::selection {
+    background: hsl(var(--brand-dot) / 0.28);
+    color: hsl(var(--foreground));
   }
 
-  /* Smooth focus transitions */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
   input, textarea, select {
-    @apply transition-all duration-150 ease-in-out;
+    caret-color: hsl(var(--primary));
+  }
+
+  * {
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+@layer components {
+  /* The brand period: a periwinkle full stop after a headline. */
+  .brand-period::after {
+    content: ".";
+    color: hsl(var(--brand-dot));
+  }
+
+  /* A small brand dot used as an indicator (active nav, new, unread). */
+  .brand-dot {
+    @apply inline-block h-1.5 w-1.5 rounded-full;
+    background: hsl(var(--brand-dot));
+  }
+
+  @keyframes locpulse {
+    0% { transform: scale(0.35); opacity: 0.9; }
+    100% { transform: scale(1.25); opacity: 0; }
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Long-form legal / guide copy */
+  .prose-doc {
+    @apply text-[0.975rem] leading-7 text-foreground/90;
+    max-width: 68ch;
+  }
+  .prose-doc h2 {
+    @apply mt-10 mb-3 text-xl font-semibold;
+  }
+  .prose-doc h3 {
+    @apply mt-6 mb-2 text-base font-semibold;
+  }
+  .prose-doc p {
+    @apply mb-4;
+  }
+  .prose-doc ul {
+    @apply mb-4 list-disc space-y-1.5 pl-5;
+  }
+  .prose-doc a {
+    @apply text-primary underline;
   }
 }

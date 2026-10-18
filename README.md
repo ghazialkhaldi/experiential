@@ -1,33 +1,32 @@
-Experiential
+# Experiential
 
-🌐 Connecting students to real-world opportunities through intelligent web design.
+Local volunteer opportunities for students, and the tools to show the work they did.
 
-Live Site: experiential.care
+Live site: [experiential.care](https://www.experiential.care)
 
-Overview:
-Experiential is a web platform that bridges the gap between students, universities, and employers by providing a centralized hub for volunteer opportunities, internships, and career resources. Built with TypeScript, HTML, CSS, and JSON, it delivers a responsive, data-driven experience designed to empower students to explore, build, and grow.
+## What it does
 
-Core Features:
+- **Browse & apply**: search volunteer opportunities by keyword, category, and distance, then apply with an optional resume.
+- **Track hours**: log volunteer hours, set a goal, and export the log as CSV.
+- **Resume builder**: build a one-page resume and download it as a PDF.
+- **College guides**: reading, service scholarships, and an application checklist.
+- **For organizations**: post opportunities, review applicants, and accept or decline them.
+- **Pro**: a $4.99/month plan that lists a student's applications first for organizations.
 
-🎯 Smart Opportunity Matching: Geocoded search engine that helps users find local and remote opportunities.
+## Stack
 
-🧭 Discover Page: Personalized feed of volunteer and internship listings.
+React 18 + TypeScript, Vite, Tailwind CSS with shadcn/ui, TanStack Query, and Supabase (auth, Postgres, storage, edge functions). Stripe handles Pro billing through Supabase edge functions.
 
-🧰 Resume Builder: Built-in tool for students to create and manage resumes easily.
+## Development
 
-🏫 University Resources: Access to campus-specific tools and academic programs.
+```bash
+npm install
+npm run dev      # http://localhost:8080
+npm run build
+```
 
-🏢 Employer Resources: Dashboard for organizations to post, manage, and track opportunities.
+Supabase settings live in `src/integrations/supabase/client.ts`. Database migrations are in `supabase/migrations`.
 
-💡 Modern Front-End Architecture: Powered by TypeScript modules, JSON-driven data, and responsive CSS.
+## Design
 
-Tech Stack:
-
-TypeScript
-
-HTML5 / CSS3
-
-JSON (for structured content and configuration)
-
-Mission:
-To make experiential learning more accessible, organized, and impactful — connecting ambition with opportunity.
+Design tokens (color, radius, shadows) are defined in `src/index.css` and `tailwind.config.ts`. Display type is Poppins, matching the wordmark. UI text is Plus Jakarta Sans. The periwinkle period from the logo is the single accent mark, used for headline periods and active indicators.

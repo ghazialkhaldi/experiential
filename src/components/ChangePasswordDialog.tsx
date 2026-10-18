@@ -1,146 +1,95 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useState, type ReactNode } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import PasswordChecklist from '@/components/PasswordChecklist';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { isPasswordValid } from '@/lib/password';
 
-interface ChangePasswordDialogProps {
-  children: React.ReactNode;
-}
-
-export const ChangePasswordDialog = ({ children }: ChangePasswordDialogProps) => {
+export const ChangePasswordDialog = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [current, setCurrent] = useState('');
+  const [next, setNext] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const reset = () => {
+    setCurrent('');
+    setNext('');
+    setConfirm('');
+    setError(null);
+  };
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (newPassword !== confirmPassword) {
-      toast({
-        title: "Error",
-        description: "New passwords do not match",
-        variant: "destructive"
-      });
-      return;
+    setError(null);
+    if (!isPasswordValid(next)) return setError('Your new password doesn’t meet the requirements yet.');
+    if (next !== confirm) return setError('The new passwords don’t match.');
+
+    setBusy(true);
+    const { data } = await supabase.auth.getUser();
+    const email = data.user?.email;
+    const { error: verifyError } = email
+      ? await supabase.auth.signInWithPassword({ email, password: current })
+      : { error: new Error('No email on account') };
+    if (verifyError) {
+      setBusy(false);
+      return setError('Your current password is incorrect.');
     }
-
-    if (newPassword.length < 6) {
-      toast({
-        title: "Error", 
-        description: "Password must be at least 6 characters long",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // First verify current password by signing in
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user?.email) {
-        throw new Error('No user found');
-      }
-
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: userData.user.email,
-        password: currentPassword
-      });
-
-      if (signInError) {
-        toast({
-          title: "Error",
-          description: "Current password is incorrect",
-          variant: "destructive"
-        });
-        setLoading(false);
-        return;
-      }
-
-      // If current password is correct, update to new password
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      });
-
-      if (error) {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive"
-        });
-      } else {
-        toast({
-          title: "Success",
-          description: "Password changed successfully"
-        });
-        setOpen(false);
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to change password",
-        variant: "destructive"
-      });
-    }
-
-    setLoading(false);
+    const { error } = await supabase.auth.updateUser({ password: next });
+    setBusy(false);
+    if (error) return setError(error.message);
+    toast({ title: 'Password changed' });
+    setOpen(false);
+    reset();
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
-      <DialogContent>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) reset();
+      }}
+    >
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Change Password</DialogTitle>
+          <DialogTitle>Change password</DialogTitle>
+          <DialogDescription>You’ll stay signed in on this device.</DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="current-password">Current Password</Label>
-            <Input
-              id="current-password"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              required
-            />
+        <form onSubmit={submit} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="current-password">Current password</Label>
+            <Input id="current-password" type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} />
           </div>
-          <div>
-            <Label htmlFor="new-password">New Password</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="new-password-dialog">New password</Label>
             <Input
-              id="new-password"
+              id="new-password-dialog"
               type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
+              autoComplete="new-password"
+              value={next}
+              onChange={(e) => setNext(e.target.value)}
+              aria-describedby="dialog-password-rules"
             />
+            <PasswordChecklist password={next} id="dialog-password-rules" />
           </div>
-          <div>
-            <Label htmlFor="confirm-password">Confirm New Password</Label>
-            <Input
-              id="confirm-password"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
+          <div className="space-y-1.5">
+            <Label htmlFor="confirm-password-dialog">Confirm new password</Label>
+            <Input id="confirm-password-dialog" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
           </div>
-          <div className="flex justify-end space-x-2">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+          {error && <p className="text-sm text-destructive" role="alert">{error}</p>}
+          <div className="flex justify-end gap-2 pt-2">
+            <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Changing...' : 'Change Password'}
+            <Button type="submit" disabled={busy || !current}>
+              {busy ? 'Saving…' : 'Change password'}
             </Button>
           </div>
         </form>

@@ -1,143 +1,89 @@
-import { useState } from "react";
-import { MapPin, ChevronDown, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useMode } from "@/contexts/ModeContext";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { useState } from 'react';
+import { ChevronDown, Loader2, LocateFixed, MapPin, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { describePlace, useLocation } from '@/hooks/useLocation';
+import { cn } from '@/lib/utils';
 
-interface Location {
-  latitude: number;
-  longitude: number;
-  city?: string;
-  state?: string;
-  country?: string;
-}
+const LocationSelector = ({ className }: { className?: string }) => {
+  const { location, loading, error, detectLocation, setManualLocation, clearLocation } = useLocation();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
 
-interface LocationSelectorProps {
-  location: Location | null;
-  loading: boolean;
-  onLocationChange: (location: string) => void;
-  onDetectLocation: () => void;
-  userDenied: boolean;
-}
+  const label = loading ? 'Finding…' : describePlace(location) || 'Anywhere';
 
-const LocationSelector = ({ 
-  location, 
-  loading, 
-  onLocationChange, 
-  onDetectLocation,
-  userDenied 
-}: LocationSelectorProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const { isInternshipMode } = useMode();
-
-  const getDisplayText = () => {
-    if (loading) return "Detecting...";
-    if (location?.city && location?.state) {
-      return `${location.city}, ${location.state}`;
-    }
-    if (location?.city) {
-      return location.city;
-    }
-    if (userDenied) return "Location access denied";
-    return "Select location";
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputValue.trim()) {
-      onLocationChange(inputValue.trim());
-      setInputValue("");
-      setIsOpen(false);
+    if (await setManualLocation(value)) {
+      setValue('');
+      setOpen(false);
     }
   };
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          type="button"
           variant="outline"
-          className={`h-12 px-4 justify-between min-w-[180px] ${
-            isInternshipMode 
-              ? 'bg-gray-700/90 border-gray-600 hover:bg-gray-600 text-white' 
-              : 'bg-white/90 border-gray-200 hover:bg-gray-50'
-          }`}
+          className={cn('h-12 justify-between gap-2 px-3.5 font-medium', className)}
+          aria-label={`Location: ${label}. Change location`}
         >
-          <div className="flex items-center space-x-2">
+          <span className="flex min-w-0 items-center gap-2">
             {loading ? (
-              <Loader2 className={`h-4 w-4 animate-spin ${
-                isInternshipMode ? 'text-blue-400' : 'text-blue-500'
-              }`} />
+              <Loader2 className="animate-spin text-primary" />
             ) : (
-              <MapPin className={`h-4 w-4 ${
-                isInternshipMode ? 'text-blue-400' : 'text-blue-500'
-              }`} />
+              <MapPin className={location ? 'text-primary' : 'text-muted-foreground'} />
             )}
-            <span className="text-sm font-medium truncate max-w-[120px]">
-              {getDisplayText()}
-            </span>
-          </div>
-          <ChevronDown className={`h-4 w-4 ${
-            isInternshipMode ? 'text-gray-400' : 'text-gray-400'
-          }`} />
+            <span className="truncate">{label}</span>
+          </span>
+          <ChevronDown className="text-muted-foreground" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={`w-80 p-4 ${
-        isInternshipMode ? 'bg-gray-800 border-gray-600' : ''
-      }`} align="start">
-        <div className="space-y-4">
-          <div>
-            <h4 className="font-medium text-sm mb-2">Current Location</h4>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onDetectLocation}
-              disabled={loading}
-              className="w-full"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Detecting...
-                </>
-              ) : (
-                <>
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Detect my location
-                </>
-              )}
+      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-4" align="start">
+        <form onSubmit={submit} className="space-y-2">
+          <Label htmlFor="location-input">City or town</Label>
+          <div className="flex gap-2">
+            <Input
+              id="location-input"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder="e.g. Austin"
+              autoComplete="address-level2"
+            />
+            <Button type="submit" disabled={!value.trim() || loading}>
+              Set
             </Button>
-            {userDenied && (
-              <p className="text-xs text-red-600 mt-1">
-                Location access was denied. Please enable location services in your browser.
-              </p>
-            )}
           </div>
-          
-          <div className="border-t pt-4">
-            <h4 className="font-medium text-sm mb-2">Enter Location</h4>
-            <form onSubmit={handleSubmit} className="space-y-2">
-              <Input
-                placeholder="Enter city, state, or address"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className="text-sm"
-              />
-              <Button
-                type="submit"
-                size="sm"
-                className="w-full bg-blue-600 hover:bg-blue-700"
-                disabled={!inputValue.trim()}
-              >
-                Set Location
-              </Button>
-            </form>
-          </div>
+        </form>
+
+        {error && (
+          <p className="mt-2 text-sm text-destructive" role="alert">
+            {error}
+          </p>
+        )}
+
+        <div className="mt-3 flex flex-col gap-1 border-t pt-3">
+          <Button type="button" variant="ghost" className="justify-start" onClick={detectLocation} disabled={loading}>
+            <LocateFixed />
+            Use my current location
+          </Button>
+          {location && (
+            <Button
+              type="button"
+              variant="ghost"
+              className="justify-start text-muted-foreground"
+              onClick={() => {
+                clearLocation();
+                setOpen(false);
+              }}
+            >
+              <X />
+              Clear location
+            </Button>
+          )}
         </div>
       </PopoverContent>
     </Popover>

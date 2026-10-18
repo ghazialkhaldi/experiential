@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useOpportunityRefresh } from '@/contexts/OpportunityRefreshContext';
 import { useSubscription } from './useSubscription';
+import { OPPORTUNITIES_KEY } from './useOpportunities';
 
-interface Application {
+export type ApplicationStatus = 'pending' | 'accepted' | 'rejected';
+
+export interface Application {
   id: string;
   opportunity_id: string;
   user_id: string;
@@ -13,140 +15,96 @@ interface Application {
   message: string | null;
   resume_url: string | null;
   status: string;
+  is_pro_user: boolean | null;
   applied_at: string;
   updated_at: string;
   opportunity?: {
+    id: string;
     title: string;
-    organization: {
-      name: string;
-    };
-  };
+    location: string;
+    start_date: string | null;
+    end_date: string | null;
+    organization: { name: string } | null;
+  } | null;
 }
 
-export const useApplications = (opportunityId?: string) => {
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const APPLICATIONS_KEY = 'applications';
+
+/**
+ * Applications visible to the current user. Row-level security scopes this:
+ * volunteers see their own; organizations see applications to their postings.
+ * The query is shared, so a status change anywhere updates every list.
+ */
+export const useApplications = () => {
   const { user } = useAuth();
   const { subscribed } = useSubscription();
-  const { triggerRefresh } = useOpportunityRefresh();
+  const queryClient = useQueryClient();
+  const key = [APPLICATIONS_KEY, user?.id];
 
-  useEffect(() => {
-    if (user) {
-      fetchApplications();
-    }
-  }, [user, opportunityId]);
-
-  const fetchApplications = async () => {
-    try {
-      setLoading(true);
-      let query = supabase
+  const query = useQuery({
+    queryKey: key,
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
         .from('applications')
         .select(`
           *,
           opportunity:opportunities (
-            title,
-            organization:organizations (
-              name
-            )
+            id, title, location, start_date, end_date,
+            organization:organizations ( name )
           )
         `)
         .order('is_pro_user', { ascending: false })
         .order('applied_at', { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as unknown as Application[];
+    },
+  });
 
-      if (opportunityId) {
-        query = query.eq('opportunity_id', opportunityId);
-      }
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: [APPLICATIONS_KEY] });
 
-      const { data, error } = await query;
-
-      if (error) {
-        throw error;
-      }
-
-      setApplications(data || []);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching applications:', err);
-      setError('Failed to load applications');
-      setApplications([]);
-    } finally {
-      setLoading(false);
+  const applyToOpportunity = async (input: {
+    opportunityId: string;
+    name: string;
+    email: string;
+    message?: string;
+    resumeUrl?: string | null;
+  }) => {
+    if (!user) throw new Error('Sign in to apply.');
+    const { error } = await supabase.from('applications').insert({
+      opportunity_id: input.opportunityId,
+      user_id: user.id,
+      applicant_name: input.name,
+      applicant_email: input.email,
+      message: input.message || null,
+      resume_url: input.resumeUrl || null,
+      is_pro_user: subscribed,
+    });
+    if (error) {
+      if (error.code === '23505') throw new Error('You’ve already applied to this opportunity.');
+      throw error;
     }
+    await invalidate();
   };
 
-  const applyToOpportunity = async (
-    opportunityId: string,
-    applicantName: string,
-    applicantEmail: string,
-    message?: string,
-    resumeUrl?: string | null
-  ) => {
-    if (!user) {
-      throw new Error('You must be logged in to apply');
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from('applications')
-        .insert({
-          opportunity_id: opportunityId,
-          user_id: user.id,
-          applicant_name: applicantName,
-          applicant_email: applicantEmail,
-          message: message || null,
-          resume_url: resumeUrl || null,
-          is_pro_user: subscribed,
-        })
-        .select()
-        .single();
-
-      if (error) {
-        if (error.code === '23505') { // Unique constraint violation
-          throw new Error('You have already applied to this opportunity');
-        }
-        throw error;
-      }
-
-      await fetchApplications();
-      return data;
-    } catch (err) {
-      console.error('Error applying to opportunity:', err);
-      throw err;
-    }
+  const updateApplicationStatus = async (applicationId: string, status: ApplicationStatus) => {
+    const { error } = await supabase.from('applications').update({ status }).eq('id', applicationId);
+    if (error) throw error;
+    await invalidate();
+    // Accepting changes the volunteer count shown on the opportunity.
+    queryClient.invalidateQueries({ queryKey: [OPPORTUNITIES_KEY] });
   };
 
-  const updateApplicationStatus = async (applicationId: string, status: string) => {
-    try {
-      const { error } = await supabase
-        .from('applications')
-        .update({ status })
-        .eq('id', applicationId);
-
-      if (error) {
-        throw error;
-      }
-
-      await fetchApplications();
-      // Trigger refresh of opportunities to update volunteer count
-      triggerRefresh();
-    } catch (err) {
-      console.error('Error updating application status:', err);
-      throw err;
-    }
-  };
-
-  const hasApplied = (opportunityId: string) => {
-    return applications.some(app => app.opportunity_id === opportunityId && app.user_id === user?.id);
-  };
+  const applications = query.data ?? [];
 
   return {
     applications,
-    loading,
-    error,
+    loading: !!user && query.isLoading,
+    error: query.error ? 'We couldn’t load applications.' : null,
     applyToOpportunity,
     updateApplicationStatus,
-    hasApplied,
-    refetch: fetchApplications,
+    hasApplied: (opportunityId: string) =>
+      applications.some((a) => a.opportunity_id === opportunityId && a.user_id === user?.id),
+    refetch: invalidate,
   };
 };

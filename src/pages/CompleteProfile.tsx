@@ -1,153 +1,150 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
-import { useMode } from "@/contexts/ModeContext";
-import { Users, Briefcase, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
-import ExperientialLogo from "@/components/ExperientialLogo";
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
+import AuthLayout from '@/components/layout/AuthLayout';
+import OrganizationSetup from '@/components/OrganizationSetup';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+
+type Role = 'volunteer' | 'volunteer_searcher';
+
+const splitName = (meta: Record<string, string | undefined>) => {
+  if (meta.first_name || meta.given_name) return [meta.first_name || meta.given_name || '', meta.last_name || meta.family_name || ''];
+  const full = (meta.full_name || meta.name || '').trim();
+  const [first = '', ...rest] = full.split(/\s+/);
+  return [first, rest.join(' ')];
+};
 
 const CompleteProfile = () => {
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    role: '',
-    organizationName: '',
-    organizationCategory: '',
-    organizationDescription: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: ''
-  });
-  
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const next = params.get('next')?.startsWith('/') ? params.get('next')! : '/';
+  const { user, loading: authLoading } = useAuth();
+  const { profile, needsRole, needsOrganization, loading, refetch } = useProfile();
   const { toast } = useToast();
-  const { user } = useAuth();
-  const { isInternshipMode } = useMode();
+
+  const [role, setRole] = useState<Role | null>(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-      return;
-    }
-  }, [user, navigate]);
+    if (!authLoading && !user) navigate('/auth?next=/complete-profile', { replace: true });
+  }, [authLoading, user, navigate]);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  useEffect(() => {
+    if (!user) return;
+    const [f, l] = splitName(user.user_metadata ?? {});
+    const fromProfile = profile?.first_name && profile.first_name !== user.email?.split('@')[0];
+    setFirstName((v) => v || (fromProfile ? profile!.first_name : f));
+    setLastName((v) => v || profile?.last_name || l);
+  }, [user, profile]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Nothing left to do: move on.
+  useEffect(() => {
+    if (!loading && user && profile && !needsRole && !needsOrganization) navigate(next, { replace: true });
+  }, [loading, user, profile, needsRole, needsOrganization, navigate, next]);
+
+  const saveRole = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      // First, update the user's profile with role
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ role: formData.role as 'volunteer' | 'volunteer_searcher' })
-        .eq('id', user.id);
-
-      if (profileError) {
-        throw profileError;
-      }
-
-
-      toast({
-        title: "Profile Complete!",
-        description: "Your profile has been set up successfully.",
-      });
-
-      navigate('/');
-    } catch (error) {
-      console.error('Profile completion error:', error);
-      toast({
-        variant: "destructive",
-        title: "Setup Error",
-        description: "There was an error completing your profile. Please try again.",
-      });
-    } finally {
-      setLoading(false);
+    setError(null);
+    if (!role) return setError('Choose how you’ll use Experiential.');
+    if (!firstName.trim()) return setError('Add your first name.');
+    setBusy(true);
+    const { error } = await supabase.from('profiles').upsert(
+      {
+        id: user!.id,
+        email: user!.email,
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        birthday: profile?.birthday ?? '1990-01-01',
+        role,
+      },
+      { onConflict: 'id' }
+    );
+    setBusy(false);
+    if (error) {
+      console.error('Profile update failed:', error);
+      return setError('We couldn’t save that. Please try again.');
     }
+    await refetch();
+    if (role === 'volunteer') toast({ title: 'You’re all set', description: 'Start by finding an opportunity near you.' });
   };
+
+  if (authLoading || loading || !user) {
+    return (
+      <AuthLayout title="Finish setting up">
+        <Skeleton className="h-40 w-full" />
+      </AuthLayout>
+    );
+  }
+
+  if (needsOrganization) {
+    return (
+      <AuthLayout title="Add your organization" description="Students see this on your listings. You can post as soon as it’s saved.">
+        <OrganizationSetup
+          onComplete={async () => {
+            await refetch();
+            toast({ title: 'Organization saved', description: 'You can post your first opportunity now.' });
+            navigate('/post-opportunity', { replace: true });
+          }}
+        />
+      </AuthLayout>
+    );
+  }
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 ${
-      isInternshipMode 
-        ? 'bg-gradient-to-br from-purple-900 via-gray-900 to-gray-800' 
-        : 'bg-gradient-to-br from-blue-50 to-green-50'
-    }`}>
-      <div className="w-full max-w-md">
-        <div className="flex items-center justify-center mb-6">
-          <Link to="/" className={`flex items-center transition-colors ${
-            isInternshipMode 
-              ? 'text-purple-300 hover:text-purple-400' 
-              : 'text-gray-600 hover:text-blue-600'
-          }`}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
-          </Link>
-        </div>
-        
-        <div className="flex items-center justify-center mb-8">
-          <ExperientialLogo className="h-16 w-auto" />
-        </div>
-
-        <Card className={isInternshipMode ? 'bg-gray-800/90 border-purple-500/30 backdrop-blur-sm' : ''}>
-          <CardHeader className="text-center">
-            <CardTitle className={`flex items-center justify-center gap-2 ${isInternshipMode ? 'text-purple-200' : ''}`}>
-              {isInternshipMode ? <Briefcase className="h-5 w-5" /> : <Users className="h-5 w-5" />}
-              Complete Your Profile
-            </CardTitle>
-            <CardDescription className={isInternshipMode ? 'text-purple-300' : ''}>
-              Just one more step to get started
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="role" className={isInternshipMode ? 'text-purple-200' : ''}>I am a...</Label>
-                <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
-                  <SelectTrigger className={isInternshipMode ? 'bg-gray-700/50 border-purple-500/30 text-purple-100' : ''}>
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
-                  <SelectContent className={isInternshipMode ? 'bg-gray-700 border-gray-600' : ''}>
-                    <SelectItem value="volunteer" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>
-                      {isInternshipMode ? 'Job Seeker' : 'Volunteer'}
-                    </SelectItem>
-                    <SelectItem value="volunteer_searcher" className={isInternshipMode ? 'text-purple-100 hover:bg-gray-600' : ''}>
-                      {isInternshipMode ? 'Looking for Talent' : 'Looking for Volunteers'}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-
-              <Button 
-                type="submit" 
-                className={`w-full ${
-                  isInternshipMode 
-                    ? 'bg-purple-600 hover:bg-purple-700' 
-                    : 'bg-blue-600 hover:bg-blue-700'
-                }`}
-                disabled={loading || !formData.role}
+    <AuthLayout title="Finish setting up" description="One quick step so we can show you the right tools.">
+      <form onSubmit={saveRole} className="space-y-5" noValidate>
+        <fieldset>
+          <legend className="mb-2 text-sm font-medium">I want to…</legend>
+          <div className="grid grid-cols-2 gap-2" role="radiogroup">
+            {(
+              [
+                { value: 'volunteer', label: 'Volunteer', hint: 'Find opportunities and track hours' },
+                { value: 'volunteer_searcher', label: 'Recruit volunteers', hint: 'Post opportunities for your organization' },
+              ] as const
+            ).map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                role="radio"
+                aria-checked={role === opt.value}
+                onClick={() => setRole(opt.value)}
+                className={cn(
+                  'flex flex-col items-start gap-1 rounded-lg border p-3.5 text-left transition-colors',
+                  role === opt.value ? 'border-primary bg-accent ring-1 ring-primary' : 'border-input bg-card hover:border-primary/40'
+                )}
               >
-                {loading ? 'Setting up...' : 'Complete Setup'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+                <span className="text-sm font-semibold">{opt.label}</span>
+                <span className="text-xs text-muted-foreground">{opt.hint}</span>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="cp-first">First name</Label>
+            <Input id="cp-first" autoComplete="given-name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="cp-last">Last name</Label>
+            <Input id="cp-last" autoComplete="family-name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+          </div>
+        </div>
+        {error && <p className="text-sm text-destructive" role="alert">{error}</p>}
+        <Button type="submit" className="w-full" size="lg" disabled={busy}>
+          {busy ? 'Saving…' : 'Continue'}
+        </Button>
+      </form>
+    </AuthLayout>
   );
 };
 

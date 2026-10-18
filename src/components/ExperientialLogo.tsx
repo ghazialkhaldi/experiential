@@ -1,35 +1,20 @@
-import React from 'react';
-import { useMode } from '@/contexts/ModeContext';
+import { cn } from '@/lib/utils';
 
 interface ExperientialLogoProps {
   className?: string;
+  /** Use the light wordmark on dark surfaces. */
+  inverse?: boolean;
 }
 
-const ExperientialLogo: React.FC<ExperientialLogoProps> = ({ 
-  className 
-}) => {
-  const { isInternshipMode } = useMode();
-  
-  // Apply mode-based sizing unless a custom size is explicitly set
-  let finalClassName = className;
-  
-  // If no className provided or standard sizes, apply mode-based sizing
-  if (!className || className === "h-16 w-auto" || className === "h-20 w-auto" || className === "h-24 w-24 mx-auto" || className.includes("h-18") || className.includes("h-22") || className === "h-12 w-auto" || className.includes("h-17") || className.includes("h-[4.25rem]")) {
-    const logoSize = isInternshipMode ? "h-[4.25rem] w-auto" : "h-16 w-auto"; // Internship slightly larger
-    finalClassName = logoSize;
-  }
-  
-  const logoSrc = isInternshipMode 
-    ? "/Experiential 4.png" 
-    : "/Experiential.jpeg";
-  
-  return (
-    <img 
-      src={logoSrc}
-      alt="Experiential Logo" 
-      className={finalClassName}
-    />
-  );
-};
+const ExperientialLogo = ({ className, inverse = false }: ExperientialLogoProps) => (
+  <img
+    src={inverse ? '/brand/wordmark-light.png' : '/brand/wordmark.png'}
+    alt="Experiential"
+    width={724}
+    height={134}
+    className={cn('h-6 w-auto select-none', className)}
+    draggable={false}
+  />
+);
 
 export default ExperientialLogo;

@@ -1,143 +1,104 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { geocode, type Place } from '@/lib/geo';
 
-interface Location {
-  latitude: number;
-  longitude: number;
-  city?: string;
-  state?: string;
-  country?: string;
-}
+const STORAGE_KEY = 'exp.location.v1';
+const EVENT = 'exp-location-change';
 
-interface LocationState {
-  location: Location | null;
-  loading: boolean;
-  error: string | null;
-  userDenied: boolean;
-}
+const read = (): Place | null => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as Place) : null;
+  } catch {
+    return null;
+  }
+};
 
+const write = (place: Place | null) => {
+  try {
+    if (place) localStorage.setItem(STORAGE_KEY, JSON.stringify(place));
+    else localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Non-persistent fallback is fine.
+  }
+  window.dispatchEvent(new Event(EVENT));
+};
+
+export const describePlace = (place: Place | null) =>
+  place ? [place.city, place.state].filter(Boolean).join(', ') : '';
+
+/**
+ * The visitor's search location. Remembered in this browser and shared
+ * between every component that uses the hook.
+ */
 export const useLocation = () => {
-  const [locationState, setLocationState] = useState<LocationState>({
-    location: null,
-    loading: false, // Don't start in loading state since we're not auto-detecting
-    error: null,
-    userDenied: false,
-  });
+  const [location, setLocation] = useState<Place | null>(read);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const reverseGeocode = async (latitude: number, longitude: number): Promise<Location> => {
-    try {
-      // Using a CORS-friendly geocoding service
-      const response = await fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-      );
-      const data = await response.json();
-      
-      return {
-        latitude,
-        longitude,
-        city: data.city || data.locality || '',
-        state: data.principalSubdivision || '',
-        country: data.countryName || '',
-      };
-    } catch (error) {
-      console.error('Reverse geocoding failed:', error);
-      // Return basic location info without geocoding
-      return { latitude, longitude };
-    }
-  };
+  useEffect(() => {
+    const sync = () => setLocation(read());
+    window.addEventListener(EVENT, sync);
+    window.addEventListener('storage', sync);
+    return () => {
+      window.removeEventListener(EVENT, sync);
+      window.removeEventListener('storage', sync);
+    };
+  }, []);
 
-  const getCurrentLocation = () => {
-    setLocationState(prev => ({ ...prev, loading: true, error: null }));
-
+  const detectLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      setLocationState({
-        location: null,
-        loading: false,
-        error: 'Geolocation is not supported by this browser.',
-        userDenied: false,
-      });
+      setError('Your browser can’t share its location. Type a city instead.');
       return;
     }
-
+    setLoading(true);
+    setError(null);
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        const locationData = await reverseGeocode(latitude, longitude);
-        
-        setLocationState({
-          location: locationData,
-          loading: false,
-          error: null,
-          userDenied: false,
-        });
+      async ({ coords }) => {
+        let city = '';
+        let state = '';
+        let country = '';
+        try {
+          const res = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${coords.latitude}&longitude=${coords.longitude}&localityLanguage=en`
+          );
+          const data = await res.json();
+          city = data.city || data.locality || '';
+          state = data.principalSubdivision || '';
+          country = data.countryName || '';
+        } catch {
+          // Coordinates alone still give us distances.
+        }
+        write({ latitude: coords.latitude, longitude: coords.longitude, city: city || 'Current location', state, country });
+        setLoading(false);
       },
-      (error) => {
-        const userDenied = error.code === error.PERMISSION_DENIED;
-        setLocationState({
-          location: null,
-          loading: false,
-          error: error.message,
-          userDenied,
-        });
+      (err) => {
+        setError(
+          err.code === err.PERMISSION_DENIED
+            ? 'Location access is blocked. Allow it in your browser settings, or type a city.'
+            : 'We couldn’t find your location. Try typing a city.'
+        );
+        setLoading(false);
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000, // 5 minutes
-      }
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 10 * 60 * 1000 }
     );
-  };
+  }, []);
 
-  const setManualLocation = async (locationInput: string) => {
-    setLocationState(prev => ({ ...prev, loading: true, error: null }));
-    
-    try {
-      // For manual location input, we'll create a basic location object
-      // without exact coordinates since geocoding APIs have CORS issues
-      const locationData: Location = {
-        latitude: 0, // Default coordinates 
-        longitude: 0,
-        city: locationInput.split(',')[0]?.trim() || locationInput,
-        state: locationInput.split(',')[1]?.trim() || '',
-        country: locationInput.split(',')[2]?.trim() || '',
-      };
-      
-      setLocationState({
-        location: locationData,
-        loading: false,
-        error: null,
-        userDenied: false,
-      });
-    } catch (error) {
-      setLocationState(prev => ({
-        ...prev,
-        loading: false,
-        error: 'Failed to set location',
-      }));
+  const setManualLocation = useCallback(async (input: string) => {
+    const text = input.trim();
+    if (!text) return false;
+    setLoading(true);
+    setError(null);
+    const place = await geocode(text);
+    setLoading(false);
+    if (!place) {
+      setError(`We couldn’t find “${text}”. Try a city name, like “Austin”.`);
+      return false;
     }
-  };
+    write(place);
+    return true;
+  }, []);
 
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371; // Radius of the Earth in kilometers
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    const distance = R * c; // Distance in kilometers
-    return distance;
-  };
+  const clearLocation = useCallback(() => write(null), []);
 
-  // Don't auto-detect location on mount to avoid overriding manual selections
-  // useEffect(() => {
-  //   getCurrentLocation();
-  // }, []);
-
-  return {
-    ...locationState,
-    getCurrentLocation,
-    setManualLocation,
-    calculateDistance,
-  };
+  return { location, loading, error, detectLocation, setManualLocation, clearLocation };
 };

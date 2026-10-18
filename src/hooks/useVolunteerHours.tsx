@@ -48,8 +48,8 @@ export const useVolunteerHours = () => {
     } catch (error) {
       console.error('Error fetching volunteer hours:', error);
       toast({
-        title: "Error",
-        description: "Failed to load volunteer hours",
+        title: "Couldn't load your hours",
+        description: "Please refresh the page.",
         variant: "destructive",
       });
     } finally {
@@ -82,25 +82,36 @@ export const useVolunteerHours = () => {
       if (error) throw error;
 
       setHours(prev => [data, ...prev]);
-      toast({
-        title: "Success",
-        description: "Volunteer hours logged successfully!",
-      });
+      toast({ title: `Logged ${data.hours} ${data.hours === 1 ? 'hour' : 'hours'}` });
       return true;
     } catch (error) {
       console.error('Error adding volunteer hours:', error);
       toast({
-        title: "Error",
-        description: "Failed to log volunteer hours",
+        title: "Couldn't save those hours",
+        description: "Please try again.",
         variant: "destructive",
       });
       return false;
     }
   };
 
+  const deleteHours = async (id: string) => {
+    const previous = hours;
+    setHours((prev) => prev.filter((h) => h.id !== id));
+    const { error } = await supabase.from('volunteer_hours').delete().eq('id', id).eq('user_id', user!.id);
+    if (error) {
+      console.error('Error deleting volunteer hours:', error);
+      setHours(previous);
+      toast({ title: "Couldn't delete that entry", description: 'Please try again.', variant: 'destructive' });
+      return false;
+    }
+    return true;
+  };
+
   useEffect(() => {
     fetchHours();
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   const totalHours = hours.reduce((sum, hour) => sum + hour.hours, 0);
   const totalOpportunities = hours.length;
@@ -109,6 +120,7 @@ export const useVolunteerHours = () => {
     hours,
     loading,
     addHours,
+    deleteHours,
     refetch: fetchHours,
     totalHours,
     totalOpportunities,

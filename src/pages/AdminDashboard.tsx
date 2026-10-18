@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { Shield, Users, Building, FileText, Bell, Clock, Heart, Bookmark } from 'lucide-react';
+import { PageShell, RequireAuth } from '@/components/layout/PageShell';
+import { Shield, Users } from 'lucide-react';
 
 interface UserData {
   profiles: any[];
@@ -20,7 +21,7 @@ interface UserData {
   subscribers: any[];
 }
 
-export default function AdminDashboard() {
+function AdminContent() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [userData, setUserData] = useState<UserData>({
@@ -102,21 +103,9 @@ export default function AdminDashboard() {
     }
   };
 
-  if (!user) {
-    return (
-      <div className="container mx-auto p-6">
-        <Card>
-          <CardContent className="p-6">
-            <p>Please log in to access the admin dashboard.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   if (!isAdmin) {
     return (
-      <div className="container mx-auto p-6">
+      <div>
         <Card>
           <CardContent className="p-6 text-center">
             <Shield className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
@@ -130,7 +119,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div>
         <Card>
           <CardContent className="p-6">
             <p>Loading admin dashboard...</p>
@@ -141,66 +130,25 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Shield className="h-8 w-8" />
-          Admin Dashboard
-        </h1>
-        <p className="text-muted-foreground">Monitor and manage all user data</p>
+        <h1 className="text-3xl font-semibold">Admin</h1>
+        <p className="text-muted-foreground">Everything in the database, newest first.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
-              <div>
-                <p className="text-sm text-muted-foreground">Total Users</p>
-                <p className="text-2xl font-bold">{userData.profiles.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Building className="h-5 w-5 text-primary" />
-              <div>
-                <p className="text-sm text-muted-foreground">Organizations</p>
-                <p className="text-2xl font-bold">{userData.organizations.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-primary" />
-              <div>
-                <p className="text-sm text-muted-foreground">Applications</p>
-                <p className="text-2xl font-bold">{userData.applications.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" />
-              <div>
-                <p className="text-sm text-muted-foreground">Volunteer Hours</p>
-                <p className="text-2xl font-bold">
-                  {userData.volunteerHours.reduce((total, hour) => total + Number(hour.hours), 0)}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <dl className="mb-8 flex flex-wrap gap-x-10 gap-y-3 border-y border-border py-4 text-sm">
+        {[
+          ['Users', userData.profiles.length],
+          ['Organizations', userData.organizations.length],
+          ['Applications', userData.applications.length],
+          ['Hours logged', userData.volunteerHours.reduce((total, hour) => total + Number(hour.hours), 0)],
+        ].map(([label, value]) => (
+          <div key={label as string} className="flex items-baseline gap-2">
+            <dt className="text-muted-foreground">{label}</dt>
+            <dd className="tabular text-lg font-semibold">{value}</dd>
+          </div>
+        ))}
+      </dl>
 
       <Tabs defaultValue="profiles" className="space-y-4">
         <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
@@ -421,5 +369,15 @@ export default function AdminDashboard() {
         </Button>
       </div>
     </div>
+  );
+}
+
+export default function AdminDashboard() {
+  return (
+    <PageShell>
+      <RequireAuth message="Sign in with an admin account.">
+        <AdminContent />
+      </RequireAuth>
+    </PageShell>
   );
 }

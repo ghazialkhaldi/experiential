@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, FileText, Check, X, Download, Eye, Plus } from 'lucide-react';
+import { Upload, FileText, Check, X, Download, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
@@ -119,8 +118,8 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
       loadUploadedResumes(); // Refresh the list
 
       toast({
-        title: "Success!",
-        description: "Resume uploaded successfully."
+        title: "Resume uploaded",
+        description: "It’s attached to this application."
       });
     } catch (error) {
       console.error('Error uploading resume:', error);
@@ -415,30 +414,21 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <FileText className="h-5 w-5 mr-2" />
-          Resume {required && <span className="text-red-500 ml-1">*</span>}
-        </CardTitle>
-        <CardDescription>
-          {required 
-            ? "A resume is required for this application." 
-            : "Optionally attach your resume to strengthen your application."
-          }
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <fieldset className="rounded-lg border border-border p-4">
+      <legend className="px-1 text-sm font-medium">
+        Resume {required ? <span className="text-destructive">(required)</span> : <span className="font-normal text-muted-foreground">(optional)</span>}
+      </legend>
+      <div>
         <Tabs defaultValue="built" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="built">Built Resumes</TabsTrigger>
-            <TabsTrigger value="uploaded">Uploaded Files</TabsTrigger>
-            <TabsTrigger value="upload">Upload New</TabsTrigger>
+            <TabsTrigger value="built">From builder</TabsTrigger>
+            <TabsTrigger value="uploaded">Uploaded</TabsTrigger>
+            <TabsTrigger value="upload">Upload new</TabsTrigger>
           </TabsList>
           
           <TabsContent value="built" className="space-y-4">
             {resumesLoading ? (
-              <p className="text-sm text-gray-500 text-center py-4">Loading resumes...</p>
+              <p className="text-sm text-muted-foreground text-center py-4">Loading…</p>
             ) : savedResumes.length > 0 ? (
               <div className="space-y-2">
                 {savedResumes.map((resume) => (
@@ -446,20 +436,23 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
                     key={resume.id}
                     className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                       selectedBuiltResume === resume.id
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-primary bg-accent'
+                        : 'border-border hover:border-primary/40'
                     }`}
                     onClick={() => handleBuiltResumeSelect(resume.id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), handleBuiltResumeSelect(resume.id))}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <FileText className="h-4 w-4 text-gray-500" />
+                        <FileText className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm font-medium">{resume.name}</span>
                         {selectedBuiltResume === resume.id && (
-                          <Check className="h-4 w-4 text-green-500" />
+                          <Check className="h-4 w-4 text-success" />
                         )}
                       </div>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-muted-foreground">
                         {new Date(resume.updated_at).toLocaleDateString()}
                       </span>
                     </div>
@@ -468,12 +461,12 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
               </div>
             ) : (
               <div className="text-center py-6">
-                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-sm text-gray-500 mb-2">No built resumes found.</p>
+                <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-sm text-muted-foreground mb-2">You haven’t built a resume yet.</p>
                 <Link to="/resume-builder">
                   <Button variant="outline" size="sm">
                     <Plus className="h-4 w-4 mr-2" />
-                    Create Resume
+                    Build a resume
                   </Button>
                 </Link>
               </div>
@@ -488,23 +481,27 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
                     key={resume.url}
                     className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                       selectedSavedResume === resume.url
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-primary bg-accent'
+                        : 'border-border hover:border-primary/40'
                     }`}
                     onClick={() => handleSavedResumeSelect(resume.url)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), handleSavedResumeSelect(resume.url))}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <FileText className="h-4 w-4 text-gray-500" />
+                        <FileText className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm font-medium">{resume.name}</span>
                         {selectedSavedResume === resume.url && (
-                          <Check className="h-4 w-4 text-green-500" />
+                          <Check className="h-4 w-4 text-success" />
                         )}
                       </div>
                       <div className="flex items-center space-x-2">
                         <Button
                           variant="ghost"
                           size="sm"
+                          aria-label={`Download ${resume.name}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             downloadResume(resume.url, resume.name);
@@ -512,7 +509,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
                         >
                           <Download className="h-3 w-3" />
                         </Button>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-muted-foreground">
                           {new Date(resume.uploaded_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -521,8 +518,8 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500 text-center py-4">
-                No uploaded files found.
+              <p className="text-sm text-muted-foreground text-center py-4">
+                No uploaded files yet.
               </p>
             )}
           </TabsContent>
@@ -533,14 +530,14 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
               <div className="flex items-center justify-center w-full">
                 <label
                   htmlFor="resume-upload"
-                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-input rounded-lg cursor-pointer bg-muted/40 transition-colors hover:border-primary/40 hover:bg-accent"
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-8 h-8 mb-4 text-gray-500" />
-                    <p className="mb-2 text-sm text-gray-500">
+                    <Upload className="w-8 h-8 mb-4 text-muted-foreground" />
+                    <p className="mb-2 text-sm text-muted-foreground">
                       <span className="font-semibold">Click to upload</span> your resume
                     </p>
-                    <p className="text-xs text-gray-500">PDF or DOC/DOCX (MAX. 5MB)</p>
+                    <p className="text-xs text-muted-foreground">PDF or DOC/DOCX (MAX. 5MB)</p>
                   </div>
                   <input
                     id="resume-upload"
@@ -553,22 +550,23 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
                 </label>
               </div>
               {uploading && (
-                <p className="text-sm text-blue-600 text-center">Uploading resume...</p>
+                <p className="text-sm text-primary text-center" role="status">Uploading…</p>
               )}
             </div>
           </TabsContent>
         </Tabs>
 
         {selectedResumeUrl && (
-          <div className="p-3 bg-green-50 border border-green-200 rounded-lg mt-4">
+          <div className="p-3 bg-success-soft rounded-md mt-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <Check className="h-4 w-4 text-green-500" />
-                <span className="text-sm text-green-700">Resume selected</span>
+                <Check className="h-4 w-4 text-success" />
+                <span className="text-sm font-medium text-success">Resume attached</span>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
+                aria-label="Remove attached resume"
                 onClick={() => {
                   onResumeSelect(null);
                   setSelectedSavedResume('');
@@ -580,8 +578,8 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
             </div>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </fieldset>
   );
 };
 

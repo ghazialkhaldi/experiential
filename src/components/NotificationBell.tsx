@@ -1,184 +1,86 @@
-import React, { useState } from 'react';
-import { Bell, X, CheckCircle, AlertCircle, Info, Clock, Star, Users, Briefcase, GraduationCap } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useAppNotifications } from '@/hooks/useAppNotifications';
-import { useMode } from '@/contexts/ModeContext';
-import { formatDistanceToNow } from 'date-fns';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface Notification {
-  id: string;
-  user_id: string;
-  type: string;
-  title: string;
-  message: string;
-  is_read: boolean;
-  application_id: string | null;
-  opportunity_id: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-const getNotificationIcon = (type: string) => {
-  switch (type) {
-    case 'acceptance':
-      return <CheckCircle className="h-4 w-4 text-green-500" />;
-    case 'rejection':
-      return <AlertCircle className="h-4 w-4 text-red-500" />;
-    case 'application':
-      return <Users className="h-4 w-4 text-blue-500" />;
-    case 'new_opportunity':
-      return <Briefcase className="h-4 w-4 text-purple-500" />;
-    case 'welcome':
-      return <Star className="h-4 w-4 text-yellow-500" />;
-    case 'reminder':
-      return <Clock className="h-4 w-4 text-orange-500" />;
-    case 'achievement':
-      return <GraduationCap className="h-4 w-4 text-indigo-500" />;
-    default:
-      return <Info className="h-4 w-4 text-gray-500" />;
-  }
-};
+import { formatDistanceToNow } from 'date-fns';
+import { Bell } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAppNotifications, type AppNotification } from '@/hooks/useAppNotifications';
+import { useProfile } from '@/hooks/useProfile';
+import { cn } from '@/lib/utils';
 
 export const NotificationBell = () => {
-  const { notifications, unreadCount, markAsRead, markAllAsRead, loading } = useAppNotifications();
-  const { isInternshipMode } = useMode();
+  const { notifications, unreadCount, markAsRead, markAllAsRead } = useAppNotifications();
+  const { isOrganization } = useProfile();
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  if (loading) {
-    return (
-      <Button variant="ghost" size="sm" disabled className={isInternshipMode ? 'text-gray-300' : ''}>
-        <Bell className="h-5 w-5" />
-      </Button>
-    );
-  }
-
-  const handleNotificationClick = async (notification: Notification) => {
-    try {
-      await markAsRead(notification.id);
-      
-      // Navigate based on notification type
-      if (notification.opportunity_id) {
-        navigate(`/opportunity/${notification.opportunity_id}`);
-      } else if (notification.application_id) {
-        navigate('/manage-opportunities');
-      }
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-    }
-  };
-
-  const handleMarkAllAsRead = async () => {
-    try {
-      await markAllAsRead();
-    } catch (error) {
-      console.error('Error marking all notifications as read:', error);
-    }
+  const handleClick = (n: AppNotification) => {
+    if (!n.is_read) markAsRead(n.id);
+    setOpen(false);
+    if (n.application_id) navigate(isOrganization ? '/manage-opportunities' : '/my-applications');
+    else if (n.opportunity_id) navigate(`/opportunity/${n.opportunity_id}`);
   };
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="sm" className={`relative ${isInternshipMode ? 'text-gray-300 hover:text-blue-400' : ''}`}>
-          <Bell className="h-5 w-5" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative h-9 w-9 rounded-full"
+          aria-label={unreadCount ? `Notifications, ${unreadCount} unread` : 'Notifications'}
+        >
+          <Bell className="h-[1.125rem] w-[1.125rem]" />
           {unreadCount > 0 && (
-            <Badge 
-              variant="destructive" 
-              className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
-            >
-              {unreadCount > 99 ? '99+' : unreadCount}
-            </Badge>
+            <span className="tabular absolute -right-0.5 -top-0.5 grid h-[1.125rem] min-w-[1.125rem] place-items-center rounded-full bg-primary px-1 text-[0.625rem] font-bold text-primary-foreground ring-2 ring-background">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
           )}
         </Button>
       </PopoverTrigger>
-      
-      <PopoverContent 
-        className={`w-80 p-0 ${isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}`}
-        align="end"
-        side="bottom"
-        sideOffset={8}
-      >
-        <Card className={`border-0 shadow-lg ${isInternshipMode ? 'bg-gray-800 border-gray-700' : ''}`}>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className={`text-lg font-semibold ${isInternshipMode ? 'text-white' : ''}`}>
-              Notifications
-            </CardTitle>
-            <div className="flex items-center gap-2">
-              {unreadCount > 0 && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={handleMarkAllAsRead}
-                  className={`text-xs ${isInternshipMode ? 'text-gray-400 hover:text-gray-200' : ''}`}
-                >
-                  Mark all read
-                </Button>
-              )}
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setIsOpen(false)}
-                className={isInternshipMode ? 'text-gray-400 hover:text-gray-200' : ''}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          </CardHeader>
-          
-          <CardContent className="p-0">
-            {notifications.length === 0 ? (
-              <div className={`p-6 text-center ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
-                <Bell className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No notifications yet</p>
-              </div>
-            ) : (
-              <ScrollArea className="h-[400px]">
-                <div className="space-y-1">
-                  {notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={`p-4 border-b last:border-0 cursor-pointer transition-colors hover:bg-muted/50 ${
-                        !notification.is_read 
-                          ? `${isInternshipMode ? 'bg-blue-500/10 border-l-4 border-l-blue-400' : 'bg-primary/5 border-l-4 border-l-primary'}` 
-                          : ''
-                      } ${isInternshipMode ? 'border-gray-700' : 'border-border'}`}
-                      onClick={() => handleNotificationClick(notification)}
-                    >
-                      <div className="flex items-start gap-3">
-                        {getNotificationIcon(notification.type)}
-                        <div className="flex-1 space-y-1">
-                          <div className="flex items-center justify-between">
-                            <p className={`text-sm font-medium ${
-                              !notification.is_read 
-                                ? isInternshipMode ? 'text-white' : 'text-foreground'
-                                : isInternshipMode ? 'text-gray-300' : 'text-muted-foreground'
-                            }`}>
-                              {notification.title}
-                            </p>
-                            {!notification.is_read && (
-                              <div className={`h-2 w-2 rounded-full ${isInternshipMode ? 'bg-blue-400' : 'bg-primary'}`} />
-                            )}
-                          </div>
-                          <p className={`text-xs ${isInternshipMode ? 'text-gray-400' : 'text-muted-foreground'}`}>
-                            {notification.message}
-                          </p>
-                          <p className={`text-xs ${isInternshipMode ? 'text-gray-500' : 'text-muted-foreground'}`}>
-                            {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            )}
-          </CardContent>
-        </Card>
+      <PopoverContent align="end" sideOffset={8} className="w-[min(22rem,calc(100vw-1.5rem))] p-0">
+        <div className="flex items-center justify-between border-b px-4 py-3">
+          <h2 className="font-sans text-sm font-semibold">Notifications</h2>
+          {unreadCount > 0 && (
+            <button onClick={markAllAsRead} className="text-xs font-medium text-primary hover:underline">
+              Mark all read
+            </button>
+          )}
+        </div>
+        {notifications.length === 0 ? (
+          <div className="px-6 py-10 text-center">
+            <p className="text-sm font-medium">You’re all caught up</p>
+            <p className="mt-1 text-sm text-muted-foreground">Application updates will show up here.</p>
+          </div>
+        ) : (
+          <ScrollArea className="max-h-[24rem]">
+            <ul className="divide-y">
+              {notifications.map((n) => (
+                <li key={n.id}>
+                  <button
+                    onClick={() => handleClick(n)}
+                    className={cn(
+                      'flex w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/60',
+                      !n.is_read && 'bg-accent/50'
+                    )}
+                  >
+                    <span className={cn('mt-1.5 shrink-0', n.is_read ? 'opacity-0' : '')} aria-hidden>
+                      <span className="brand-dot" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className={cn('block text-sm', n.is_read ? 'text-muted-foreground' : 'font-semibold')}>{n.title}</span>
+                      <span className="mt-0.5 block text-sm text-muted-foreground">{n.message}</span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </ScrollArea>
+        )}
       </PopoverContent>
     </Popover>
   );
