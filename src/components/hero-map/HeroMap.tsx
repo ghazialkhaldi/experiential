@@ -237,16 +237,8 @@ const MapArtwork = ({ routeRef }: { routeRef: React.RefObject<SVGPathElement> })
       <path d={MAP.roads.major} stroke="#8FB0F0" strokeWidth="10" />
     </g>
 
-    <path
-      ref={routeRef}
-      d={MAP.route}
-      fill="none"
-      stroke="#FFFFFF"
-      strokeWidth="5.5"
-      strokeLinecap="round"
-      strokeDasharray="0 12"
-      opacity="0.85"
-    />
+    {/* The walker's route: geometry only, not drawn */}
+    <path ref={routeRef} d={MAP.route} fill="none" stroke="none" />
 
     <g paintOrder="stroke" stroke="#22408F" strokeWidth="4" strokeLinejoin="round" fontWeight="600">
       {MAP.streetLabels.map((l) => (
