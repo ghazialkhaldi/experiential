@@ -71,7 +71,12 @@ const Index = () => {
             aria-hidden
             className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,hsl(var(--blue-field)/0.92)_0%,hsl(var(--blue-field)/0.72)_45%,hsl(var(--blue-field)/0.15)_100%)] lg:bg-[linear-gradient(90deg,hsl(var(--blue-field))_0%,hsl(var(--blue-field)/0.9)_34%,hsl(var(--blue-field)/0.25)_62%,transparent_80%)]"
           />
-          <div className="container pb-[22rem] pt-14 sm:pb-[24rem] md:pt-20 lg:min-h-[44rem] lg:pb-24 lg:pt-28">
+          {/* Fade the map into the page below instead of ending on a hard edge */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-64 bg-[linear-gradient(180deg,hsl(var(--background)/0)_0%,hsl(var(--background)/0.06)_22%,hsl(var(--background)/0.22)_42%,hsl(var(--background)/0.5)_62%,hsl(var(--background)/0.82)_82%,hsl(var(--background))_100%)] md:h-80"
+          />
+          <div className="container pb-[24rem] pt-14 sm:pb-[26rem] md:pt-20 lg:min-h-[48rem] lg:pb-40 lg:pt-28">
             <div className="max-w-xl">
               <h1 className="animate-rise-in text-[2.6rem] font-bold leading-[1.04] tracking-[-0.03em] text-white sm:text-6xl lg:text-[4.5rem]">
                 Volunteer work that <span className="brand-period">counts</span>
@@ -87,16 +92,16 @@ const Index = () => {
               />
             </div>
           </div>
-          <p className="absolute bottom-3 right-4 text-[11px] text-white/55">
+          <p className="absolute bottom-3 right-4 text-[11px] text-muted-foreground">
             Port Credit, Mississauga · Map data ©{' '}
-            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:text-white hover:underline">
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:text-foreground hover:underline">
               OpenStreetMap
             </a>
           </p>
         </section>
 
         {/* Listings */}
-        <section className="container py-14 md:py-20" aria-labelledby="latest-heading">
+        <section className="container pb-14 pt-4 md:pb-20 md:pt-6" aria-labelledby="latest-heading">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 id="latest-heading" className="text-2xl font-semibold md:text-3xl">

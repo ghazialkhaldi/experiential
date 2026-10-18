@@ -36,7 +36,7 @@ const smoothstep = (x: number) => x * x * (3 - 2 * x);
 
 /** Where the walker sits in the hero: in the open area right of the text. */
 const anchorFor = (w: number, h: number) =>
-  w >= 1024 ? { x: w * 0.72, y: h * 0.5, zoom: 1.05 } : { x: w * 0.6, y: h * 0.78, zoom: 0.95 };
+  w >= 1024 ? { x: w * 0.72, y: h * 0.5, zoom: 1.05 } : { x: w * 0.6, y: h - 330, zoom: 0.95 };
 
 const HeroMap = ({ className }: { className?: string }) => {
   const rootRef = useRef<HTMLDivElement>(null);
