@@ -34,7 +34,7 @@ const Footer = () => (
     <div className="container grid gap-10 py-12 md:grid-cols-[1.4fr_repeat(3,1fr)]">
       <div className="max-w-xs">
         <Link to="/" aria-label="Experiential home" className="inline-block rounded-sm">
-          <ExperientialLogo inverse className="h-5" />
+          <ExperientialLogo inverse height={26} />
         </Link>
         <p className="mt-4 text-sm leading-6 text-ink-muted">
           Local volunteer opportunities for students, and the tools to show the work you did.

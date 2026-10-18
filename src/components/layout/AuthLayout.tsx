@@ -7,7 +7,7 @@ const AuthLayout = ({ title, description, children, footer }: { title: string; d
   <div className="flex min-h-screen flex-col">
     <header className="container flex h-16 items-center">
       <Link to="/" aria-label="Experiential home" className="rounded-sm">
-        <ExperientialLogo className="h-[1.375rem]" />
+        <ExperientialLogo height={28} />
       </Link>
     </header>
     <main id="main" className="flex flex-1 items-start justify-center px-4 pb-16 pt-6 sm:pt-12">

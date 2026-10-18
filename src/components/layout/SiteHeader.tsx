@@ -82,10 +82,10 @@ const SiteHeader = () => {
     .join('');
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background">
       <div className="container flex h-16 items-center gap-6">
         <Link to="/" className="shrink-0 rounded-sm" aria-label="Experiential home">
-          <ExperientialLogo className="h-[1.375rem]" />
+          <ExperientialLogo height={28} />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
