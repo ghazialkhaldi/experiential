@@ -17,6 +17,10 @@ Live site: [experiential.care](https://www.experiential.care)
 
 React 18 + TypeScript, Vite, Tailwind CSS with shadcn/ui, TanStack Query, and Supabase (auth, Postgres, storage, edge functions). Stripe handles Pro billing through Supabase edge functions.
 
+## How it was built
+
+I prototyped the first version in Lovable, an AI app builder, in summer 2025, which is why most early commits come from its bot account, gpt-engineer-app. From there I took it to production myself: Vercel deployment and routing, the Google sign-in flow, terms and privacy pages, the iOS build with Capacitor, mobile optimization, and an October 2026 redesign that fixed the core flows. Experiential won 1st place at the Bloom Business Accelerator and was piloted by Mentor College.
+
 ## Development
 
 ```bash
